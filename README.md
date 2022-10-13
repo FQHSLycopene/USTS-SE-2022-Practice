@@ -1,4 +1,4 @@
 本项目为苏州科技大学2022软件工程实践项目
 
 
-后端运行main启动，地址栏输入http://127.0.0.1:8080/swagger/index.html可查看后端提供的api
+后端运行main启动，地址栏输入http://127.0.0.1:8080/swagger/index.html 可查看后端提供的api
