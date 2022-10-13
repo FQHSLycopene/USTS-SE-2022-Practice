@@ -1,0 +1,99 @@
+info:
+  contact: {}
+paths:
+  /Login:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: password
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: email
+        in: formData
+        name: email
+        type: string
+      - description: phone
+        in: formData
+        name: phone
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - 公共方法
+  /Register:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: password
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: 此处email由VerifyEmailCode得来
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: phone
+        in: formData
+        name: phone
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: Register
+      tags:
+      - 公共方法
+  /SendCode:
+    post:
+      parameters:
+      - description: email
+        in: formData
+        name: email
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: SendCode
+      tags:
+      - 公共方法
+  /VerifyEmailCode:
+    post:
+      parameters:
+      - description: 此处email由SendCode得来
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: code
+        in: formData
+        name: code
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 验证码是否真确
+      tags:
+      - 公共方法
+swagger: "2.0"
