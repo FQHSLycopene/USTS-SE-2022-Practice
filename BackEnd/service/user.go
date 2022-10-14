@@ -139,7 +139,7 @@ func Register(c *gin.Context) {
 	password := c.PostForm("password")
 	email := c.PostForm("email")
 	phone := c.PostForm("phone")
-	status := c.DefaultPostForm("status", define.DefaultUserStatus)
+	status := c.DefaultPostForm("status", define.DefaultUserStatusStr)
 	data, err := models.AddUser(name, password, email, phone, status)
 	if err != nil {
 		c.JSON(200, gin.H{
