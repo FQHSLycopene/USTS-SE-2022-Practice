@@ -1,18 +1,23 @@
 {
-  "小组号":13,
+  "小组号": 13,
   "小组成员": {
     "list": [
       {
-        "ID":1,
-        "name":"Lycopene",
+        "ID": 1,
+        "name": "Lycopene",
         "department": "后端开发"
       },
       {
-        "ID":2,
-        "name":"xiaoqiye777",
+        "ID": 2,
+        "name": "xiaoqiye777",
+        "department": "前端开发"
+      },
+      {
+        "ID": 3,
+        "name": "huashengluanfei",
         "department": "前端开发"
       }
     ],
-    "total": 1
+    "total": 3
   }
 }
