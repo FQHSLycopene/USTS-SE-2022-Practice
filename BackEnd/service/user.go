@@ -127,10 +127,11 @@ func VerifyEmailCode(c *gin.Context) {
 // Register
 // @Summary	Register
 // @Tags	公共方法
-// @Param	name formData string true "name"
-// @Param	password formData string true  "password"
+// @Param	name formData string true "用户名"
+// @Param	password formData string true  "密码"
 // @Param	email formData string true  "此处email由VerifyEmailCode得来"
-// @Param 	phone formData string false "phone"
+// @Param 	phone formData string false "电话"
+// @Param 	status formData string false "以什么身份注册"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/Register [post]
 func Register(c *gin.Context) {
@@ -138,7 +139,8 @@ func Register(c *gin.Context) {
 	password := c.PostForm("password")
 	email := c.PostForm("email")
 	phone := c.PostForm("phone")
-	data, err := models.AddUser(name, password, email, phone)
+	status := c.DefaultPostForm("status", define.DefaultUserStatus)
+	data, err := models.AddUser(name, password, email, phone, status)
 	if err != nil {
 		c.JSON(200, gin.H{
 			"code": 401,
