@@ -32,12 +32,12 @@ paths:
   /Register:
     post:
       parameters:
-      - description: name
+      - description: 用户名
         in: formData
         name: name
         required: true
         type: string
-      - description: password
+      - description: 密码
         in: formData
         name: password
         required: true
@@ -47,9 +47,13 @@ paths:
         name: email
         required: true
         type: string
-      - description: phone
+      - description: 电话
         in: formData
         name: phone
+        type: string
+      - description: 以什么身份注册
+        in: formData
+        name: status
         type: string
       responses:
         "200":
@@ -96,4 +100,44 @@ paths:
       summary: 验证码是否真确
       tags:
       - 公共方法
+  /teacher/Knowledge:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 添加知识点
+      tags:
+      - 管理员方法
+  /teacher/ProblemCategory:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 添加题目类型
+      tags:
+      - 管理员方法
 swagger: "2.0"
