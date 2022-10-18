@@ -181,6 +181,26 @@ paths:
       tags:
       - 管理员方法
   /teacher/Knowledge:
+    delete:
+      parameters:
+      - description: identity
+        in: formData
+        name: identity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 删除知识点
+      tags:
+      - 管理员方法
     post:
       parameters:
       - description: name
@@ -198,6 +218,31 @@ paths:
           schema:
             type: string
       summary: 添加知识点
+      tags:
+      - 管理员方法
+    put:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: identity
+        in: formData
+        name: identity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 修改知识点
       tags:
       - 管理员方法
   /teacher/ProblemCategory:

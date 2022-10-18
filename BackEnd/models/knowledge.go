@@ -17,12 +17,45 @@ type Knowledge struct {
 	Name      string         `gorm:"UNIQUE;NOT NULL;Type:varchar(36);Column:name" json:"name"`
 }
 
+func UpdateKnowledge(name, identity string) (interface{}, error) {
+	data, err := getKnowledgeByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	data.Name = name
+	err = DB.Save(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	_, err = UpdateAchievement(name+"成就", identity)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func DeleteKnowledge(identity string) (interface{}, error) {
+	data, err := getKnowledgeByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	err = DB.Delete(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	_, err = DeleteAchievement(identity)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func AddKnowledge(name string) (interface{}, error) {
 	data := Knowledge{
 		Identity: utils.GetUuid(),
 		Name:     name,
 	}
-	err := DB.Create(&data).Error
+	err := DB.Create(data).Error
 	if err != nil {
 		return nil, err
 	}
@@ -33,13 +66,13 @@ func AddKnowledge(name string) (interface{}, error) {
 	return data, err
 }
 
-func GetKnowledgeByIdentity(identity string) (interface{}, error) {
+func getKnowledgeByIdentity(identity string) (*Knowledge, error) {
 	data := Knowledge{}
 	err := DB.Where("identity = ?", identity).First(&data).Error
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+	return &data, nil
 }
 
 func GetKnowledgeIdentityByName(name string) (string, error) {

@@ -18,9 +18,13 @@ func Router() *gin.Engine {
 	teacherGroup := r.Group("/teacher", middleware.AnalyseToken(), middleware.UserIsTeacher())
 	{
 		teacherGroup.POST("/Knowledge", service.AddKnowledge)
+		teacherGroup.PUT("/Knowledge", service.UpdateKnowledge)
+		teacherGroup.DELETE("/Knowledge", service.DeleteKnowledge)
+
 		teacherGroup.POST("/ProblemCategory", service.AddProblemCategory)
-		teacherGroup.POST("/Achievement", service.AddAchievement)
 		teacherGroup.GET("/ProblemCategory", service.GetProblemCategoryList)
+
+		teacherGroup.POST("/Achievement", service.AddAchievement)
 	}
 	studentGroup := r.Group("", middleware.AnalyseToken())
 	{

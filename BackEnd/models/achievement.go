@@ -19,6 +19,18 @@ type Achievement struct {
 	Knowledge         *Knowledge     `gorm:"foreignKey:KnowledgeIdentity;references:Identity"`
 }
 
+func DeleteAchievement(knowledgeIdentity string) (interface{}, error) {
+	data, err := getAchievementByKnowledgeIdentity(knowledgeIdentity)
+	if err != nil {
+		return nil, err
+	}
+	err = DB.Delete(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func AddAchievement(name, knowledgeIdentity string) (interface{}, error) {
 	data := Achievement{
 		Identity:          utils.GetUuid(),
@@ -51,4 +63,26 @@ func GetAchievementList(pageStr, pageSizeStr, keyWord string) (interface{}, erro
 		"total": total,
 		"list":  data,
 	}, nil
+}
+
+func UpdateAchievement(name, knowledgeIdentity string) (interface{}, error) {
+	data, err := getAchievementByKnowledgeIdentity(knowledgeIdentity)
+	if err != nil {
+		return nil, err
+	}
+	data.Name = name
+	err = DB.Save(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func getAchievementByKnowledgeIdentity(knowledgeIdentity string) (*Achievement, error) {
+	data := Achievement{}
+	err := DB.Where("knowledge_identity = ?", knowledgeIdentity).First(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
 }
