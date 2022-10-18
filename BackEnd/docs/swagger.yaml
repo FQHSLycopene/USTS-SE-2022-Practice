@@ -1,6 +1,62 @@
 info:
   contact: {}
 paths:
+  /Achievement:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取成就列表
+      tags:
+      - 公共方法
+  /Knowledge:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取知识点列表
+      tags:
+      - 公共方法
   /Login:
     post:
       parameters:
@@ -32,12 +88,12 @@ paths:
   /Register:
     post:
       parameters:
-      - description: name
+      - description: 用户名
         in: formData
         name: name
         required: true
         type: string
-      - description: password
+      - description: 密码
         in: formData
         name: password
         required: true
@@ -47,9 +103,13 @@ paths:
         name: email
         required: true
         type: string
-      - description: phone
+      - description: 电话
         in: formData
         name: phone
+        type: string
+      - description: 以什么身份注册
+        in: formData
+        name: status
         type: string
       responses:
         "200":
@@ -96,4 +156,140 @@ paths:
       summary: 验证码是否真确
       tags:
       - 公共方法
+  /teacher/Achievement:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: knowledgeIdentity
+        in: formData
+        name: knowledgeIdentity
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 添加知识点成就
+      tags:
+      - 管理员方法
+  /teacher/Knowledge:
+    delete:
+      parameters:
+      - description: identity
+        in: formData
+        name: identity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 删除知识点
+      tags:
+      - 管理员方法
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 添加知识点
+      tags:
+      - 管理员方法
+    put:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: identity
+        in: formData
+        name: identity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 修改知识点
+      tags:
+      - 管理员方法
+  /teacher/ProblemCategory:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取题目类型列表
+      tags:
+      - 管理员方法
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 添加题目类型
+      tags:
+      - 管理员方法
 swagger: "2.0"
