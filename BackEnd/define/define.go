@@ -18,4 +18,6 @@ const (
 	DefaultStudentCodeStr      = "1"
 	DefaultStudentCode         = 1
 	DefaultUserStatusStr       = DefaultStudentCodeStr
+	DefaultPage                = "1"
+	DefaultPageSize            = "10"
 )

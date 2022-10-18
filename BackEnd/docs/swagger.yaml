@@ -1,6 +1,62 @@
 info:
   contact: {}
 paths:
+  /Achievement:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取成就列表
+      tags:
+      - 公共方法
+  /Knowledge:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取知识点列表
+      tags:
+      - 公共方法
   /Login:
     post:
       parameters:
@@ -100,6 +156,30 @@ paths:
       summary: 验证码是否真确
       tags:
       - 公共方法
+  /teacher/Achievement:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: knowledgeIdentity
+        in: formData
+        name: knowledgeIdentity
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 添加知识点成就
+      tags:
+      - 管理员方法
   /teacher/Knowledge:
     post:
       parameters:
@@ -121,6 +201,33 @@ paths:
       tags:
       - 管理员方法
   /teacher/ProblemCategory:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取题目类型列表
+      tags:
+      - 管理员方法
     post:
       parameters:
       - description: name

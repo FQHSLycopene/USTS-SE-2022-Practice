@@ -19,7 +19,13 @@ func Router() *gin.Engine {
 	{
 		teacherGroup.POST("/Knowledge", service.AddKnowledge)
 		teacherGroup.POST("/ProblemCategory", service.AddProblemCategory)
+		teacherGroup.POST("/Achievement", service.AddAchievement)
+		teacherGroup.GET("/ProblemCategory", service.GetProblemCategoryList)
 	}
-
+	studentGroup := r.Group("", middleware.AnalyseToken())
+	{
+		studentGroup.GET("/Knowledge", service.GetKnowledgeList)
+		studentGroup.GET("/Achievement", service.GetAchievementList)
+	}
 	return r
 }

@@ -4,6 +4,92 @@
         "contact": {}
     },
     "paths": {
+        "/Achievement": {
+            "get": {
+                "tags": [
+                    "公共方法"
+                ],
+                "summary": "获取成就列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/Knowledge": {
+            "get": {
+                "tags": [
+                    "公共方法"
+                ],
+                "summary": "获取知识点列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/Login": {
             "post": {
                 "tags": [
@@ -155,6 +241,43 @@
                 }
             }
         },
+        "/teacher/Achievement": {
+            "post": {
+                "tags": [
+                    "管理员方法"
+                ],
+                "summary": "添加知识点成就",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "knowledgeIdentity",
+                        "name": "knowledgeIdentity",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/Knowledge": {
             "post": {
                 "tags": [
@@ -187,6 +310,47 @@
             }
         },
         "/teacher/ProblemCategory": {
+            "get": {
+                "tags": [
+                    "管理员方法"
+                ],
+                "summary": "获取题目类型列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "管理员方法"
