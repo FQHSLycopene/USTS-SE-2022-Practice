@@ -156,6 +156,27 @@ paths:
       summary: 验证码是否真确
       tags:
       - 公共方法
+  /student/Class:
+    put:
+      parameters:
+      - description: joinCode
+        in: formData
+        name: joinCode
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 加入班级
+      tags:
+      - 学生方法
   /teacher/Achievement:
     post:
       parameters:
@@ -178,6 +199,27 @@ paths:
           schema:
             type: string
       summary: 添加知识点成就
+      tags:
+      - 管理员方法
+  /teacher/Class:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 创建班级
       tags:
       - 管理员方法
   /teacher/Knowledge:
@@ -246,6 +288,26 @@ paths:
       tags:
       - 管理员方法
   /teacher/ProblemCategory:
+    delete:
+      parameters:
+      - description: identity
+        in: formData
+        name: identity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 删除题目类型
+      tags:
+      - 管理员方法
     get:
       parameters:
       - description: token

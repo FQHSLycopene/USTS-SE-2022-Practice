@@ -253,6 +253,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/student/Class": {
+            "put": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "加入班级",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "joinCode",
+                        "name": "joinCode",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/Achievement": {
             "post": {
                 "tags": [
@@ -271,6 +303,38 @@ const docTemplate = `{
                         "description": "knowledgeIdentity",
                         "name": "knowledgeIdentity",
                         "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/Class": {
+            "post": {
+                "tags": [
+                    "管理员方法"
+                ],
+                "summary": "创建班级",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -441,6 +505,36 @@ const docTemplate = `{
                         "description": "name",
                         "name": "name",
                         "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "管理员方法"
+                ],
+                "summary": "删除题目类型",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "identity",
+                        "name": "identity",
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",

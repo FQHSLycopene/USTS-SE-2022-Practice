@@ -56,3 +56,25 @@ func UserIsTeacher() gin.HandlerFunc {
 		}
 	}
 }
+
+func UserIsStudent() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userStatus, exists := c.Get("userStatus")
+		if !exists {
+			c.JSON(200, define.Result{
+				Code: 402,
+				Msg:  "用户未登录",
+			})
+			c.Abort()
+			return
+		}
+		if userStatus != define.DefaultStudentCode {
+			c.JSON(200, define.Result{
+				Code: 402,
+				Msg:  "用户非学生",
+			})
+			c.Abort()
+			return
+		}
+	}
+}

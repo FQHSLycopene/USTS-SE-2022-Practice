@@ -17,6 +17,21 @@ type ProblemCategory struct {
 	Name      string         `gorm:"NOT NULL;Type:varchar(36);Column:name" json:"name"`
 }
 
+func DeleteProblemCategory(identity string) (interface{}, error) {
+	data, err := GetProblemCategoryByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	err = DB.Delete(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func AddProblemCategory(name string) (interface{}, error) {
 	data := ProblemCategory{
 		Identity: utils.GetUuid(),

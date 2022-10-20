@@ -1,6 +1,7 @@
 package test
 
 import (
+	"BackEnd/models"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -34,12 +35,21 @@ func TestDB(t *testing.T) {
 	//		{Identity: "l_2"},
 	//	},
 	//})
-	user := User{}
-	languages := make([]Language, 0)
-	db.Where("identity = ?", "user_3").First(&user)
-	db.Model(&user).Association("Languages").Find(&languages)
-	fmt.Println(user)
-	fmt.Println(languages)
+	//user := User{}
+	//languages := make([]Language, 0)
+	users := make([]models.User, 0)
+	//language := Language{
+	//	Identity: utils.GetUuid(),
+	//	Name:     "123",
+	//}
+	//language := Language{}
+	//db.Preload("Languages").Where("identity = ?", "user_3").First(&user)
+	//db.Model(&user).Association("Languages").Append(&language)
+	models.DB.Preload("Classes").Joins("right join user_classes uc on uc.user_identity = identity").
+		Where("uc.class_identity = ?", "758e5428-f945-47a5-92f9-514b327bc13b").
+		Where("identity = ?", "12ecffaf-bddb-4e00-86ba-a423713cc47").Find(&users)
+	fmt.Println(users)
+	//fmt.Println(languages)
 }
 
 func TestHasmany(t *testing.T) {
