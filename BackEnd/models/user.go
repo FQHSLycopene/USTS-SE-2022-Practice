@@ -28,13 +28,13 @@ func (table *User) TableName() string {
 	return "user"
 }
 
-func GetUserByIdentity(identity string) (interface{}, error) {
+func GetUserByIdentity(identity string) (*User, error) {
 	data := User{}
 	err := DB.Where("identity = ?", identity).First(&data).Error
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+	return &data, nil
 }
 
 func AddUser(name, password, email, phone, statusStr string) (interface{}, error) {

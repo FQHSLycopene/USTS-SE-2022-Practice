@@ -1,6 +1,8 @@
 package models
 
 import (
+	"BackEnd/utils"
+	"errors"
 	"gorm.io/gorm"
 	"time"
 )
@@ -12,6 +14,88 @@ type Class struct {
 	DeletedAt     gorm.DeletedAt `gorm:"index"`
 	Identity      string         `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
 	Name          string         `gorm:"NOT NULL;Type:varchar(36);Column:name" json:"name"`
+	JoinCode      string         `gorm:"UNIQUE;NOT NULL;Type:varchar(6);Column:join_code" json:"join_code"`
 	StudentNumber int            `gorm:"NOT NULL;Type:int;Column:student_number" json:"student_number"`
 	Exams         []*Exam        `gorm:"foreignKey:ClassIdentity;references:Identity"`
+}
+
+func JoinClass(joinCode, userIdentity string) (interface{}, error) {
+	class, err := getClassByJoinCode(joinCode)
+	if err != nil {
+		return nil, errors.New("班级不存在")
+	}
+	data := User{}
+	users := make([]User, 0)
+	user, err2 := GetUserByIdentity(userIdentity)
+	if err2 != nil {
+		return nil, err2
+	}
+	err = DB.Model(user).Association("Classes").Append(class)
+	if err != nil {
+		return nil, err
+	}
+	DB.Preload("Classes").Joins("right join user_classes uc on uc.user_identity = identity").
+		Where("uc.class_identity = ?", class.Identity).
+		Where("identity = ?", user.Identity).Find(&users)
+	if len(users) == 0 {
+		class.StudentNumber += 1
+	} else {
+		return nil, errors.New("已加入班级")
+	}
+	err = DB.Save(&class).Error
+	if err != nil {
+		return nil, err
+	}
+	err = DB.Preload("Classes").
+		Where("identity = ?", userIdentity).First(&data).Error
+	data.Phone = ""
+	data.Email = ""
+	data.Password = ""
+	return data, nil
+}
+
+func AddClass(name, userIdentity string) (interface{}, error) {
+	class := Class{
+		Identity:      utils.GetUuid(),
+		Name:          name,
+		JoinCode:      name + utils.GetCode(),
+		StudentNumber: 0,
+	}
+	data := User{}
+	user, err := GetUserByIdentity(userIdentity)
+	if err != nil {
+		return nil, err
+	}
+	err = DB.Model(&user).Association("Classes").Append(&class)
+	if err != nil {
+		return nil, err
+	}
+	err = DB.Preload("Classes").
+		Where("identity = ?", userIdentity).First(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	data.Status = -1
+	data.Phone = ""
+	data.Email = ""
+	data.Password = ""
+	return data, nil
+}
+
+func getClassByJoinCode(joinCode string) (*Class, error) {
+	data := Class{}
+	err := DB.Where("join_code = ?", joinCode).First(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
+}
+
+func getClassByIdentity(identity string) (*Class, error) {
+	data := Class{}
+	err := DB.Where("identity = ?", identity).First(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
 }
