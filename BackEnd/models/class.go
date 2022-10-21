@@ -3,7 +3,9 @@ package models
 import (
 	"BackEnd/utils"
 	"errors"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"strconv"
 	"time"
 )
 
@@ -30,18 +32,23 @@ func JoinClass(joinCode, userIdentity string) (interface{}, error) {
 	if err2 != nil {
 		return nil, err2
 	}
-	err = DB.Model(user).Association("Classes").Append(class)
+
+	err = DB.Preload("Classes").Joins("right join user_classes uc on uc.user_identity = identity").
+		Where("uc.class_identity = ?", class.Identity).
+		Where("identity = ?", user.Identity).Find(&users).Error
 	if err != nil {
 		return nil, err
 	}
-	DB.Preload("Classes").Joins("right join user_classes uc on uc.user_identity = identity").
-		Where("uc.class_identity = ?", class.Identity).
-		Where("identity = ?", user.Identity).Find(&users)
 	if len(users) == 0 {
+		err = DB.Model(user).Association("Classes").Append(class)
+		if err != nil {
+			return nil, err
+		}
 		class.StudentNumber += 1
 	} else {
 		return nil, errors.New("已加入班级")
 	}
+
 	err = DB.Save(&class).Error
 	if err != nil {
 		return nil, err
@@ -98,4 +105,26 @@ func getClassByIdentity(identity string) (*Class, error) {
 		return nil, err
 	}
 	return &data, nil
+}
+
+func GetClassList(userIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+	data := make([]*Class, 0)
+	var total int64 = 0
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, err
+	}
+	pageSize, err2 := strconv.Atoi(pageSizeStr)
+	if err2 != nil {
+		return nil, err2
+	}
+	err = DB.Model(data).Joins("right join user_classes uc on uc.class_identity = identity").
+		Where("uc.user_identity = ?", userIdentity).
+		Where("name like ?", "%"+keyWord+"%").
+		Offset((page - 1) * pageSize).Limit(pageSize).Count(&total).
+		Find(&data).Error
+	return gin.H{
+		"total": total,
+		"list":  data,
+	}, nil
 }

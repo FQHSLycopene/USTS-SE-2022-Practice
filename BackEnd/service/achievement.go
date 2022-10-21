@@ -8,7 +8,7 @@ import (
 
 // AddAchievement
 // @Summary	添加知识点成就
-// @Tags	管理员方法
+// @Tags	老师方法
 // @Param	name formData string false "name"
 // @Param	knowledgeIdentity formData string false "knowledgeIdentity"
 // @Param	token header string true "token"

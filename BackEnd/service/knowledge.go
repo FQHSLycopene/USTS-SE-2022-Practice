@@ -8,7 +8,7 @@ import (
 
 // AddKnowledge
 // @Summary	添加知识点
-// @Tags	管理员方法
+// @Tags	老师方法
 // @Param	name formData string false "name"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
@@ -62,7 +62,7 @@ func GetKnowledgeList(c *gin.Context) {
 
 // UpdateKnowledge
 // @Summary	修改知识点
-// @Tags	管理员方法
+// @Tags	老师方法
 // @Param	name formData string true "name"
 // @Param	identity formData string true "identity"
 // @Param	token header string true "token"
@@ -89,7 +89,7 @@ func UpdateKnowledge(c *gin.Context) {
 
 // DeleteKnowledge
 // @Summary	删除知识点
-// @Tags	管理员方法
+// @Tags	老师方法
 // @Param	identity formData string true "identity"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}

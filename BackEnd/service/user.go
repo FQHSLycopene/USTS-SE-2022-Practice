@@ -8,6 +8,37 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetClassStudentList
+// @Summary	获取班级学生列表
+// @Tags	老师方法
+// @Param	classIdentity query string true "classIdentity"
+// @Param	page query string false "page"
+// @Param	pageSize query string false "pageSize"
+// @Param	keyWord query string false "keyWord"
+// @Param	token header string true "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/ClassStudents [get]
+func GetClassStudentList(c *gin.Context) {
+	page := c.DefaultQuery("page", define.DefaultPage)
+	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	keyWord := c.Query("keyWord")
+	classIdentity := c.Query("classIdentity")
+	data, err := models.GetClassStudentList(classIdentity, page, pageSize, keyWord)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
 // Login
 // @Summary	Login
 // @Tags	公共方法

@@ -59,6 +59,76 @@ const docTemplate = `{
                 }
             }
         },
+        "/BodyJSONTest": {
+            "post": {
+                "tags": [
+                    "测试方法"
+                ],
+                "summary": "BodyJSONTest",
+                "parameters": [
+                    {
+                        "description": "上传的JSON",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/Class": {
+            "get": {
+                "tags": [
+                    "公共方法"
+                ],
+                "summary": "获取班级列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/Knowledge": {
             "get": {
                 "tags": [
@@ -133,6 +203,31 @@ const docTemplate = `{
                         "description": "phone",
                         "name": "phone",
                         "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/PostArrayTest": {
+            "post": {
+                "tags": [
+                    "测试方法"
+                ],
+                "summary": "PostArrayTest",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "description": "array",
+                        "name": "param",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -288,7 +383,7 @@ const docTemplate = `{
         "/teacher/Achievement": {
             "post": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "添加知识点成就",
                 "parameters": [
@@ -323,9 +418,65 @@ const docTemplate = `{
             }
         },
         "/teacher/Class": {
+            "put": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "修改班级",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "classIdentity",
+                        "name": "classIdentity",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "isChangeCode",
+                        "name": "isChangeCode",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "array",
+                        "description": "踢出班级的学生studentIdentity",
+                        "name": "studentIdentity",
+                        "in": "formData"
+                    },
+                    {
+                        "description": "上传的JSON",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "创建班级",
                 "parameters": [
@@ -354,10 +505,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/teacher/ClassStudents": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取班级学生列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "classIdentity",
+                        "name": "classIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/Knowledge": {
             "put": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "修改知识点",
                 "parameters": [
@@ -394,7 +595,7 @@ const docTemplate = `{
             },
             "post": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "添加知识点",
                 "parameters": [
@@ -423,7 +624,7 @@ const docTemplate = `{
             },
             "delete": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "删除知识点",
                 "parameters": [
@@ -455,7 +656,7 @@ const docTemplate = `{
         "/teacher/ProblemCategory": {
             "get": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "获取题目类型列表",
                 "parameters": [
@@ -496,7 +697,7 @@ const docTemplate = `{
             },
             "post": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "添加题目类型",
                 "parameters": [
@@ -525,7 +726,7 @@ const docTemplate = `{
             },
             "delete": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "删除题目类型",
                 "parameters": [

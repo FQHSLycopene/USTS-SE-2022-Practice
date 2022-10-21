@@ -8,7 +8,7 @@ import (
 
 // DeleteProblemCategory
 // @Summary	删除题目类型
-// @Tags	管理员方法
+// @Tags	老师方法
 // @Param	identity formData string true "identity"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
@@ -33,7 +33,7 @@ func DeleteProblemCategory(c *gin.Context) {
 
 // AddProblemCategory
 // @Summary	添加题目类型
-// @Tags	管理员方法
+// @Tags	老师方法
 // @Param	name formData string false "name"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
@@ -58,7 +58,7 @@ func AddProblemCategory(c *gin.Context) {
 
 // GetProblemCategoryList
 // @Summary	获取题目类型列表
-// @Tags	管理员方法
+// @Tags	老师方法
 // @Param	token header string true "token"
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"

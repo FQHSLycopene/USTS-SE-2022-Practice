@@ -13,8 +13,8 @@ type Result struct {
 const (
 	DefaultEmailCodeDuration   = time.Minute * 5
 	DefaultTeacherRegisterCode = "123456"
-	DefaultTeacherCodeStr      = "0"
-	DefaultTeacherCode         = 0
+	DefaultTeacherCodeStr      = "2"
+	DefaultTeacherCode         = 2
 	DefaultStudentCodeStr      = "1"
 	DefaultStudentCode         = 1
 	DefaultUserStatusStr       = DefaultStudentCodeStr
