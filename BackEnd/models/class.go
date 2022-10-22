@@ -21,6 +21,52 @@ type Class struct {
 	Exams         []*Exam        `gorm:"foreignKey:ClassIdentity;references:Identity"`
 }
 
+func UpdateClass(identity, name string, isChangCode bool, studentIdentities []string) (interface{}, error) {
+	class, err := getClassByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	if name != "" {
+		class.Name = name
+	}
+	if isChangCode {
+		var code string
+		for true {
+			code = utils.GetCode()
+			exist := joinCodeIsExist(code)
+			if !exist {
+				break
+			}
+		}
+		class.JoinCode = code
+	}
+	if len(studentIdentities) != 0 {
+		for _, studentIdentity := range studentIdentities {
+			student, err := GetUserByIdentity(studentIdentity)
+			if err != nil {
+				return nil, err
+			}
+			err = DB.Model(student).Association("Classes").Delete(class)
+			if err != nil {
+				return nil, err
+			}
+			class.StudentNumber -= 1
+		}
+	}
+	DB.Save(&class)
+	return class, nil
+}
+
+func joinCodeIsExist(code string) bool {
+	datas := make([]*Class, 0)
+	DB.Where("join_code = ?", code).Find(&datas)
+	if len(datas) == 0 {
+		return false
+	} else {
+		return true
+	}
+
+}
 func JoinClass(joinCode, userIdentity string) (interface{}, error) {
 	class, err := getClassByJoinCode(joinCode)
 	if err != nil {

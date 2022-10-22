@@ -10,6 +10,9 @@ type Result struct {
 	Msg  string      `json:"msg"`
 }
 
+type Accept struct {
+}
+
 const (
 	DefaultEmailCodeDuration   = time.Minute * 5
 	DefaultTeacherRegisterCode = "123456"

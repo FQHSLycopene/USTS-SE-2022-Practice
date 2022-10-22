@@ -1,3 +1,20 @@
+definitions:
+  service.updateClassAccept:
+    properties:
+      class_identity:
+        type: string
+      class_name:
+        type: string
+      is_change_code:
+        type: boolean
+      student_identities:
+        items:
+          type: string
+        type: array
+    required:
+    - class_identity
+    - is_change_code
+    type: object
 info:
   contact: {}
 paths:
@@ -285,32 +302,15 @@ paths:
       - 老师方法
     put:
       parameters:
-      - description: classIdentity
-        in: formData
-        name: classIdentity
-        type: string
-      - description: name
-        in: formData
-        name: name
-        type: string
-      - description: isChangeCode
-        in: formData
-        name: isChangeCode
-        type: boolean
-      - description: 踢出班级的学生studentIdentity
-        in: formData
-        name: studentIdentity
-        type: array
       - description: 上传的JSON
         in: body
         name: param
         required: true
         schema:
-          type: string
+          $ref: '#/definitions/service.updateClassAccept'
       - description: token
         in: header
         name: token
-        required: true
         type: string
       responses:
         "200":

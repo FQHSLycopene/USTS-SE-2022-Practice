@@ -425,44 +425,19 @@ const docTemplate = `{
                 "summary": "修改班级",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "classIdentity",
-                        "name": "classIdentity",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "isChangeCode",
-                        "name": "isChangeCode",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "array",
-                        "description": "踢出班级的学生studentIdentity",
-                        "name": "studentIdentity",
-                        "in": "formData"
-                    },
-                    {
                         "description": "上传的JSON",
                         "name": "param",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.updateClassAccept"
                         }
                     },
                     {
                         "type": "string",
                         "description": "token",
                         "name": "token",
-                        "in": "header",
-                        "required": true
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -751,6 +726,32 @@ const docTemplate = `{
                         "schema": {
                             "type": "string"
                         }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "service.updateClassAccept": {
+            "type": "object",
+            "required": [
+                "class_identity",
+                "is_change_code"
+            ],
+            "properties": {
+                "class_identity": {
+                    "type": "string"
+                },
+                "class_name": {
+                    "type": "string"
+                },
+                "is_change_code": {
+                    "type": "boolean"
+                },
+                "student_identities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
                     }
                 }
             }

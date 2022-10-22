@@ -3,24 +3,27 @@ package service
 import (
 	"BackEnd/define"
 	"BackEnd/models"
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
+type updateClassAccept struct {
+	ClassIdentity     string   `json:"class_identity" binding:"required"`
+	ClassName         string   `json:"class_name" binding:""`
+	IsChangeCode      bool     `json:"is_change_code" binding:"required"`
+	StudentIdentities []string `json:"student_identities" binding:""`
+}
+
 // UpdateClass
 // @Summary	修改班级
 // @Tags	老师方法
-// @Param	classIdentity formData string false "classIdentity"
-// @Param	name formData string false "name"
-// @Param	isChangeCode formData bool false "isChangeCode"
-// @Param	studentIdentity formData array false "踢出班级的学生studentIdentity"
-// @Param param body string true "上传的JSON"
-// @Param	token header string true "token"
+// @Param   param body updateClassAccept true "上传的JSON"
+// @Param	token header string false "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Class [put]
 func UpdateClass(c *gin.Context) {
-	data, err := c.GetRawData()
+	data := updateClassAccept{}
+	err := c.ShouldBind(&data)
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 403,
@@ -29,10 +32,20 @@ func UpdateClass(c *gin.Context) {
 		})
 		return
 	}
-	var m map[string]interface{}
-	// 反序列化
-	_ = json.Unmarshal(data, &m)
-	fmt.Println(m["studentIdentity"])
+	result, err2 := models.UpdateClass(data.ClassIdentity, data.ClassName, data.IsChangeCode, data.StudentIdentities)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: result,
+		Msg:  "success",
+	})
 }
 
 // CreateClass
