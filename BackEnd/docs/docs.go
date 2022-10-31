@@ -180,29 +180,12 @@ const docTemplate = `{
                 "summary": "Login",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "password",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "email",
-                        "name": "email",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "phone",
-                        "name": "phone",
-                        "in": "formData"
+                        "description": "登陆信息",
+                        "name": "json",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/service.loginAccept"
+                        }
                     }
                 ],
                 "responses": {
@@ -248,37 +231,13 @@ const docTemplate = `{
                 "summary": "Register",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "用户名",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "密码",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "此处email由VerifyEmailCode得来",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "电话",
-                        "name": "phone",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "以什么身份注册",
-                        "name": "status",
-                        "in": "formData"
+                        "description": "此处email由VerifyEmailCode得来;status以什么身份注册1为学生2为老师",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.registerAccept"
+                        }
                     }
                 ],
                 "responses": {
@@ -299,11 +258,12 @@ const docTemplate = `{
                 "summary": "SendCode",
                 "parameters": [
                     {
-                        "type": "string",
                         "description": "email",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
+                        "name": "json",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/service.sendCodeAccept"
+                        }
                     }
                 ],
                 "responses": {
@@ -318,29 +278,27 @@ const docTemplate = `{
         },
         "/VerifyEmailCode": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "tags": [
                     "公共方法"
                 ],
                 "summary": "验证码是否真确",
                 "parameters": [
                     {
-                        "type": "string",
                         "description": "此处email由SendCode得来",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "code",
                         "name": "code",
-                        "in": "formData",
-                        "required": true
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.verifyEmailCodeAccept"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "description": "OK",
                         "schema": {
                             "type": "string"
                         }
@@ -732,6 +690,62 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "service.loginAccept": {
+            "type": "object",
+            "required": [
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.registerAccept": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.sendCodeAccept": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
         "service.updateClassAccept": {
             "type": "object",
             "required": [
@@ -753,6 +767,21 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "service.verifyEmailCodeAccept": {
+            "type": "object",
+            "required": [
+                "code",
+                "email"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
                 }
             }
         }

@@ -2,7 +2,7 @@ package define
 
 import "time"
 
-// 成功代码200，数据库错误401，token错误402
+// 成功代码200，数据库错误401，token错误402,接受数据错误403
 
 type Result struct {
 	Code int         `json:"code"`
