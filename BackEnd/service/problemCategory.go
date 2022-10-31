@@ -8,14 +8,23 @@ import (
 
 // DeleteProblemCategory
 // @Summary	删除题目类型
-// @Tags	管理员方法
-// @Param	identity formData string true "identity"
+// @Tags	老师方法
+// @Param	json body deleteProblemCategoryAccept true "json"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/ProblemCategory [delete]
 func DeleteProblemCategory(c *gin.Context) {
-	identity := c.PostForm("identity")
-	data, err := models.DeleteProblemCategory(identity)
+	accept := deleteProblemCategoryAccept{}
+	err2 := c.ShouldBind(&accept)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
+	data, err := models.DeleteProblemCategory(accept.Identity)
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -29,23 +38,36 @@ func DeleteProblemCategory(c *gin.Context) {
 		Data: data,
 		Msg:  "success",
 	})
+}
+
+type deleteProblemCategoryAccept struct {
+	Identity string `binding:"required" json:"identity"`
 }
 
 // AddProblemCategory
 // @Summary	添加题目类型
-// @Tags	管理员方法
-// @Param	name formData string false "name"
+// @Tags	老师方法
+// @Param	json body addProblemCategoryAccept false "json"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/ProblemCategory [post]
 func AddProblemCategory(c *gin.Context) {
-	name := c.PostForm("name")
-	data, err := models.AddProblemCategory(name)
+	accept := addProblemCategoryAccept{}
+	err := c.ShouldBind(&accept)
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
 			Data: nil,
 			Msg:  err.Error(),
+		})
+		return
+	}
+	data, err2 := models.AddProblemCategory(accept.Name)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
 		})
 		return
 	}
@@ -56,9 +78,13 @@ func AddProblemCategory(c *gin.Context) {
 	})
 }
 
+type addProblemCategoryAccept struct {
+	Name string `json:"name" binding:"required"`
+}
+
 // GetProblemCategoryList
 // @Summary	获取题目类型列表
-// @Tags	管理员方法
+// @Tags	老师方法
 // @Param	token header string true "token"
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"

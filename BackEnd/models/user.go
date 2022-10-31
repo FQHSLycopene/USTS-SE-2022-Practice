@@ -3,6 +3,7 @@ package models
 import (
 	"BackEnd/utils"
 	"errors"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
 	"time"
@@ -26,6 +27,31 @@ type User struct {
 
 func (table *User) TableName() string {
 	return "user"
+}
+
+func GetClassStudentList(classIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+	data := make([]*User, 0)
+	var total int64 = 0
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, err
+	}
+	pageSize, err2 := strconv.Atoi(pageSizeStr)
+	if err2 != nil {
+		return nil, err2
+	}
+	err = DB.Model(&User{}).Joins("right join user_classes uc on uc.user_identity = identity").
+		Where("uc.class_identity = ?", classIdentity).
+		Where("status = ?", 1).Offset((page-1)*pageSize).Limit(pageSize).Count(&total).
+		Select("Identity", "Name").
+		Find(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return gin.H{
+		"total": total,
+		"list":  data,
+	}, nil
 }
 
 func GetUserByIdentity(identity string) (*User, error) {

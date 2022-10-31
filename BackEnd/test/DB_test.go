@@ -37,7 +37,8 @@ func TestDB(t *testing.T) {
 	//})
 	//user := User{}
 	//languages := make([]Language, 0)
-	users := make([]models.User, 0)
+	data := make([]*models.Class, 0)
+	var total int64
 	//language := Language{
 	//	Identity: utils.GetUuid(),
 	//	Name:     "123",
@@ -45,10 +46,11 @@ func TestDB(t *testing.T) {
 	//language := Language{}
 	//db.Preload("Languages").Where("identity = ?", "user_3").First(&user)
 	//db.Model(&user).Association("Languages").Append(&language)
-	models.DB.Preload("Classes").Joins("right join user_classes uc on uc.user_identity = identity").
-		Where("uc.class_identity = ?", "758e5428-f945-47a5-92f9-514b327bc13b").
-		Where("identity = ?", "12ecffaf-bddb-4e00-86ba-a423713cc47").Find(&users)
-	fmt.Println(users)
+	models.DB.Joins("right join user_classes uc on uc.class_identity = identity").
+		Where("uc.user_identity = ?", "0d252d92-e4a8-495b-95c0-08f3b0160f63").
+		Find(&data)
+	fmt.Println(data)
+	fmt.Println(total)
 	//fmt.Println(languages)
 }
 

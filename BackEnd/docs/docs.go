@@ -59,6 +59,76 @@ const docTemplate = `{
                 }
             }
         },
+        "/BodyJSONTest": {
+            "post": {
+                "tags": [
+                    "测试方法"
+                ],
+                "summary": "BodyJSONTest",
+                "parameters": [
+                    {
+                        "description": "上传的JSON",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/Class": {
+            "get": {
+                "tags": [
+                    "公共方法"
+                ],
+                "summary": "获取班级列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/Knowledge": {
             "get": {
                 "tags": [
@@ -110,29 +180,37 @@ const docTemplate = `{
                 "summary": "Login",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
-                    },
+                        "description": "登陆信息",
+                        "name": "json",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/service.loginAccept"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/PostArrayTest": {
+            "post": {
+                "tags": [
+                    "测试方法"
+                ],
+                "summary": "PostArrayTest",
+                "parameters": [
                     {
-                        "type": "string",
-                        "description": "password",
-                        "name": "password",
+                        "type": "array",
+                        "description": "array",
+                        "name": "param",
                         "in": "formData",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "email",
-                        "name": "email",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "phone",
-                        "name": "phone",
-                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -153,37 +231,13 @@ const docTemplate = `{
                 "summary": "Register",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "用户名",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "密码",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "此处email由VerifyEmailCode得来",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "电话",
-                        "name": "phone",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "以什么身份注册",
-                        "name": "status",
-                        "in": "formData"
+                        "description": "此处email由VerifyEmailCode得来;status以什么身份注册1为学生2为老师",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.registerAccept"
+                        }
                     }
                 ],
                 "responses": {
@@ -204,11 +258,12 @@ const docTemplate = `{
                 "summary": "SendCode",
                 "parameters": [
                     {
-                        "type": "string",
                         "description": "email",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
+                        "name": "json",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/service.sendCodeAccept"
+                        }
                     }
                 ],
                 "responses": {
@@ -223,29 +278,27 @@ const docTemplate = `{
         },
         "/VerifyEmailCode": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "tags": [
                     "公共方法"
                 ],
                 "summary": "验证码是否真确",
                 "parameters": [
                     {
-                        "type": "string",
                         "description": "此处email由SendCode得来",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "code",
                         "name": "code",
-                        "in": "formData",
-                        "required": true
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.verifyEmailCodeAccept"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "description": "OK",
                         "schema": {
                             "type": "string"
                         }
@@ -261,11 +314,13 @@ const docTemplate = `{
                 "summary": "加入班级",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "joinCode",
-                        "name": "joinCode",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.joinClassAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -288,21 +343,18 @@ const docTemplate = `{
         "/teacher/Achievement": {
             "post": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "添加知识点成就",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "knowledgeIdentity",
-                        "name": "knowledgeIdentity",
-                        "in": "formData"
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addAchievementAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -323,18 +375,101 @@ const docTemplate = `{
             }
         },
         "/teacher/Class": {
+            "put": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "修改班级",
+                "parameters": [
+                    {
+                        "description": "上传的JSON",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.updateClassAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "创建班级",
                 "parameters": [
                     {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.createClassAccept"
+                        }
+                    },
+                    {
                         "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/ClassStudents": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取班级学生列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "classIdentity",
+                        "name": "classIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
                     },
                     {
                         "type": "string",
@@ -357,23 +492,18 @@ const docTemplate = `{
         "/teacher/Knowledge": {
             "put": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "修改知识点",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "identity",
-                        "name": "identity",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.updateKnowledgeAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -394,15 +524,18 @@ const docTemplate = `{
             },
             "post": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "添加知识点",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addKnowledgeAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -414,7 +547,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "description": "OK",
                         "schema": {
                             "type": "string"
                         }
@@ -423,16 +556,18 @@ const docTemplate = `{
             },
             "delete": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "删除知识点",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "identity",
-                        "name": "identity",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.deleteKnowledgeAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -455,7 +590,7 @@ const docTemplate = `{
         "/teacher/ProblemCategory": {
             "get": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "获取题目类型列表",
                 "parameters": [
@@ -496,15 +631,17 @@ const docTemplate = `{
             },
             "post": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "添加题目类型",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/service.addProblemCategoryAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -525,16 +662,18 @@ const docTemplate = `{
             },
             "delete": {
                 "tags": [
-                    "管理员方法"
+                    "老师方法"
                 ],
                 "summary": "删除题目类型",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "identity",
-                        "name": "identity",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.deleteProblemCategoryAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -551,6 +690,199 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "service.addAchievementAccept": {
+            "type": "object",
+            "required": [
+                "knowledge_identity",
+                "name"
+            ],
+            "properties": {
+                "knowledge_identity": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.addKnowledgeAccept": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.addProblemCategoryAccept": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.createClassAccept": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.deleteKnowledgeAccept": {
+            "type": "object",
+            "required": [
+                "identity"
+            ],
+            "properties": {
+                "identity": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.deleteProblemCategoryAccept": {
+            "type": "object",
+            "required": [
+                "identity"
+            ],
+            "properties": {
+                "identity": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.joinClassAccept": {
+            "type": "object",
+            "required": [
+                "joinCode"
+            ],
+            "properties": {
+                "joinCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.loginAccept": {
+            "type": "object",
+            "required": [
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.registerAccept": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.sendCodeAccept": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.updateClassAccept": {
+            "type": "object",
+            "required": [
+                "class_identity",
+                "is_change_code"
+            ],
+            "properties": {
+                "class_identity": {
+                    "type": "string"
+                },
+                "class_name": {
+                    "type": "string"
+                },
+                "is_change_code": {
+                    "type": "boolean"
+                },
+                "student_identities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "service.updateKnowledgeAccept": {
+            "type": "object",
+            "required": [
+                "identity",
+                "name"
+            ],
+            "properties": {
+                "identity": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.verifyEmailCodeAccept": {
+            "type": "object",
+            "required": [
+                "code",
+                "email"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
                 }
             }
         }
