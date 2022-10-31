@@ -314,11 +314,13 @@ const docTemplate = `{
                 "summary": "加入班级",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "joinCode",
-                        "name": "joinCode",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.joinClassAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -346,16 +348,13 @@ const docTemplate = `{
                 "summary": "添加知识点成就",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "knowledgeIdentity",
-                        "name": "knowledgeIdentity",
-                        "in": "formData"
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addAchievementAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -384,7 +383,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "上传的JSON",
-                        "name": "param",
+                        "name": "json",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -414,11 +413,13 @@ const docTemplate = `{
                 "summary": "创建班级",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.createClassAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -496,18 +497,13 @@ const docTemplate = `{
                 "summary": "修改知识点",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "identity",
-                        "name": "identity",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.updateKnowledgeAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -533,10 +529,13 @@ const docTemplate = `{
                 "summary": "添加知识点",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addKnowledgeAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -548,7 +547,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "description": "OK",
                         "schema": {
                             "type": "string"
                         }
@@ -562,11 +561,13 @@ const docTemplate = `{
                 "summary": "删除知识点",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "identity",
-                        "name": "identity",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.deleteKnowledgeAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -635,10 +636,12 @@ const docTemplate = `{
                 "summary": "添加题目类型",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/service.addProblemCategoryAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -664,11 +667,13 @@ const docTemplate = `{
                 "summary": "删除题目类型",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "identity",
-                        "name": "identity",
-                        "in": "formData",
-                        "required": true
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.deleteProblemCategoryAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -690,6 +695,87 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "service.addAchievementAccept": {
+            "type": "object",
+            "required": [
+                "knowledge_identity",
+                "name"
+            ],
+            "properties": {
+                "knowledge_identity": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.addKnowledgeAccept": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.addProblemCategoryAccept": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.createClassAccept": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.deleteKnowledgeAccept": {
+            "type": "object",
+            "required": [
+                "identity"
+            ],
+            "properties": {
+                "identity": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.deleteProblemCategoryAccept": {
+            "type": "object",
+            "required": [
+                "identity"
+            ],
+            "properties": {
+                "identity": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.joinClassAccept": {
+            "type": "object",
+            "required": [
+                "joinCode"
+            ],
+            "properties": {
+                "joinCode": {
+                    "type": "string"
+                }
+            }
+        },
         "service.loginAccept": {
             "type": "object",
             "required": [
@@ -767,6 +853,21 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "service.updateKnowledgeAccept": {
+            "type": "object",
+            "required": [
+                "identity",
+                "name"
+            ],
+            "properties": {
+                "identity": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },

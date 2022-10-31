@@ -1,4 +1,56 @@
 definitions:
+  service.addAchievementAccept:
+    properties:
+      knowledge_identity:
+        type: string
+      name:
+        type: string
+    required:
+    - knowledge_identity
+    - name
+    type: object
+  service.addKnowledgeAccept:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  service.addProblemCategoryAccept:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  service.createClassAccept:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  service.deleteKnowledgeAccept:
+    properties:
+      identity:
+        type: string
+    required:
+    - identity
+    type: object
+  service.deleteProblemCategoryAccept:
+    properties:
+      identity:
+        type: string
+    required:
+    - identity
+    type: object
+  service.joinClassAccept:
+    properties:
+      joinCode:
+        type: string
+    required:
+    - joinCode
+    type: object
   service.loginAccept:
     properties:
       email:
@@ -51,6 +103,16 @@ definitions:
     required:
     - class_identity
     - is_change_code
+    type: object
+  service.updateKnowledgeAccept:
+    properties:
+      identity:
+        type: string
+      name:
+        type: string
+    required:
+    - identity
+    - name
     type: object
   service.verifyEmailCodeAccept:
     properties:
@@ -253,11 +315,12 @@ paths:
   /student/Class:
     put:
       parameters:
-      - description: joinCode
-        in: formData
-        name: joinCode
+      - description: json
+        in: body
+        name: json
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/service.joinClassAccept'
       - description: token
         in: header
         name: token
@@ -274,14 +337,12 @@ paths:
   /teacher/Achievement:
     post:
       parameters:
-      - description: name
-        in: formData
-        name: name
-        type: string
-      - description: knowledgeIdentity
-        in: formData
-        name: knowledgeIdentity
-        type: string
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.addAchievementAccept'
       - description: token
         in: header
         name: token
@@ -298,11 +359,12 @@ paths:
   /teacher/Class:
     post:
       parameters:
-      - description: name
-        in: formData
-        name: name
+      - description: json
+        in: body
+        name: json
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/service.createClassAccept'
       - description: token
         in: header
         name: token
@@ -320,7 +382,7 @@ paths:
       parameters:
       - description: 上传的JSON
         in: body
-        name: param
+        name: json
         required: true
         schema:
           $ref: '#/definitions/service.updateClassAccept'
@@ -372,11 +434,12 @@ paths:
   /teacher/Knowledge:
     delete:
       parameters:
-      - description: identity
-        in: formData
-        name: identity
+      - description: json
+        in: body
+        name: json
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/service.deleteKnowledgeAccept'
       - description: token
         in: header
         name: token
@@ -392,10 +455,12 @@ paths:
       - 老师方法
     post:
       parameters:
-      - description: name
-        in: formData
-        name: name
-        type: string
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.addKnowledgeAccept'
       - description: token
         in: header
         name: token
@@ -403,7 +468,7 @@ paths:
         type: string
       responses:
         "200":
-          description: code":"200","msg":"","data",""}
+          description: OK
           schema:
             type: string
       summary: 添加知识点
@@ -411,16 +476,12 @@ paths:
       - 老师方法
     put:
       parameters:
-      - description: name
-        in: formData
-        name: name
+      - description: json
+        in: body
+        name: json
         required: true
-        type: string
-      - description: identity
-        in: formData
-        name: identity
-        required: true
-        type: string
+        schema:
+          $ref: '#/definitions/service.updateKnowledgeAccept'
       - description: token
         in: header
         name: token
@@ -437,11 +498,12 @@ paths:
   /teacher/ProblemCategory:
     delete:
       parameters:
-      - description: identity
-        in: formData
-        name: identity
+      - description: json
+        in: body
+        name: json
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/service.deleteProblemCategoryAccept'
       - description: token
         in: header
         name: token
@@ -484,10 +546,11 @@ paths:
       - 老师方法
     post:
       parameters:
-      - description: name
-        in: formData
-        name: name
-        type: string
+      - description: json
+        in: body
+        name: json
+        schema:
+          $ref: '#/definitions/service.addProblemCategoryAccept'
       - description: token
         in: header
         name: token

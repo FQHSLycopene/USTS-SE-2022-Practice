@@ -9,15 +9,22 @@ import (
 // AddAchievement
 // @Summary	添加知识点成就
 // @Tags	老师方法
-// @Param	name formData string false "name"
-// @Param	knowledgeIdentity formData string false "knowledgeIdentity"
+// @Param	json body addAchievementAccept true "json"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Achievement [post]
 func AddAchievement(c *gin.Context) {
-	name := c.PostForm("name")
-	knowledgeIdentity := c.PostForm("knowledgeIdentity")
-	data, err := models.AddAchievement(name, knowledgeIdentity)
+	accept := addAchievementAccept{}
+	err2 := c.ShouldBind(&accept)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
+	data, err := models.AddAchievement(accept.Name, accept.KnowledgeIdentity)
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -31,6 +38,11 @@ func AddAchievement(c *gin.Context) {
 		Data: data,
 		Msg:  "success",
 	})
+}
+
+type addAchievementAccept struct {
+	Name              string `binding:"required" json:"name"`
+	KnowledgeIdentity string `binding:"required" json:"knowledge_identity"`
 }
 
 // GetAchievementList

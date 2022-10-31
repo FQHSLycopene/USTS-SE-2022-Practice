@@ -185,7 +185,7 @@ func VerifyEmailCode(c *gin.Context) {
 }
 
 type verifyEmailCodeAccept struct {
-	Email string `binding:"required" json:"email"form:"123"`
+	Email string `binding:"required" json:"email"`
 	Code  string `binding:"required" json:"code"`
 }
 

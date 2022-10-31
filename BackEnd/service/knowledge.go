@@ -9,13 +9,13 @@ import (
 // AddKnowledge
 // @Summary	添加知识点
 // @Tags	老师方法
-// @Param	name formData string false "name"
+// @Param	json body addKnowledgeAccept true "json"
 // @Param	token header string true "token"
-// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Success	200  {string}  define.Result
 // @Router	/teacher/Knowledge [post]
 func AddKnowledge(c *gin.Context) {
-	name := c.PostForm("name")
-	data, err := models.AddKnowledge(name)
+	accept := addKnowledgeAccept{}
+	err := c.ShouldBind(&accept)
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -24,11 +24,24 @@ func AddKnowledge(c *gin.Context) {
 		})
 		return
 	}
+	data, err2 := models.AddKnowledge(accept.Name)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
 	c.JSON(200, define.Result{
 		Code: 200,
 		Data: data,
 		Msg:  "success",
 	})
+}
+
+type addKnowledgeAccept struct {
+	Name string `json:"name" binding:"required"`
 }
 
 // GetKnowledgeList
@@ -63,20 +76,27 @@ func GetKnowledgeList(c *gin.Context) {
 // UpdateKnowledge
 // @Summary	修改知识点
 // @Tags	老师方法
-// @Param	name formData string true "name"
-// @Param	identity formData string true "identity"
+// @Param	json body updateKnowledgeAccept true "json"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Knowledge [put]
 func UpdateKnowledge(c *gin.Context) {
-	name := c.PostForm("name")
-	identity := c.PostForm("identity")
-	data, err := models.UpdateKnowledge(name, identity)
+	accept := updateKnowledgeAccept{}
+	err := c.ShouldBind(&accept)
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
 			Data: nil,
 			Msg:  err.Error(),
+		})
+		return
+	}
+	data, err2 := models.UpdateKnowledge(accept.Name, accept.Identity)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
 		})
 		return
 	}
@@ -87,16 +107,21 @@ func UpdateKnowledge(c *gin.Context) {
 	})
 }
 
+type updateKnowledgeAccept struct {
+	Name     string `json:"name" binding:"required"`
+	Identity string `json:"identity" binding:"required"`
+}
+
 // DeleteKnowledge
 // @Summary	删除知识点
 // @Tags	老师方法
-// @Param	identity formData string true "identity"
+// @Param	json body deleteKnowledgeAccept true "json"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Knowledge [delete]
 func DeleteKnowledge(c *gin.Context) {
-	identity := c.PostForm("identity")
-	data, err := models.DeleteKnowledge(identity)
+	accept := deleteKnowledgeAccept{}
+	err := c.ShouldBind(&accept)
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -105,9 +130,22 @@ func DeleteKnowledge(c *gin.Context) {
 		})
 		return
 	}
+	data, err2 := models.DeleteKnowledge(accept.Identity)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
 	c.JSON(200, define.Result{
 		Code: 200,
 		Data: data,
 		Msg:  "success",
 	})
+}
+
+type deleteKnowledgeAccept struct {
+	Identity string `json:"identity" binding:"required"`
 }

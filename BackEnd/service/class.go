@@ -7,17 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type updateClassAccept struct {
-	ClassIdentity     string   `json:"class_identity" binding:"required"`
-	ClassName         string   `json:"class_name" binding:""`
-	IsChangeCode      bool     `json:"is_change_code" binding:"required"`
-	StudentIdentities []string `json:"student_identities" binding:""`
-}
-
 // UpdateClass
 // @Summary	修改班级
 // @Tags	老师方法
-// @Param   param body updateClassAccept true "上传的JSON"
+// @Param   json body updateClassAccept true "上传的JSON"
 // @Param	token header string false "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Class [put]
@@ -48,15 +41,31 @@ func UpdateClass(c *gin.Context) {
 	})
 }
 
+type updateClassAccept struct {
+	ClassIdentity     string   `json:"class_identity" binding:"required"`
+	ClassName         string   `json:"class_name" binding:""`
+	IsChangeCode      bool     `json:"is_change_code" binding:"required"`
+	StudentIdentities []string `json:"student_identities" binding:""`
+}
+
 // CreateClass
 // @Summary	创建班级
 // @Tags	老师方法
-// @Param	name formData string true "name"
+// @Param	json body createClassAccept true "json"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Class [post]
 func CreateClass(c *gin.Context) {
-	name := c.PostForm("name")
+	accept := createClassAccept{}
+	err2 := c.ShouldBind(&accept)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
 	userIdentity, exist := c.Get("userIdentity")
 	if !exist {
 		c.JSON(200, define.Result{
@@ -66,7 +75,7 @@ func CreateClass(c *gin.Context) {
 		})
 		return
 	}
-	data, err := models.AddClass(name, userIdentity.(string))
+	data, err := models.AddClass(accept.Name, userIdentity.(string))
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -82,15 +91,28 @@ func CreateClass(c *gin.Context) {
 	})
 }
 
+type createClassAccept struct {
+	Name string `binding:"required" json:"name"`
+}
+
 // JoinClass
 // @Summary	加入班级
 // @Tags	学生方法
-// @Param	joinCode formData string true "joinCode"
+// @Param	json body joinClassAccept true "json"
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/student/Class [put]
 func JoinClass(c *gin.Context) {
-	joinCode := c.PostForm("joinCode")
+	accept := joinClassAccept{}
+	err2 := c.ShouldBind(&accept)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
 	userIdentity, exist := c.Get("userIdentity")
 	if !exist {
 		c.JSON(200, define.Result{
@@ -100,7 +122,7 @@ func JoinClass(c *gin.Context) {
 		})
 		return
 	}
-	data, err := models.JoinClass(joinCode, userIdentity.(string))
+	data, err := models.JoinClass(accept.JoinCode, userIdentity.(string))
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -114,6 +136,10 @@ func JoinClass(c *gin.Context) {
 		Data: data,
 		Msg:  "success",
 	})
+}
+
+type joinClassAccept struct {
+	JoinCode string `binding:"required" json:"joinCode"`
 }
 
 // GetClassList
