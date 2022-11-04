@@ -43,6 +43,7 @@ func AddProblem(name, content, answer, categoryIdentity string, score int, knowl
 		}
 		knowledges = append(knowledges, knowledge)
 	}
-	DB.Save(&data)
+	data.Knowledge = knowledges
+	DB.Preload("Knowledge").Create(&data)
 	return data, err
 }

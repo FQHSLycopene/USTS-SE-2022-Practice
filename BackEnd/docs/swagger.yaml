@@ -16,6 +16,30 @@ definitions:
     required:
     - name
     type: object
+  service.addProblemAccept:
+    properties:
+      answer:
+        type: string
+      categoryIdentity:
+        type: string
+      content:
+        type: string
+      knowledgeIdentities:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      score:
+        type: integer
+    required:
+    - answer
+    - categoryIdentity
+    - content
+    - knowledgeIdentities
+    - name
+    - score
+    type: object
   service.addProblemCategoryAccept:
     properties:
       name:
@@ -513,6 +537,28 @@ paths:
           schema:
             type: string
       summary: 修改知识点
+      tags:
+      - 老师方法
+  /teacher/Problem:
+    post:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.addProblemAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 创建题目
       tags:
       - 老师方法
   /teacher/ProblemCategory:

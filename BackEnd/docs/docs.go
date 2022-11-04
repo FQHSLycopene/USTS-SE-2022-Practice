@@ -618,6 +618,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/teacher/Problem": {
+            "post": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "创建题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addProblemAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/ProblemCategory": {
             "get": {
                 "tags": [
@@ -749,6 +783,40 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "service.addProblemAccept": {
+            "type": "object",
+            "required": [
+                "answer",
+                "categoryIdentity",
+                "content",
+                "knowledgeIdentities",
+                "name",
+                "score"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "categoryIdentity": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "knowledgeIdentities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
                 }
             }
         },
