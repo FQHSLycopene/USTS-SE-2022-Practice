@@ -21,6 +21,15 @@ type Class struct {
 	Exams         []*Exam        `gorm:"foreignKey:ClassIdentity;references:Identity"`
 }
 
+func GetClassDetail(identity string) (interface{}, error) {
+	class := Class{}
+	err := DB.Preload("Exams").Where("identity = ?", identity).Find(&class).Error
+	if err != nil {
+		return nil, err
+	}
+	return class, nil
+}
+
 func UpdateClass(identity, name string, isChangCode bool, studentIdentities []string) (interface{}, error) {
 	class, err := getClassByIdentity(identity)
 	if err != nil {
@@ -67,6 +76,7 @@ func joinCodeIsExist(code string) bool {
 	}
 
 }
+
 func JoinClass(joinCode, userIdentity string) (interface{}, error) {
 	class, err := getClassByJoinCode(joinCode)
 	if err != nil {
@@ -164,10 +174,12 @@ func GetClassList(userIdentity, pageStr, pageSizeStr, keyWord string) (interface
 	if err2 != nil {
 		return nil, err2
 	}
-	err = DB.Model(data).Joins("right join user_classes uc on uc.class_identity = identity").
+	err = DB.Model(data).
+		Joins("right join user_classes uc on uc.class_identity = identity").
 		Where("uc.user_identity = ?", userIdentity).
 		Where("name like ?", "%"+keyWord+"%").
-		Offset((page - 1) * pageSize).Limit(pageSize).Count(&total).
+		Offset((page - 1) * pageSize).Limit(pageSize).Omit("JoinCode").
+		Count(&total).
 		Find(&data).Error
 	return gin.H{
 		"total": total,

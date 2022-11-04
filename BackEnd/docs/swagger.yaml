@@ -16,6 +16,30 @@ definitions:
     required:
     - name
     type: object
+  service.addProblemAccept:
+    properties:
+      answer:
+        type: string
+      categoryIdentity:
+        type: string
+      content:
+        type: string
+      knowledgeIdentities:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      score:
+        type: integer
+    required:
+    - answer
+    - categoryIdentity
+    - content
+    - knowledgeIdentities
+    - name
+    - score
+    type: object
   service.addProblemCategoryAccept:
     properties:
       name:
@@ -53,15 +77,12 @@ definitions:
     type: object
   service.loginAccept:
     properties:
-      email:
-        type: string
       name:
         type: string
       password:
         type: string
-      phone:
-        type: string
     required:
+    - name
     - password
     type: object
   service.registerAccept:
@@ -241,7 +262,7 @@ paths:
           description: code":"200","msg":"","data",""}
           schema:
             type: string
-      summary: Login
+      summary: 用户名登陆
       tags:
       - 公共方法
   /PostArrayTest:
@@ -263,7 +284,7 @@ paths:
   /Register:
     post:
       parameters:
-      - description: 此处email由VerifyEmailCode得来;status以什么身份注册1为学生2为老师
+      - description: status以什么身份注册1为学生2为老师
         in: body
         name: json
         required: true
@@ -309,7 +330,7 @@ paths:
           description: OK
           schema:
             type: string
-      summary: 验证码是否真确
+      summary: 邮箱验证码登陆
       tags:
       - 公共方法
   /student/Class:
@@ -396,6 +417,26 @@ paths:
           schema:
             type: string
       summary: 修改班级
+      tags:
+      - 老师方法
+  /teacher/Class/{identity}:
+    get:
+      parameters:
+      - description: class_identity
+        in: path
+        name: identity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取班级详情
       tags:
       - 老师方法
   /teacher/ClassStudents:
@@ -493,6 +534,28 @@ paths:
           schema:
             type: string
       summary: 修改知识点
+      tags:
+      - 老师方法
+  /teacher/Problem:
+    post:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.addProblemAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 创建题目
       tags:
       - 老师方法
   /teacher/ProblemCategory:

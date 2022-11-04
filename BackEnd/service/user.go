@@ -39,13 +39,13 @@ func GetClassStudentList(c *gin.Context) {
 	})
 }
 
-// Login
-// @Summary	Login
+// LoginByName
+// @Summary	用户名登陆
 // @Tags	公共方法
 // @Param	json body loginAccept false "登陆信息"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/Login [post]
-func Login(c *gin.Context) {
+func LoginByName(c *gin.Context) {
 	accept := loginAccept{}
 	err := c.ShouldBind(&accept)
 	if err != nil {
@@ -55,7 +55,7 @@ func Login(c *gin.Context) {
 			Data: nil,
 		})
 	}
-	data, err2 := models.Login(accept.Name, accept.Password, accept.Email, accept.Phone)
+	data, err2 := models.LoginByName(accept.Name, accept.Password)
 	if err2 != nil {
 		c.JSON(200, gin.H{
 			"code": 401,
@@ -72,10 +72,8 @@ func Login(c *gin.Context) {
 }
 
 type loginAccept struct {
-	Name     string `binding:"" json:"name"`
+	Name     string `binding:"required" json:"name"`
 	Password string `binding:"required" json:"password"`
-	Email    string `binding:"" json:"email"`
-	Phone    string `binding:"" json:"phone"`
 }
 
 // SendCode
@@ -104,11 +102,11 @@ func SendCode(c *gin.Context) {
 		})
 		return
 	}
-	if emailIsExist {
+	if !emailIsExist {
 		c.JSON(200, gin.H{
 			"code": 401,
 			"data": nil,
-			"msg":  errors.New("邮箱已存在"),
+			"msg":  errors.New("邮箱没有注册"),
 		})
 		return
 	}
@@ -143,7 +141,7 @@ type sendCodeAccept struct {
 }
 
 // VerifyEmailCode
-// @Summary	验证码是否真确
+// @Summary	邮箱验证码登陆
 // @Tags	公共方法
 // @Accept  json
 // @Param 	code body verifyEmailCodeAccept true "此处email由SendCode得来"
@@ -177,9 +175,18 @@ func VerifyEmailCode(c *gin.Context) {
 		})
 		return
 	}
+	data, err3 := models.GetTokenByEmail(accept.Email)
+	if err3 != nil {
+		c.JSON(200, define.Result{
+			401,
+			nil,
+			err3.Error(),
+		})
+		return
+	}
 	c.JSON(200, define.Result{
 		200,
-		nil,
+		data,
 		"success",
 	})
 }
@@ -192,7 +199,7 @@ type verifyEmailCodeAccept struct {
 // Register
 // @Summary	Register
 // @Tags	公共方法
-// @Param 	json body registerAccept true "此处email由VerifyEmailCode得来;status以什么身份注册1为学生2为老师"
+// @Param 	json body registerAccept true "status以什么身份注册1为学生2为老师"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/Register [post]
 func Register(c *gin.Context) {

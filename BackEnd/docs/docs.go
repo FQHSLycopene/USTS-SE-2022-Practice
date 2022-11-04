@@ -177,7 +177,7 @@ const docTemplate = `{
                 "tags": [
                     "公共方法"
                 ],
-                "summary": "Login",
+                "summary": "用户名登陆",
                 "parameters": [
                     {
                         "description": "登陆信息",
@@ -231,7 +231,7 @@ const docTemplate = `{
                 "summary": "Register",
                 "parameters": [
                     {
-                        "description": "此处email由VerifyEmailCode得来;status以什么身份注册1为学生2为老师",
+                        "description": "status以什么身份注册1为学生2为老师",
                         "name": "json",
                         "in": "body",
                         "required": true,
@@ -284,7 +284,7 @@ const docTemplate = `{
                 "tags": [
                     "公共方法"
                 ],
-                "summary": "验证码是否真确",
+                "summary": "邮箱验证码登陆",
                 "parameters": [
                     {
                         "description": "此处email由SendCode得来",
@@ -427,6 +427,37 @@ const docTemplate = `{
                         "name": "token",
                         "in": "header",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/Class/{identity}": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取班级详情",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "class_identity",
+                        "name": "identity",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -587,6 +618,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/teacher/Problem": {
+            "post": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "创建题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addProblemAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/ProblemCategory": {
             "get": {
                 "tags": [
@@ -721,6 +786,40 @@ const docTemplate = `{
                 }
             }
         },
+        "service.addProblemAccept": {
+            "type": "object",
+            "required": [
+                "answer",
+                "categoryIdentity",
+                "content",
+                "knowledgeIdentities",
+                "name",
+                "score"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "categoryIdentity": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "knowledgeIdentities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                }
+            }
+        },
         "service.addProblemCategoryAccept": {
             "type": "object",
             "required": [
@@ -779,19 +878,14 @@ const docTemplate = `{
         "service.loginAccept": {
             "type": "object",
             "required": [
+                "name",
                 "password"
             ],
             "properties": {
-                "email": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 },
                 "password": {
-                    "type": "string"
-                },
-                "phone": {
                     "type": "string"
                 }
             }

@@ -14,7 +14,7 @@ type Knowledge struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Identity  string         `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
-	Name      string         `gorm:"UNIQUE;NOT NULL;Type:varchar(36);Column:name" json:"name"`
+	Name      string         `gorm:"NOT NULL;Type:varchar(36);Column:name" json:"name"`
 }
 
 func UpdateKnowledge(name, identity string) (interface{}, error) {
@@ -55,7 +55,7 @@ func AddKnowledge(name string) (interface{}, error) {
 		Identity: utils.GetUuid(),
 		Name:     name,
 	}
-	err := DB.Create(data).Error
+	err := DB.Create(&data).Error
 	if err != nil {
 		return nil, err
 	}
