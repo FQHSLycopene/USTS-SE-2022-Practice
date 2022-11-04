@@ -29,6 +29,19 @@ func (table *User) TableName() string {
 	return "user"
 }
 
+func GetTokenByEmail(email string) (interface{}, error) {
+	user := User{}
+	err := DB.Where("email = ?", email).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	token, err2 := utils.GenerateToken(user.Identity, user.Name, user.Status)
+	if err2 != nil {
+		return nil, err2
+	}
+	return token, nil
+}
+
 func GetClassStudentList(classIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
 	data := make([]*User, 0)
 	var total int64 = 0
@@ -87,21 +100,11 @@ func AddUser(name, password, email, phone, statusStr string) (interface{}, error
 	return token, nil
 }
 
-func Login(name, password, email, phone string) (interface{}, error) {
+func LoginByName(name, password string) (interface{}, error) {
 	var data User
 	passwordMd5 := utils.GetMd5(password)
 	if name != "" {
 		err := DB.Where("name = ?", name).Find(&data).Error
-		if err != nil {
-			return nil, err
-		}
-	} else if email != "" {
-		err := DB.Where("email = ?", email).Find(&data).Error
-		if err != nil {
-			return nil, err
-		}
-	} else if phone != "" {
-		err := DB.Where("phone = ?", phone).Find(&data).Error
 		if err != nil {
 			return nil, err
 		}

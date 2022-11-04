@@ -10,7 +10,7 @@ func Router() *gin.Engine {
 	r := gin.Default()
 	userGroup := r.Group("")
 	{
-		userGroup.POST("/Login", service.Login)
+		userGroup.POST("/Login", service.LoginByName)
 		userGroup.POST("/SendCode", service.SendCode)
 		userGroup.POST("/VerifyEmailCode", service.VerifyEmailCode)
 		userGroup.POST("/Register", service.Register)

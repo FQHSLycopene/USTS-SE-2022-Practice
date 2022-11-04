@@ -77,15 +77,12 @@ definitions:
     type: object
   service.loginAccept:
     properties:
-      email:
-        type: string
       name:
         type: string
       password:
         type: string
-      phone:
-        type: string
     required:
+    - name
     - password
     type: object
   service.registerAccept:
@@ -265,7 +262,7 @@ paths:
           description: code":"200","msg":"","data",""}
           schema:
             type: string
-      summary: Login
+      summary: 用户名登陆
       tags:
       - 公共方法
   /PostArrayTest:
@@ -287,7 +284,7 @@ paths:
   /Register:
     post:
       parameters:
-      - description: 此处email由VerifyEmailCode得来;status以什么身份注册1为学生2为老师
+      - description: status以什么身份注册1为学生2为老师
         in: body
         name: json
         required: true
@@ -333,7 +330,7 @@ paths:
           description: OK
           schema:
             type: string
-      summary: 验证码是否真确
+      summary: 邮箱验证码登陆
       tags:
       - 公共方法
   /student/Class:

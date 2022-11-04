@@ -177,7 +177,7 @@ const docTemplate = `{
                 "tags": [
                     "公共方法"
                 ],
-                "summary": "Login",
+                "summary": "用户名登陆",
                 "parameters": [
                     {
                         "description": "登陆信息",
@@ -231,7 +231,7 @@ const docTemplate = `{
                 "summary": "Register",
                 "parameters": [
                     {
-                        "description": "此处email由VerifyEmailCode得来;status以什么身份注册1为学生2为老师",
+                        "description": "status以什么身份注册1为学生2为老师",
                         "name": "json",
                         "in": "body",
                         "required": true,
@@ -284,7 +284,7 @@ const docTemplate = `{
                 "tags": [
                     "公共方法"
                 ],
-                "summary": "验证码是否真确",
+                "summary": "邮箱验证码登陆",
                 "parameters": [
                     {
                         "description": "此处email由SendCode得来",
@@ -878,19 +878,14 @@ const docTemplate = `{
         "service.loginAccept": {
             "type": "object",
             "required": [
+                "name",
                 "password"
             ],
             "properties": {
-                "email": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 },
                 "password": {
-                    "type": "string"
-                },
-                "phone": {
                     "type": "string"
                 }
             }
