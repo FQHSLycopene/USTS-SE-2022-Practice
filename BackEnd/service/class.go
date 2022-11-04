@@ -3,9 +3,33 @@ package service
 import (
 	"BackEnd/define"
 	"BackEnd/models"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
+
+// GetClassDetail
+// @Summary	获取班级详情
+// @Tags	老师方法
+// @Param   identity path string true "class_identity"
+// @Param	token header string false "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Class/{identity} [get]
+func GetClassDetail(c *gin.Context) {
+	classIdentity := c.Param("identity")
+	data, err := models.GetClassDetail(classIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Msg:  err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Msg:  "success",
+		Data: data,
+	})
+}
 
 // UpdateClass
 // @Summary	修改班级
@@ -156,7 +180,6 @@ func GetClassList(c *gin.Context) {
 	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	userIdentity, exist := c.Get("userIdentity")
-	fmt.Println(userIdentity)
 	if !exist {
 		c.JSON(200, define.Result{
 			Code: 402,

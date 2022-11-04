@@ -427,6 +427,37 @@
                 }
             }
         },
+        "/teacher/Class/{identity}": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取班级详情",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "class_identity",
+                        "name": "identity",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/ClassStudents": {
             "get": {
                 "tags": [

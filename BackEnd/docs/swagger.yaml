@@ -398,6 +398,26 @@ paths:
       summary: 修改班级
       tags:
       - 老师方法
+  /teacher/Class/{identity}:
+    get:
+      parameters:
+      - description: class_identity
+        in: path
+        name: identity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取班级详情
+      tags:
+      - 老师方法
   /teacher/ClassStudents:
     get:
       parameters:

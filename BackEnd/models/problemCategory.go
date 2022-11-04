@@ -18,7 +18,7 @@ type ProblemCategory struct {
 }
 
 func DeleteProblemCategory(identity string) (interface{}, error) {
-	data, err := GetProblemCategoryByIdentity(identity)
+	data, err := getProblemCategoryByIdentity(identity)
 	if err != nil {
 		return nil, err
 	}
@@ -44,13 +44,13 @@ func AddProblemCategory(name string) (interface{}, error) {
 	return data, err
 }
 
-func GetProblemCategoryByIdentity(identity string) (interface{}, error) {
+func getProblemCategoryByIdentity(identity string) (*ProblemCategory, error) {
 	data := ProblemCategory{}
 	err := DB.Where("identity = ?", identity).First(&data).Error
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+	return &data, nil
 }
 
 func GetProblemCategoryIdentityByName(name string) (string, error) {

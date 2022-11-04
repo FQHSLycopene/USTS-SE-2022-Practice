@@ -23,4 +23,5 @@ type ExamProblem struct {
 	ExamIdentity    string `gorm:"NOT NULL;Type:varchar(36);Column:exam_identity" json:"exam_identity"`
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 	QuestionNumber  int    `gorm:"NOT NULL;Type:int;Column:question_number" json:"question_number"`
+	Score           int    `gorm:"NOT NULL;Type:int;Column:score" json:"score"`
 }

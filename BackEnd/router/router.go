@@ -31,8 +31,12 @@ func Router() *gin.Engine {
 
 		teacherGroup.POST("/Class", service.CreateClass)
 		teacherGroup.PUT("/Class", service.UpdateClass)
+		teacherGroup.GET("/Class/:identity", service.GetClassDetail)
 
 		teacherGroup.GET("/ClassStudents", service.GetClassStudentList)
+
+		teacherGroup.POST("/Problem", service.AddProblem)
+
 	}
 
 	publicGroup := r.Group("", middleware.AnalyseToken())

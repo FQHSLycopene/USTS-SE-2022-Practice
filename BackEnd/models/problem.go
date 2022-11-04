@@ -1,6 +1,7 @@
 package models
 
 import (
+	"BackEnd/utils"
 	"gorm.io/gorm"
 	"time"
 )
@@ -18,4 +19,30 @@ type Problem struct {
 	Knowledge        []*Knowledge     `gorm:"many2many:problem_knowledge;foreignKey:Identity;joinForeignKey:ProblemIdentity;References:Identity;joinReferences:KnowledgeIdentity"`
 	CategoryIdentity string           `gorm:"NOT NULL;Type:varchar(36);Column:category_identity" json:"category_identity"`
 	ProblemCategory  *ProblemCategory `gorm:"foreignKey:CategoryIdentity;references:Identity"`
+}
+
+func AddProblem(name, content, answer, categoryIdentity string, score int, knowledgeIdentities []string) (interface{}, error) {
+	data := Problem{
+		Identity: utils.GetUuid(),
+		Name:     name,
+		Content:  content,
+		Answer:   answer,
+		Score:    score,
+	}
+
+	problemCategory, err := getProblemCategoryByIdentity(categoryIdentity)
+	if err != nil {
+		return nil, err
+	}
+	data.ProblemCategory = problemCategory
+	knowledges := make([]*Knowledge, 0)
+	for _, knowledgeIdentity := range knowledgeIdentities {
+		knowledge, err := getKnowledgeByIdentity(knowledgeIdentity)
+		if err != nil {
+			return nil, err
+		}
+		knowledges = append(knowledges, knowledge)
+	}
+	DB.Save(&data)
+	return data, err
 }
