@@ -135,6 +135,27 @@ definitions:
     - identity
     - name
     type: object
+  service.updateProblemAccept:
+    properties:
+      answer:
+        type: string
+      categoryIdentity:
+        type: string
+      content:
+        type: string
+      identity:
+        type: string
+      knowledgeIdentities:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      score:
+        type: integer
+    required:
+    - identity
+    type: object
   service.verifyEmailCodeAccept:
     properties:
       code:
@@ -556,6 +577,27 @@ paths:
           schema:
             type: string
       summary: 创建题目
+      tags:
+      - 老师方法
+    put:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.updateProblemAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 修改题目
       tags:
       - 老师方法
   /teacher/ProblemCategory:

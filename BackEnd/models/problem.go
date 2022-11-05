@@ -47,3 +47,63 @@ func AddProblem(name, content, answer, categoryIdentity string, score int, knowl
 	DB.Preload("Knowledge").Create(&data)
 	return data, err
 }
+
+func UpdateProblem(identity, name, content, answer, categoryIdentity string, score int, knowledgeIdentities []string) (interface{}, error) {
+	data, err := getProblemByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+
+	if name != "" {
+		data.Name = name
+	}
+	if content != "" {
+		data.Content = content
+	}
+	if answer != "" {
+		data.Answer = answer
+	}
+	if score != 0 {
+		data.Score = score
+	}
+	err = DB.Model(&data).Preload("Knowledge").Save(&data).Error
+	if err != nil {
+		return nil, err
+	}
+
+	if categoryIdentity != "" {
+		problemCategory, err := getProblemCategoryByIdentity(categoryIdentity)
+		if err != nil {
+			return nil, err
+		}
+		err = DB.Model(&data).Preload("Knowledge").Association("ProblemCategory").Replace(problemCategory)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if len(knowledgeIdentities) != 0 {
+		knowledges := make([]*Knowledge, 0)
+		for _, knowledgeIdentity := range knowledgeIdentities {
+			knowledge, err := getKnowledgeByIdentity(knowledgeIdentity)
+			if err != nil {
+				return nil, err
+			}
+			knowledges = append(knowledges, knowledge)
+		}
+		err := DB.Model(&data).Preload("Knowledge").Association("Knowledge").Replace(knowledges)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return data, nil
+}
+
+func getProblemByIdentity(identity string) (*Problem, error) {
+	data := Problem{}
+	err := DB.Where("identity = ?", identity).First(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
+}

@@ -36,6 +36,7 @@ func Router() *gin.Engine {
 		teacherGroup.GET("/ClassStudents", service.GetClassStudentList)
 
 		teacherGroup.POST("/Problem", service.AddProblem)
+		teacherGroup.PUT("/Problem", service.UpdateProblem)
 
 	}
 
