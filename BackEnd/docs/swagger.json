@@ -607,6 +607,38 @@
             }
         },
         "/teacher/Problem": {
+            "put": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "修改题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.updateProblemAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "老师方法"
@@ -950,6 +982,38 @@
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "service.updateProblemAccept": {
+            "type": "object",
+            "required": [
+                "identity"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "categoryIdentity": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "identity": {
+                    "type": "string"
+                },
+                "knowledgeIdentities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
                 }
             }
         },
