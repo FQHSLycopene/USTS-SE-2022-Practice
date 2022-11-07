@@ -15,10 +15,22 @@ type Problem struct {
 	Name             string           `gorm:"NOT NULL;Type:varchar(36);Column:name" json:"name"`
 	Content          string           `gorm:"NOT NULL;Type:text;Column:content" json:"content"`
 	Answer           string           `gorm:"NOT NULL;Type:text;Column:answer" json:"answer"`
+	Key              string           `gorm:"NOT NULL;Type:text;Column:key" json:"Key"` //题解
 	Score            int              `gorm:"NOT NULL;Type:int;Column:score" json:"score"`
 	Knowledge        []*Knowledge     `gorm:"many2many:problem_knowledge;foreignKey:Identity;joinForeignKey:ProblemIdentity;References:Identity;joinReferences:KnowledgeIdentity"`
 	CategoryIdentity string           `gorm:"NOT NULL;Type:varchar(36);Column:category_identity" json:"category_identity"`
 	ProblemCategory  *ProblemCategory `gorm:"foreignKey:CategoryIdentity;references:Identity"`
+}
+
+func getProblemByKnowledge(knowledgeIdentity string) ([]*Problem, error) {
+	problems := make([]*Problem, 0)
+	err := DB.Preload("Knowledge").Joins("right join problem_knowledge pk on pk.problem_identity = identity").
+		Where("pk.knowledge_identity = ?", knowledgeIdentity).
+		Find(&problems).Error
+	if err != nil {
+		return nil, err
+	}
+	return problems, nil
 }
 
 func AddProblem(name, content, answer, categoryIdentity string, score int, knowledgeIdentities []string) (interface{}, error) {

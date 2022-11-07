@@ -6,6 +6,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// DeleteProblem
+// @Summary	删除题目
+// @Tags	老师方法
+// @Param	json body deleteProblemAccept true "json"
+// @Param	token header string true "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Problem [delete]
+func DeleteProblem(c *gin.Context) {
+
+}
+
+type deleteProblemAccept struct {
+	Identity string `binding:"required" json:"identity"`
+}
+
 // UpdateProblem
 // @Summary	修改题目
 // @Tags	老师方法
