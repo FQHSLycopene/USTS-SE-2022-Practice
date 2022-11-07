@@ -51,6 +51,7 @@ func Router() *gin.Engine {
 	studentGroup := r.Group("/student", middleware.AnalyseToken(), middleware.UserIsStudent())
 	{
 		studentGroup.PUT("/Class", service.JoinClass)
+		studentGroup.GET("/Practise", service.GetPractiseList)
 	}
 	return r
 }

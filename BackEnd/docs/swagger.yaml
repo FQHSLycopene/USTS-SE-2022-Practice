@@ -61,6 +61,13 @@ definitions:
     required:
     - identity
     type: object
+  service.deleteProblemAccept:
+    properties:
+      identity:
+        type: string
+    required:
+    - identity
+    type: object
   service.deleteProblemCategoryAccept:
     properties:
       identity:
@@ -376,6 +383,33 @@ paths:
       summary: 加入班级
       tags:
       - 学生方法
+  /student/Practise:
+    get:
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      - description: token
+        in: header
+        name: token
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取练习列表
+      tags:
+      - 学生方法
   /teacher/Achievement:
     post:
       parameters:
@@ -558,6 +592,27 @@ paths:
       tags:
       - 老师方法
   /teacher/Problem:
+    delete:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.deleteProblemAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 删除题目
+      tags:
+      - 老师方法
     post:
       parameters:
       - description: json

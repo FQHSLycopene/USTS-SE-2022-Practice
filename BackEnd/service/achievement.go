@@ -56,7 +56,7 @@ type addAchievementAccept struct {
 // @Router	/Achievement [Get]
 func GetAchievementList(c *gin.Context) {
 	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	data, err := models.GetAchievementList(page, pageSize, keyWord)
 	if err != nil {

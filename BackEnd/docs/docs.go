@@ -340,6 +340,48 @@ const docTemplate = `{
                 }
             }
         },
+        "/student/Practise": {
+            "get": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "获取练习列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/Achievement": {
             "post": {
                 "tags": [
@@ -682,6 +724,38 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "删除题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.deleteProblemAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/teacher/ProblemCategory": {
@@ -875,6 +949,17 @@ const docTemplate = `{
             }
         },
         "service.deleteKnowledgeAccept": {
+            "type": "object",
+            "required": [
+                "identity"
+            ],
+            "properties": {
+                "identity": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.deleteProblemAccept": {
             "type": "object",
             "required": [
                 "identity"
