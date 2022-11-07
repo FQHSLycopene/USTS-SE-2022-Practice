@@ -1,7 +1,6 @@
 package test
 
 import (
-	"BackEnd/models"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -14,44 +13,9 @@ func TestDB(t *testing.T) {
 	if err != nil {
 	}
 	db.AutoMigrate(&User{}, &Card{}, &Language{})
-
-	//db.Create(&Language{
-	//	Identity: "l_1",
-	//	Name:     "普通话",
-	//})
-	//db.Create(&Language{
-	//	Identity: "l_2",
-	//	Name:     "英文",
-	//})
-	//db.Create(&Language{
-	//	Identity: "l_3",
-	//	Name:     "俄文",
-	//})
-	//db.Create(&User{
-	//	Identity: "user_3",
-	//	Name:     "user_3",
-	//	Languages: []Language{
-	//		{Identity: "l_1"},
-	//		{Identity: "l_2"},
-	//	},
-	//})
-	//user := User{}
-	//languages := make([]Language, 0)
-	data := make([]*models.Class, 0)
-	var total int64
-	//language := Language{
-	//	Identity: utils.GetUuid(),
-	//	Name:     "123",
-	//}
-	//language := Language{}
-	//db.Preload("Languages").Where("identity = ?", "user_3").First(&user)
-	//db.Model(&user).Association("Languages").Append(&language)
-	models.DB.Joins("right join user_classes uc on uc.class_identity = identity").
-		Where("uc.user_identity = ?", "0d252d92-e4a8-495b-95c0-08f3b0160f63").
-		Find(&data)
-	fmt.Println(data)
-	fmt.Println(total)
-	//fmt.Println(languages)
+	user := make([]User, 0)
+	db.Model(user).Where("name = ?", "user_3").Order("RAND()").Limit(1).Find(&user)
+	fmt.Println(user)
 }
 
 func TestHasmany(t *testing.T) {

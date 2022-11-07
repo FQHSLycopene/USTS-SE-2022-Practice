@@ -410,6 +410,27 @@ paths:
       summary: 获取练习列表
       tags:
       - 学生方法
+  /student/PractiseProblemDetail:
+    get:
+      parameters:
+      - description: practiseIdentity
+        in: query
+        name: practiseIdentity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取练习随机题目
+      tags:
+      - 学生方法
   /teacher/Achievement:
     post:
       parameters:

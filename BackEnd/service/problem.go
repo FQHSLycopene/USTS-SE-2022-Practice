@@ -6,6 +6,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetRandPractiseProblemDetail
+// @Summary	获取练习随机题目
+// @Tags	学生方法
+// @Param	practiseIdentity query string true "practiseIdentity"
+// @Param	token header string true "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/student/PractiseProblemDetail [get]
+func GetRandPractiseProblemDetail(c *gin.Context) {
+	practiseIdentity := c.Query("practiseIdentity")
+	detail, err := models.GetRandPractiseProblemDetail(practiseIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: detail,
+		Msg:  "success",
+	})
+}
+
 // DeleteProblem
 // @Summary	删除题目
 // @Tags	老师方法

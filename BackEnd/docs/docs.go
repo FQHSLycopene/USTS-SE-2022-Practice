@@ -382,6 +382,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/student/PractiseProblemDetail": {
+            "get": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "获取练习随机题目",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "practiseIdentity",
+                        "name": "practiseIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/Achievement": {
             "post": {
                 "tags": [
