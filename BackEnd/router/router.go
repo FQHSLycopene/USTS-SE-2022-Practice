@@ -14,6 +14,7 @@ func Router() *gin.Engine {
 		userGroup.POST("/SendCode", service.SendCode)
 		userGroup.POST("/VerifyEmailCode", service.VerifyEmailCode)
 		userGroup.POST("/Register", service.Register)
+		userGroup.GET("/image", service.GetImage)
 		userGroup.POST("/BodyJSONTest", service.BodyJSONTest)
 		userGroup.POST("/PostArrayTest", service.PostArrayTest)
 	}

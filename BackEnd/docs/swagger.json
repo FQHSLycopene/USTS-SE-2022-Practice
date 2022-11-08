@@ -294,6 +294,31 @@
                 }
             }
         },
+        "/image": {
+            "get": {
+                "tags": [
+                    "公共方法"
+                ],
+                "summary": "获取图片",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "url",
+                        "name": "url",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/student/Class": {
             "put": {
                 "tags": [

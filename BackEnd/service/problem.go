@@ -6,6 +6,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetImage
+// @Summary	获取图片
+// @Tags	公共方法
+// @Param   url query string true "url"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/image [get]
+func GetImage(c *gin.Context) {
+	path := c.Query("url")
+	c.File(path)
+}
+
 // GetRandPractiseProblemDetail
 // @Summary	获取练习随机题目
 // @Tags	学生方法

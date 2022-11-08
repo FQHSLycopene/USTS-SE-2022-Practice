@@ -361,6 +361,22 @@ paths:
       summary: 邮箱验证码登陆
       tags:
       - 公共方法
+  /image:
+    get:
+      parameters:
+      - description: url
+        in: query
+        name: url
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取图片
+      tags:
+      - 公共方法
   /student/Class:
     put:
       parameters:
