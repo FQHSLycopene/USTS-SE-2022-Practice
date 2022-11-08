@@ -439,6 +439,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/student/UpProblemAnswer": {
+            "put": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "提交题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.upProblemAnswerAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/Achievement": {
             "post": {
                 "tags": [
@@ -1096,6 +1130,24 @@ const docTemplate = `{
             ],
             "properties": {
                 "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.upProblemAnswerAccept": {
+            "type": "object",
+            "required": [
+                "answer",
+                "problem_identity"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "practiseIdentity": {
+                    "type": "string"
+                },
+                "problem_identity": {
                     "type": "string"
                 }
             }

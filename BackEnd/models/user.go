@@ -10,19 +10,20 @@ import (
 )
 
 type User struct {
-	ID           uint `gorm:"PRIMARY_KEY"`
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    gorm.DeletedAt `gorm:"index"`
-	Identity     string         `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
-	Name         string         `gorm:"NOT NULL;unique;Type:varchar(36);Column:name" json:"name"`
-	Password     string         `gorm:"NOT NULL;Type:varchar(255);Column:password" json:"password"`
-	Email        string         `gorm:"Type:varchar(255);unique;Column:email" json:"email"`
-	Phone        string         `gorm:"Type:varchar(255);Column:phone" json:"phone"`
-	Status       int            `gorm:"NOT NULL;Type:int(11);Column:status" json:"status"`
-	Achievements []*Achievement `gorm:"many2many:user_achievements;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:AchievementIdentity"`
-	Classes      []*Class       `gorm:"many2many:user_classes;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:ClassIdentity"`
-	Practise     []*Practise    `gorm:"foreignKey:UserIdentity;references:Identity"`
+	ID            uint `gorm:"PRIMARY_KEY"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     gorm.DeletedAt  `gorm:"index"`
+	Identity      string          `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
+	Name          string          `gorm:"NOT NULL;unique;Type:varchar(36);Column:name" json:"name"`
+	Password      string          `gorm:"NOT NULL;Type:varchar(255);Column:password" json:"password"`
+	Email         string          `gorm:"Type:varchar(255);unique;Column:email" json:"email"`
+	Phone         string          `gorm:"Type:varchar(255);Column:phone" json:"phone"`
+	Status        int             `gorm:"NOT NULL;Type:int(11);Column:status" json:"status"`
+	Achievements  []*Achievement  `gorm:"many2many:user_achievements;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:AchievementIdentity"`
+	Classes       []*Class        `gorm:"many2many:user_classes;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:ClassIdentity"`
+	Practise      []*Practise     `gorm:"foreignKey:UserIdentity;references:Identity"`
+	WrongProblems []*WrongProblem `gorm:"many2many:user_wrongProblems;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:WrongProblemIdentity"`
 }
 
 func (table *User) TableName() string {

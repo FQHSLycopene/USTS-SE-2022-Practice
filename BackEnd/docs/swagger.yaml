@@ -116,6 +116,18 @@ definitions:
     required:
     - email
     type: object
+  service.upProblemAnswerAccept:
+    properties:
+      answer:
+        type: string
+      practiseIdentity:
+        type: string
+      problem_identity:
+        type: string
+    required:
+    - answer
+    - problem_identity
+    type: object
   service.updateClassAccept:
     properties:
       class_identity:
@@ -445,6 +457,28 @@ paths:
           schema:
             type: string
       summary: 获取练习随机题目
+      tags:
+      - 学生方法
+  /student/UpProblemAnswer:
+    put:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.upProblemAnswerAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 提交题目
       tags:
       - 学生方法
   /teacher/Achievement:

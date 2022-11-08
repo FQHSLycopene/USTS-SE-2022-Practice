@@ -24,6 +24,53 @@ type Problem struct {
 	ProblemCategory  *ProblemCategory `gorm:"foreignKey:CategoryIdentity;references:Identity"`
 }
 
+func ProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity, answer string) (interface{}, error) {
+	problem, err := getProblemByIdentity(problemIdentity)
+	if err != nil {
+		return nil, err
+	}
+	practise, err2 := getPractiseByIdentity(practiseIdentity)
+	if err2 != nil {
+		return nil, err2
+	}
+	user, err3 := GetUserByIdentity(userIdentity)
+	if err3 != nil {
+		return nil, err3
+	}
+	practiseProblem := PractiseProblem{}
+	err = DB.Model(practiseProblem).
+		Where("practise_identity = ?", practiseIdentity).
+		Where("problem_identity = ?", problemIdentity).First(&practiseProblem).Error
+	if err != nil {
+		return nil, err
+	}
+	if answer == problem.Answer {
+		practise.RightNum++
+		practiseProblem.Status = 1
+		DB.Save(&practise)
+		DB.Where("practise_identity = ?", practiseIdentity).
+			Where("problem_identity = ?", problemIdentity).Save(&practiseProblem)
+		return "correct", nil
+	} else {
+		wrongProblem := WrongProblem{
+			Identity:        utils.GetUuid(),
+			Name:            problem.Name + time.ANSIC,
+			Problem:         problem,
+			ProblemIdentity: problemIdentity,
+			WrongAnswer:     answer,
+		}
+		err := DB.Model(&user).Association("WrongProblems").Append(&wrongProblem)
+		if err != nil {
+			return nil, err
+		}
+		practiseProblem.Status = 2
+		DB.Where("practise_identity = ?", practiseIdentity).
+			Where("problem_identity = ?", problemIdentity).Save(&practiseProblem)
+		return "wrong", nil
+	}
+
+}
+
 func GetRandPractiseProblemDetail(practiseIdentity string) (interface{}, error) {
 	//problem := Problem{}
 	//problems := make([]*Problem, 0)

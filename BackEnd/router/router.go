@@ -54,6 +54,7 @@ func Router() *gin.Engine {
 		studentGroup.PUT("/Class", service.JoinClass)
 		studentGroup.GET("/Practise", service.GetPractiseList)
 		studentGroup.GET("/PractiseProblemDetail", service.GetRandPractiseProblemDetail)
+		studentGroup.PUT("/UpProblemAnswer", service.UpProblemAnswer)
 	}
 	return r
 }
