@@ -15,13 +15,14 @@ type Exam struct {
 	StartAt       time.Time      `gorm:"NOT NULL;"`
 	Duration      time.Duration  `gorm:"NOT NULL;"`
 	ClassIdentity string         `gorm:"NOT NULL;Type:varchar(36);Column:class_identity" json:"class_identity"`
-	Problems      []*Problem     `gorm:"many2many:exam_problems;foreignKey:Identity;joinForeignKey:ExamIdentity;References:Identity;joinReferences:ProblemIdentity"`
 	TotalScore    int            `gorm:"NOT NULL;Type:int;Column:total_score" json:"total_score"`
+	ProblemNumber int            `gorm:"NOT NULL;Type:int;Column:problem_number" json:"problem_number"`
+	Problems      []*Problem     `gorm:"many2many:exam_problems;foreignKey:Identity;joinForeignKey:ExamIdentity;References:Identity;joinReferences:ProblemIdentity"`
 }
 
-type ExamProblem struct {
+type ExamProblems struct {
+	Identity        string `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
 	ExamIdentity    string `gorm:"NOT NULL;Type:varchar(36);Column:exam_identity" json:"exam_identity"`
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
-	QuestionNumber  int    `gorm:"NOT NULL;Type:int;Column:question_number" json:"question_number"`
-	Score           int    `gorm:"NOT NULL;Type:int;Column:score" json:"score"`
+	QuestionNum     int    `gorm:"NOT NULL;Type:int;Column:question_num" json:"question_num"` //题号
 }
