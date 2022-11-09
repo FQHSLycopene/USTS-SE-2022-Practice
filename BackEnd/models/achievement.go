@@ -24,7 +24,7 @@ func DeleteAchievement(knowledgeIdentity string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = DB.Delete(&data).Error
+	err = DB.Unscoped().Delete(&data).Error
 	if err != nil {
 		return nil, err
 	}

@@ -10,23 +10,38 @@ import (
 )
 
 type User struct {
-	ID           uint `gorm:"PRIMARY_KEY"`
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    gorm.DeletedAt `gorm:"index"`
-	Identity     string         `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
-	Name         string         `gorm:"NOT NULL;Type:varchar(36);Column:name" json:"name"`
-	Password     string         `gorm:"NOT NULL;Type:varchar(255);Column:password" json:"password"`
-	Email        string         `gorm:"Type:varchar(255);Column:email" json:"email"`
-	Phone        string         `gorm:"Type:varchar(255);Column:phone" json:"phone"`
-	Status       int            `gorm:"NOT NULL;Type:int(11);Column:status" json:"status"`
-	Achievements []*Achievement `gorm:"many2many:user_achievements;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:AchievementIdentity"`
-	Classes      []*Class       `gorm:"many2many:user_classes;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:ClassIdentity"`
-	Practise     []*Practise    `gorm:"foreignKey:UserIdentity;references:Identity"`
+	ID            uint `gorm:"PRIMARY_KEY"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     gorm.DeletedAt  `gorm:"index"`
+	Identity      string          `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
+	Name          string          `gorm:"NOT NULL;unique;Type:varchar(36);Column:name" json:"name"`
+	Password      string          `gorm:"NOT NULL;Type:varchar(255);Column:password" json:"password"`
+	Email         string          `gorm:"Type:varchar(255);unique;Column:email" json:"email"`
+	Phone         string          `gorm:"Type:varchar(255);Column:phone" json:"phone"`
+	Status        int             `gorm:"NOT NULL;Type:int(11);Column:status" json:"status"`
+	Achievements  []*Achievement  `gorm:"many2many:user_achievements;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:AchievementIdentity"`
+	Classes       []*Class        `gorm:"many2many:user_classes;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:ClassIdentity"`
+	Practise      []*Practise     `gorm:"foreignKey:UserIdentity;references:Identity"`
+	WrongProblems []*WrongProblem `gorm:"many2many:user_wrongProblems;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:WrongProblemIdentity"`
 }
 
 func (table *User) TableName() string {
 	return "user"
+}
+
+func InitPractise(userIdentity string) (interface{}, error) {
+	knowledgeIdentities, err := getKnowledgeIdentities()
+	if err != nil {
+		return nil, err
+	}
+	for _, identity := range knowledgeIdentities {
+		_, err := AddPractise(userIdentity, identity)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return nil, nil
 }
 
 func GetTokenByEmail(email string) (interface{}, error) {
@@ -77,6 +92,13 @@ func GetUserByIdentity(identity string) (*User, error) {
 }
 
 func AddUser(name, password, email, phone, statusStr string) (interface{}, error) {
+	exist, err3 := EmailIsExist(email)
+	if err3 != nil {
+		return nil, err3
+	}
+	if exist {
+		return nil, errors.New("邮箱已存在")
+	}
 	status, err := strconv.Atoi(statusStr)
 	if err != nil {
 		return nil, err
@@ -97,6 +119,13 @@ func AddUser(name, password, email, phone, statusStr string) (interface{}, error
 	if err2 != nil {
 		return nil, err2
 	}
+	if status == 1 {
+		_, err := InitPractise(data.Identity)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return token, nil
 }
 

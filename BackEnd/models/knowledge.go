@@ -17,6 +17,15 @@ type Knowledge struct {
 	Name      string         `gorm:"NOT NULL;Type:varchar(36);Column:name" json:"name"`
 }
 
+func getKnowledgeIdentities() ([]string, error) {
+	data := make([]string, 0)
+	err := DB.Model(&Knowledge{}).Select("identity").Find(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func UpdateKnowledge(name, identity string) (interface{}, error) {
 	data, err := getKnowledgeByIdentity(identity)
 	if err != nil {
@@ -39,7 +48,7 @@ func DeleteKnowledge(identity string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = DB.Delete(&data).Error
+	err = DB.Unscoped().Delete(&data).Error
 	if err != nil {
 		return nil, err
 	}

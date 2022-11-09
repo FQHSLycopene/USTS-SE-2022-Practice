@@ -61,6 +61,13 @@ definitions:
     required:
     - identity
     type: object
+  service.deleteProblemAccept:
+    properties:
+      identity:
+        type: string
+    required:
+    - identity
+    type: object
   service.deleteProblemCategoryAccept:
     properties:
       identity:
@@ -108,6 +115,18 @@ definitions:
         type: string
     required:
     - email
+    type: object
+  service.upProblemAnswerAccept:
+    properties:
+      answer:
+        type: string
+      practiseIdentity:
+        type: string
+      problem_identity:
+        type: string
+    required:
+    - answer
+    - problem_identity
     type: object
   service.updateClassAccept:
     properties:
@@ -354,6 +373,22 @@ paths:
       summary: 邮箱验证码登陆
       tags:
       - 公共方法
+  /image:
+    get:
+      parameters:
+      - description: url
+        in: query
+        name: url
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取图片
+      tags:
+      - 公共方法
   /student/Class:
     put:
       parameters:
@@ -374,6 +409,76 @@ paths:
           schema:
             type: string
       summary: 加入班级
+      tags:
+      - 学生方法
+  /student/Practise:
+    get:
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      - description: token
+        in: header
+        name: token
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取练习列表
+      tags:
+      - 学生方法
+  /student/PractiseProblemDetail:
+    get:
+      parameters:
+      - description: practiseIdentity
+        in: query
+        name: practiseIdentity
+        required: true
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取练习随机题目
+      tags:
+      - 学生方法
+  /student/UpProblemAnswer:
+    put:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.upProblemAnswerAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 提交题目
       tags:
       - 学生方法
   /teacher/Achievement:
@@ -558,6 +663,27 @@ paths:
       tags:
       - 老师方法
   /teacher/Problem:
+    delete:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.deleteProblemAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 删除题目
+      tags:
+      - 老师方法
     post:
       parameters:
       - description: json

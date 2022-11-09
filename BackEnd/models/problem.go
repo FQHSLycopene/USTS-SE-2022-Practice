@@ -2,6 +2,7 @@ package models
 
 import (
 	"BackEnd/utils"
+	"errors"
 	"gorm.io/gorm"
 	"time"
 )
@@ -15,10 +16,94 @@ type Problem struct {
 	Name             string           `gorm:"NOT NULL;Type:varchar(36);Column:name" json:"name"`
 	Content          string           `gorm:"NOT NULL;Type:text;Column:content" json:"content"`
 	Answer           string           `gorm:"NOT NULL;Type:text;Column:answer" json:"answer"`
+	Key              string           `gorm:"NOT NULL;Type:text;Column:key" json:"Key"` //题解
 	Score            int              `gorm:"NOT NULL;Type:int;Column:score" json:"score"`
+	Image            string           `gorm:"NOT NULL;Type:text;Column:image" json:"image"`
 	Knowledge        []*Knowledge     `gorm:"many2many:problem_knowledge;foreignKey:Identity;joinForeignKey:ProblemIdentity;References:Identity;joinReferences:KnowledgeIdentity"`
 	CategoryIdentity string           `gorm:"NOT NULL;Type:varchar(36);Column:category_identity" json:"category_identity"`
 	ProblemCategory  *ProblemCategory `gorm:"foreignKey:CategoryIdentity;references:Identity"`
+}
+
+var ProblemModels *Problem
+
+func (*Problem) ProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity, answer string) (interface{}, error) {
+	problem, err := getProblemByIdentity(problemIdentity)
+	if err != nil {
+		return nil, err
+	}
+	practise, err2 := getPractiseByIdentity(practiseIdentity)
+	if err2 != nil {
+		return nil, err2
+	}
+	user, err3 := GetUserByIdentity(userIdentity)
+	if err3 != nil {
+		return nil, err3
+	}
+	practiseProblem := PractiseProblem{}
+	err = DB.Model(practiseProblem).
+		Where("practise_identity = ?", practiseIdentity).
+		Where("problem_identity = ?", problemIdentity).First(&practiseProblem).Error
+	if err != nil {
+		return nil, err
+	}
+	if answer == problem.Answer {
+		practise.RightNum++
+		practiseProblem.Status = 1
+		DB.Save(&practise)
+		DB.Where("practise_identity = ?", practiseIdentity).
+			Where("problem_identity = ?", problemIdentity).Save(&practiseProblem)
+		return "correct", nil
+	} else {
+		wrongProblem := WrongProblem{
+			Identity:        utils.GetUuid(),
+			Name:            problem.Name + time.ANSIC,
+			Problem:         problem,
+			ProblemIdentity: problemIdentity,
+			WrongAnswer:     answer,
+		}
+		err := DB.Model(&user).Association("WrongProblems").Append(&wrongProblem)
+		if err != nil {
+			return nil, err
+		}
+		practiseProblem.Status = 2
+		DB.Where("practise_identity = ?", practiseIdentity).
+			Where("problem_identity = ?", problemIdentity).Save(&practiseProblem)
+		return "wrong", nil
+	}
+
+}
+
+func GetRandPractiseProblemDetail(practiseIdentity string) (interface{}, error) {
+	//problem := Problem{}
+	//problems := make([]*Problem, 0)
+	practise, err := getPractiseByIdentity(practiseIdentity)
+	if err != nil {
+		return nil, err
+	}
+	if practise.ProblemNum == practise.RightNum {
+		return nil, errors.New("该练习已完成")
+	}
+	practiseProblem := PractiseProblem{}
+	DB.Model(practiseProblem).
+		Where("practise_identity = ?", practiseIdentity).
+		Where("status != ?", 1).Order("RAND()").Limit(1).
+		First(&practiseProblem)
+	problem, err2 := getProblemByIdentity(practiseProblem.ProblemIdentity)
+	if err2 != nil {
+		return nil, err2
+	}
+	return problem, nil
+}
+
+func getProblemByKnowledge(knowledgeIdentity string) ([]*Problem, error) {
+	problems := make([]*Problem, 0)
+	err := DB.Preload("Knowledge").Joins("right join problem_knowledge pk on pk.problem_identity = identity").
+		Where("pk.knowledge_identity = ?", knowledgeIdentity).
+		Find(&problems).Error
+	if err != nil {
+		return nil, err
+	}
+	return problems, nil
 }
 
 func AddProblem(name, content, answer, categoryIdentity string, score int, knowledgeIdentities []string) (interface{}, error) {
@@ -101,7 +186,7 @@ func UpdateProblem(identity, name, content, answer, categoryIdentity string, sco
 
 func getProblemByIdentity(identity string) (*Problem, error) {
 	data := Problem{}
-	err := DB.Where("identity = ?", identity).First(&data).Error
+	err := DB.Preload("Knowledge").Preload("ProblemCategory").Where("identity = ?", identity).First(&data).Error
 	if err != nil {
 		return nil, err
 	}
