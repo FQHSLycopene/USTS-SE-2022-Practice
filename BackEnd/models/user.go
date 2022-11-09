@@ -92,6 +92,13 @@ func GetUserByIdentity(identity string) (*User, error) {
 }
 
 func AddUser(name, password, email, phone, statusStr string) (interface{}, error) {
+	exist, err3 := EmailIsExist(email)
+	if err3 != nil {
+		return nil, err3
+	}
+	if exist {
+		return nil, errors.New("邮箱已存在")
+	}
 	status, err := strconv.Atoi(statusStr)
 	if err != nil {
 		return nil, err

@@ -24,7 +24,9 @@ type Problem struct {
 	ProblemCategory  *ProblemCategory `gorm:"foreignKey:CategoryIdentity;references:Identity"`
 }
 
-func ProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity, answer string) (interface{}, error) {
+var ProblemModels *Problem
+
+func (*Problem) ProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity, answer string) (interface{}, error) {
 	problem, err := getProblemByIdentity(problemIdentity)
 	if err != nil {
 		return nil, err

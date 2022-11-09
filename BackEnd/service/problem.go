@@ -6,6 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type problem struct {
+}
+
+var Problem *problem
+
 // UpProblemAnswer
 // @Summary	提交题目
 // @Tags	学生方法
@@ -13,7 +18,7 @@ import (
 // @Param	token header string true "token"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/student/UpProblemAnswer [put]
-func UpProblemAnswer(c *gin.Context) {
+func (p *problem) UpProblemAnswer(c *gin.Context) {
 	userIdentity, _ := c.Get("userIdentity")
 	accept := upProblemAnswerAccept{}
 	err := c.ShouldBind(&accept)
@@ -25,7 +30,7 @@ func UpProblemAnswer(c *gin.Context) {
 		})
 		return
 	}
-	correct, err2 := models.ProblemIsCorrect(userIdentity.(string), accept.ProblemIdentity, accept.PractiseIdentity, accept.Answer)
+	correct, err2 := models.ProblemModels.ProblemIsCorrect(userIdentity.(string), accept.ProblemIdentity, accept.PractiseIdentity, accept.Answer)
 	if err2 != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
