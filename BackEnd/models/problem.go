@@ -55,6 +55,7 @@ func (*Problem) ProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity
 		return "correct", nil
 	} else {
 		wrongProblem := wrongProblem{
+
 			Identity:        utils.GetUuid(),
 			Name:            problem.Name + time.ANSIC,
 			Problem:         problem,
