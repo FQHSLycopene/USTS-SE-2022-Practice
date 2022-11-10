@@ -23,7 +23,7 @@ type User struct {
 	Achievements      []*Achievement  `gorm:"many2many:user_achievements;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:AchievementIdentity"`
 	Classes           []*Class        `gorm:"many2many:user_classes;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:ClassIdentity"`
 	Practise          []*Practise     `gorm:"foreignKey:UserIdentity;references:Identity"`
-	WrongProblems     []*WrongProblem `gorm:"many2many:user_wrongProblems;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:WrongProblemIdentity"`
+	WrongProblems     []*wrongProblem `gorm:"foreignKey:UserIdentity;references:Identity"`
 	ExamPaperProblems []*Problem      `gorm:"many2many:exam_paper_problems;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:ProblemIdentity"`
 }
 

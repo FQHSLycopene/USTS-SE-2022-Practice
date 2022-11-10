@@ -14,7 +14,7 @@ import (
 func main() {
 	r := router.Router()
 	r.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	err := r.Run()
+	err := r.Run(":8087")
 	if err != nil {
 		fmt.Println(err)
 	}

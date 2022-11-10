@@ -54,7 +54,7 @@ func (*Problem) ProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity
 			Where("problem_identity = ?", problemIdentity).Save(&practiseProblem)
 		return "correct", nil
 	} else {
-		wrongProblem := WrongProblem{
+		wrongProblem := wrongProblem{
 			Identity:        utils.GetUuid(),
 			Name:            problem.Name + time.ANSIC,
 			Problem:         problem,
