@@ -2,7 +2,6 @@ package models
 
 import (
 	"BackEnd/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
