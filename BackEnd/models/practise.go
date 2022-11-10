@@ -2,7 +2,6 @@ package models
 
 import (
 	"BackEnd/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
@@ -30,7 +29,6 @@ type PractiseProblem struct {
 }
 
 func GetPractiseList(userIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
-	fmt.Println(pageStr)
 	practise := make([]*Practise, 0)
 	var total int64 = 0
 	page, err := strconv.Atoi(pageStr)

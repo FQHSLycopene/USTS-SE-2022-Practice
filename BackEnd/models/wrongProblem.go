@@ -1,7 +1,9 @@
 package models
 
 import (
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"strconv"
 	"time"
 )
 
@@ -20,8 +22,43 @@ type wrongProblem struct {
 
 var WrongProblem *wrongProblem
 
-func (*wrongProblem) GetWrongProblemList(pageStr, pageSizeStr, keyword string) (interface{}, error) {
+func (*wrongProblem) GetWrongProblemDetail(identity string) (interface{}, error) {
+	data, err := getWrongProblemByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (*wrongProblem) GetWrongProblemList(pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+	var total int64 = 0
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, err
+	}
+	pageSize, err2 := strconv.Atoi(pageSizeStr)
+	if err2 != nil {
+		return nil, err2
+	}
 	data := make([]*wrongProblem, 0)
-	DB.Model(data).Preload("Problem").Joins("right join problem p on p.identity = problem_identity")
-	return nil, nil
+	DB.Model(&data).
+		Where("name like ?", "%"+keyWord+"%").
+		Offset((page - 1) * pageSize).Limit(pageSize).Count(&total).
+		Find(&data)
+	return gin.H{
+		"list":  data,
+		"total": total,
+	}, nil
+}
+
+func getWrongProblemByIdentity(identity string) (*wrongProblem, error) {
+	data := wrongProblem{}
+	err := DB.Model(&data).
+		Preload("Problem").Preload("Problem.Knowledge").Preload("Problem.ProblemCategory").
+		Where("identity = ?", identity).First(&data).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
 }
