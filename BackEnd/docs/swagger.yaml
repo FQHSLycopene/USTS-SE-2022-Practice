@@ -481,6 +481,55 @@ paths:
       summary: 提交题目
       tags:
       - 学生方法
+  /student/WrongProblem:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取错题列表
+      tags:
+      - 学生方法
+  /student/WrongProblem/{identity}:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: wrongProblem_identity
+        in: path
+        name: identity
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取错题详情
+      tags:
+      - 学生方法
   /teacher/Achievement:
     post:
       parameters:

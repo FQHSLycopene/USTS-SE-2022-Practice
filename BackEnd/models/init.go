@@ -12,6 +12,7 @@ func InitDB() *gorm.DB {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 	}
-	db.AutoMigrate(&User{}, &Achievement{}, &Class{}, &Exam{}, &Practise{}, &Problem{}, &PractiseProblem{}, &ProblemCategory{}, &Knowledge{}, &ExamProblem{}, &PractiseProblem{})
+	db.AutoMigrate(&User{}, &Achievement{}, &Class{}, &Exam{}, &Practise{}, &Problem{}, &PractiseProblem{}, &ProblemCategory{}, &Knowledge{}, &ExamProblems{}, &PractiseProblem{}, &ExamPaperProblems{}, &wrongProblem{})
+
 	return db
 }
