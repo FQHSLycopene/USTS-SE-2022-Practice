@@ -84,10 +84,10 @@ export default {
                     console.log("注册")
                     if (data.code === 200) {
                         this.$message.success("注册成功")
+                        this.$router.push("/login")
                     } else {
                         this.$message.error("注册失败")
                     }
-                    this.$router.push("/login")
                 })
             })
         }
