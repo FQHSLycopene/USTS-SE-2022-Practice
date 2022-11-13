@@ -14,7 +14,7 @@ type Knowledge struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Identity  string         `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
-	Name      string         `gorm:"NOT NULL;Type:varchar(36);Column:name" json:"name"`
+	Name      string         `gorm:"unique;NOT NULL;Type:varchar(36);Column:name" json:"name"`
 }
 
 func getKnowledgeIdentities() ([]string, error) {

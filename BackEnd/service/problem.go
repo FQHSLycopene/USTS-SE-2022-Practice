@@ -164,7 +164,7 @@ func AddProblem(c *gin.Context) {
 		})
 		return
 	}
-	data, err2 := models.AddProblem(accept.Name, accept.Content, accept.Answer, accept.CategoryIdentity, accept.Score, accept.KnowledgeIdentities)
+	data, err2 := models.AddProblem(accept.Name, accept.Content, accept.Key, accept.Answer, accept.CategoryIdentity, accept.Score, accept.KnowledgeIdentities)
 	if err2 != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -187,4 +187,5 @@ type addProblemAccept struct {
 	CategoryIdentity    string   `binding:"required" json:"categoryIdentity"`
 	KnowledgeIdentities []string `binding:"required" json:"knowledgeIdentities"`
 	Score               int      `binding:"required" json:"score"`
+	Key                 string   `binding:"required" json:"key"`
 }

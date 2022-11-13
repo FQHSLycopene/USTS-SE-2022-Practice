@@ -18,7 +18,6 @@ type Problem struct {
 	Answer           string           `gorm:"NOT NULL;Type:text;Column:answer" json:"answer"`
 	Key              string           `gorm:"NOT NULL;Type:text;Column:key" json:"Key"` //题解
 	Score            int              `gorm:"NOT NULL;Type:int;Column:score" json:"score"`
-	Image            string           `gorm:"NOT NULL;Type:text;Column:image" json:"image"`
 	Knowledge        []*Knowledge     `gorm:"many2many:problem_knowledge;foreignKey:Identity;joinForeignKey:ProblemIdentity;References:Identity;joinReferences:KnowledgeIdentity"`
 	CategoryIdentity string           `gorm:"NOT NULL;Type:varchar(36);Column:category_identity" json:"category_identity"`
 	ProblemCategory  *ProblemCategory `gorm:"foreignKey:CategoryIdentity;references:Identity"`
@@ -107,13 +106,14 @@ func getProblemByKnowledge(knowledgeIdentity string) ([]*Problem, error) {
 	return problems, nil
 }
 
-func AddProblem(name, content, answer, categoryIdentity string, score int, knowledgeIdentities []string) (interface{}, error) {
+func AddProblem(name, content, key, answer, categoryIdentity string, score int, knowledgeIdentities []string) (interface{}, error) {
 	data := Problem{
 		Identity: utils.GetUuid(),
 		Name:     name,
 		Content:  content,
 		Answer:   answer,
 		Score:    score,
+		Key:      key,
 	}
 
 	problemCategory, err := getProblemCategoryByIdentity(categoryIdentity)

@@ -1064,6 +1064,7 @@ const docTemplate = `{
                 "answer",
                 "categoryIdentity",
                 "content",
+                "key",
                 "knowledgeIdentities",
                 "name",
                 "score"
@@ -1076,6 +1077,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "content": {
+                    "type": "string"
+                },
+                "key": {
                     "type": "string"
                 },
                 "knowledgeIdentities": {

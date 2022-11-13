@@ -1052,6 +1052,7 @@
                 "answer",
                 "categoryIdentity",
                 "content",
+                "key",
                 "knowledgeIdentities",
                 "name",
                 "score"
@@ -1064,6 +1065,9 @@
                     "type": "string"
                 },
                 "content": {
+                    "type": "string"
+                },
+                "key": {
                     "type": "string"
                 },
                 "knowledgeIdentities": {
