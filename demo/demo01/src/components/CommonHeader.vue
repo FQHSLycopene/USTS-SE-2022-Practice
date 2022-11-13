@@ -35,6 +35,11 @@ export default {
                 this.$router.push('/login')
             }
         }
+    },
+    computed: {
+        isLogin() {
+            return Cookie.get('token') != ''
+        }
     }
 }
 </script>
