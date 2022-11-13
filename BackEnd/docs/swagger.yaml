@@ -24,6 +24,8 @@ definitions:
         type: string
       content:
         type: string
+      key:
+        type: string
       knowledgeIdentities:
         items:
           type: string
@@ -36,6 +38,7 @@ definitions:
     - answer
     - categoryIdentity
     - content
+    - key
     - knowledgeIdentities
     - name
     - score
