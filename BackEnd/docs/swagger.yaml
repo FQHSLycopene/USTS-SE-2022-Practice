@@ -157,6 +157,16 @@ definitions:
     - identity
     - name
     type: object
+  service.updatePasswordAccept:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+    required:
+    - new_password
+    - old_password
+    type: object
   service.updateProblemAccept:
     properties:
       answer:
@@ -177,6 +187,19 @@ definitions:
         type: integer
     required:
     - identity
+    type: object
+  service.updateUserAccept:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - name
+    - phone
     type: object
   service.verifyEmailCodeAccept:
     properties:
@@ -217,6 +240,44 @@ paths:
           schema:
             type: string
       summary: 获取成就列表
+      tags:
+      - 公共方法
+  /Avatar:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取头像
+      tags:
+      - 公共方法
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: file
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 修改用户头像
       tags:
       - 公共方法
   /BodyJSONTest:
@@ -308,6 +369,28 @@ paths:
       summary: 用户名登陆
       tags:
       - 公共方法
+  /Password:
+    post:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.updatePasswordAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 修改用户密码
+      tags:
+      - 公共方法
   /PostArrayTest:
     post:
       parameters:
@@ -355,6 +438,43 @@ paths:
           schema:
             type: string
       summary: SendCode
+      tags:
+      - 公共方法
+  /User:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取用户信息
+      tags:
+      - 公共方法
+    post:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.updateUserAccept'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 修改用户信息
       tags:
       - 公共方法
   /VerifyEmailCode:

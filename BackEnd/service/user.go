@@ -5,8 +5,182 @@ import (
 	"BackEnd/models"
 	"BackEnd/utils"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 )
+
+// UpdateAvatar
+// @Summary	修改用户头像
+// @Tags	公共方法
+// @Accept multipart/form-data
+// @Param file formData file true "file"
+// @Param	token header string true "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/Avatar [post]
+func UpdateAvatar(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	log.Println(file.Filename)
+	dst := fmt.Sprintf("./image/avatar/%s", file.Filename)
+	// 上传文件到指定的目录
+	err = c.SaveUploadedFile(file, dst)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	userIdentity, _ := c.Get("userIdentity")
+	_, err2 := models.UpdateAvatar(userIdentity.(string), dst)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: nil,
+		Msg:  "success",
+	})
+}
+
+// UpdatePassword
+// @Summary	修改用户密码
+// @Tags	公共方法
+// @Param	json body updatePasswordAccept true "json"
+// @Param	token header string true "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/Password [post]
+func UpdatePassword(c *gin.Context) {
+	accept := updatePasswordAccept{}
+	err2 := c.ShouldBind(&accept)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
+	userIdentity, _ := c.Get("userIdentity")
+	data, err := models.UpdatePassword(userIdentity.(string), accept.OldPassword, accept.NewPassword)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
+type updatePasswordAccept struct {
+	OldPassword string `binding:"required" json:"old_password"`
+	NewPassword string `binding:"required" json:"new_password"`
+}
+
+// UpdateUser
+// @Summary	修改用户信息
+// @Tags	公共方法
+// @Param	json body updateUserAccept true "json"
+// @Param	token header string true "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/User [post]
+func UpdateUser(c *gin.Context) {
+	accept := updateUserAccept{}
+	err2 := c.ShouldBind(&accept)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
+	userIdentity, _ := c.Get("userIdentity")
+	data, err := models.UpdateUser(userIdentity.(string), accept.Name, accept.Email, accept.Phone)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
+type updateUserAccept struct {
+	Name  string `binding:"required" json:"name"`
+	Email string `binding:"required" json:"email"`
+	Phone string `binding:"required" json:"phone"`
+}
+
+// GetUser
+// @Summary	获取用户信息
+// @Tags	公共方法
+// @Param	token header string true "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/User [get]
+func GetUser(c *gin.Context) {
+	userIdentity, _ := c.Get("userIdentity")
+	data, err := models.GetUser(userIdentity.(string))
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
+// GetAvatar
+// @Summary	获取头像
+// @Tags	公共方法
+// @Param	token header string true "token"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/Avatar [get]
+func GetAvatar(c *gin.Context) {
+	userIdentity, _ := c.Get("userIdentity")
+	data, err := models.GetAvatarByIdentity(userIdentity.(string))
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.File(data.(string))
+}
 
 // GetClassStudentList
 // @Summary	获取班级学生列表

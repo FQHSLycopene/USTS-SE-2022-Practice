@@ -6,15 +6,13 @@ var mySigningKey = []byte("Go-Bill")
 
 type MyClaims struct {
 	jwt.RegisteredClaims
-	UserName string
 	Identity string
 	Status   int
 }
 
-func GenerateToken(identity, name string, status int) (string, error) {
+func GenerateToken(identity string, status int) (string, error) {
 
 	c := MyClaims{
-		UserName: name,
 		Identity: identity,
 		Status:   status,
 	}

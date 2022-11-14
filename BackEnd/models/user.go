@@ -15,11 +15,12 @@ type User struct {
 	UpdatedAt         time.Time
 	DeletedAt         gorm.DeletedAt  `gorm:"index"`
 	Identity          string          `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
-	Name              string          `gorm:"NOT NULL;unique;Type:varchar(36);Column:name" json:"name"`
+	Name              string          `gorm:"unique;NOT NULL;unique;Type:varchar(36);Column:name" json:"name"`
 	Password          string          `gorm:"NOT NULL;Type:varchar(255);Column:password" json:"password"`
-	Email             string          `gorm:"Type:varchar(255);unique;Column:email" json:"email"`
+	Email             string          `gorm:"unique;Type:varchar(255);unique;Column:email" json:"email"`
 	Phone             string          `gorm:"Type:varchar(255);Column:phone" json:"phone"`
 	Status            int             `gorm:"NOT NULL;Type:int(11);Column:status" json:"status"`
+	Avatar            string          `gorm:"default:image/avatar/default.png;Type:varchar(255);Column:avatar" json:"avatar"`
 	Achievements      []*Achievement  `gorm:"many2many:user_achievements;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:AchievementIdentity"`
 	Classes           []*Class        `gorm:"many2many:user_classes;foreignKey:Identity;joinForeignKey:UserIdentity;References:Identity;joinReferences:ClassIdentity"`
 	Practise          []*Practise     `gorm:"foreignKey:UserIdentity;references:Identity"`
@@ -39,6 +40,98 @@ type ExamPaperProblems struct {
 
 func (table *User) TableName() string {
 	return "user"
+}
+
+func UpdateAvatar(identity, dst string) (interface{}, error) {
+	user, err := GetUserByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	user.Avatar = dst
+	err = DB.Save(user).Error
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func UpdatePassword(identity, oldPassword, newPassword string) (interface{}, error) {
+	user, err := GetUserByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	md5 := utils.GetMd5(oldPassword)
+	if user.Password != md5 {
+		return nil, errors.New("密码错误")
+	}
+	user.Password = utils.GetMd5(newPassword)
+	err = DB.Save(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func UpdateUser(identity, name, email, phone string) (interface{}, error) {
+	user, err := GetUserByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	if email != user.Email {
+		exist, err := EmailIsExist(email)
+		if err != nil {
+			return nil, err
+		}
+		if exist {
+			return nil, errors.New("该邮箱已存在")
+		}
+		user.Email = email
+	}
+	if name != user.Name {
+		exist, err := UserNameIsExist(name)
+		if err != nil {
+			return nil, err
+		}
+		if exist {
+			return nil, errors.New("该用户名已存在")
+		}
+		user.Name = name
+	}
+	user.Phone = phone
+	err = DB.Save(user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func UserNameIsExist(name string) (bool, error) {
+	var total int64 = 0
+	err := DB.Model(&User{}).Where("name = ?", name).Count(&total).Error
+	if err != nil {
+		return true, err
+	}
+	if total == 0 {
+		return false, nil
+	} else {
+		return true, nil
+	}
+}
+
+func GetUser(identity string) (interface{}, error) {
+	user, err := GetUserByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func GetAvatarByIdentity(identity string) (interface{}, error) {
+	user, err := GetUserByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	return user.Avatar, nil
 }
 
 func InitPractise(userIdentity string) (interface{}, error) {
@@ -61,7 +154,7 @@ func GetTokenByEmail(email string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	token, err2 := utils.GenerateToken(user.Identity, user.Name, user.Status)
+	token, err2 := utils.GenerateToken(user.Identity, user.Status)
 	if err2 != nil {
 		return nil, err2
 	}
@@ -126,7 +219,7 @@ func AddUser(name, password, email, phone, statusStr string) (interface{}, error
 	if err != nil {
 		return nil, err
 	}
-	token, err2 := utils.GenerateToken(data.Identity, data.Name, data.Status)
+	token, err2 := utils.GenerateToken(data.Identity, data.Status)
 	if err2 != nil {
 		return nil, err2
 	}
@@ -150,7 +243,7 @@ func LoginByName(name, password string) (interface{}, error) {
 		}
 	}
 	if data.Password == passwordMd5 {
-		token, err := utils.GenerateToken(data.Identity, data.Name, data.Status)
+		token, err := utils.GenerateToken(data.Identity, data.Status)
 		if err != nil {
 			return nil, err
 		}

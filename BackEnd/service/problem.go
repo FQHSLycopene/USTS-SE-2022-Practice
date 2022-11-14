@@ -30,7 +30,7 @@ func (p *problem) UpProblemAnswer(c *gin.Context) {
 		})
 		return
 	}
-	correct, err2 := models.ProblemModels.ProblemIsCorrect(userIdentity.(string), accept.ProblemIdentity, accept.PractiseIdentity, accept.Answer)
+	correct, err2 := models.ProblemModels.PractiseProblemIsCorrect(userIdentity.(string), accept.ProblemIdentity, accept.PractiseIdentity, accept.Answer)
 	if err2 != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
