@@ -25,7 +25,7 @@ type Problem struct {
 
 var ProblemModels *Problem
 
-func (*Problem) ProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity, answer string) (interface{}, error) {
+func (*Problem) PractiseProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity, answer string) (interface{}, error) {
 	problem, err := getProblemByIdentity(problemIdentity)
 	if err != nil {
 		return nil, err
