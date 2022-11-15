@@ -10,7 +10,7 @@ import (
 // @Summary	删除题目类型
 // @Tags	老师方法
 // @Param	json body deleteProblemCategoryAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/ProblemCategory [delete]
 func DeleteProblemCategory(c *gin.Context) {
@@ -48,7 +48,7 @@ type deleteProblemCategoryAccept struct {
 // @Summary	添加题目类型
 // @Tags	老师方法
 // @Param	json body addProblemCategoryAccept false "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/ProblemCategory [post]
 func AddProblemCategory(c *gin.Context) {
@@ -85,7 +85,7 @@ type addProblemCategoryAccept struct {
 // GetProblemCategoryList
 // @Summary	获取题目类型列表
 // @Tags	老师方法
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"
 // @Param	keyWord query string false "keyWord"

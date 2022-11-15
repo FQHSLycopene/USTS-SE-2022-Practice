@@ -91,7 +91,7 @@ func GetRandPractiseProblemDetail(c *gin.Context) {
 // @Summary	删除题目
 // @Tags	老师方法
 // @Param	json body deleteProblemAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Problem [delete]
 func DeleteProblem(c *gin.Context) {
@@ -106,7 +106,7 @@ type deleteProblemAccept struct {
 // @Summary	修改题目
 // @Tags	老师方法
 // @Param	json body updateProblemAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Problem [put]
 func UpdateProblem(c *gin.Context) {
@@ -150,7 +150,7 @@ type updateProblemAccept struct {
 // @Summary	创建题目
 // @Tags	老师方法
 // @Param	json body addProblemAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Problem [post]
 func AddProblem(c *gin.Context) {

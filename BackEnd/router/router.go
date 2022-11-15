@@ -20,6 +20,7 @@ func Router() *gin.Engine {
 	}
 	teacherGroup := r.Group("/teacher", middleware.AnalyseToken(), middleware.UserIsTeacher())
 	{
+		teacherGroup.GET("/Knowledge", service.GetKnowledgeList)
 		teacherGroup.POST("/Knowledge", service.AddKnowledge)
 		teacherGroup.PUT("/Knowledge", service.UpdateKnowledge)
 		teacherGroup.DELETE("/Knowledge", service.DeleteKnowledge)
@@ -44,7 +45,7 @@ func Router() *gin.Engine {
 
 	publicGroup := r.Group("", middleware.AnalyseToken())
 	{
-		publicGroup.GET("/Knowledge", service.GetKnowledgeList)
+
 		publicGroup.GET("/Achievement", service.GetAchievementList)
 		publicGroup.GET("/Class", service.GetClassList)
 		publicGroup.GET("/Avatar", service.GetAvatar)

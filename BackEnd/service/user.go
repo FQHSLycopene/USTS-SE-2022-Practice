@@ -15,7 +15,7 @@ import (
 // @Tags	公共方法
 // @Accept multipart/form-data
 // @Param file formData file true "file"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/Avatar [post]
 func UpdateAvatar(c *gin.Context) {
@@ -61,7 +61,7 @@ func UpdateAvatar(c *gin.Context) {
 // @Summary	修改用户密码
 // @Tags	公共方法
 // @Param	json body updatePasswordAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/Password [post]
 func UpdatePassword(c *gin.Context) {
@@ -101,7 +101,7 @@ type updatePasswordAccept struct {
 // @Summary	修改用户信息
 // @Tags	公共方法
 // @Param	json body updateUserAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/User [post]
 func UpdateUser(c *gin.Context) {
@@ -141,7 +141,7 @@ type updateUserAccept struct {
 // GetUser
 // @Summary	获取用户信息
 // @Tags	公共方法
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/User [get]
 func GetUser(c *gin.Context) {
@@ -165,7 +165,7 @@ func GetUser(c *gin.Context) {
 // GetAvatar
 // @Summary	获取头像
 // @Tags	公共方法
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/Avatar [get]
 func GetAvatar(c *gin.Context) {
@@ -189,7 +189,7 @@ func GetAvatar(c *gin.Context) {
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"
 // @Param	keyWord query string false "keyWord"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/ClassStudents [get]
 func GetClassStudentList(c *gin.Context) {
