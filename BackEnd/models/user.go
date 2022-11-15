@@ -35,11 +35,22 @@ type ExamPaperProblems struct {
 	Exam            *Exam  `gorm:"foreignKey:ExamIdentity;references:Identity"`
 	Answer          string `gorm:"Type:text;Column:answer" json:"answer"`
 	Status          int    `gorm:"NOT NULL;Type:int(11);Column:status;default:0" json:"status"` //0没有做，1做对，2做错
-
 }
 
 func (table *User) TableName() string {
 	return "user"
+}
+
+func UserIsHasClass(identity string) (bool, error) {
+	user, err := GetUserByIdentity(identity)
+	if err != nil {
+		return false, err
+	}
+	count := DB.Model(user).Association("Classes").Count()
+	if count == 0 {
+		return false, err
+	}
+	return true, nil
 }
 
 func UpdateAvatar(identity, dst string) (interface{}, error) {

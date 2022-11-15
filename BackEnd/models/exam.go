@@ -1,7 +1,9 @@
 package models
 
 import (
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"strconv"
 	"time"
 )
 
@@ -25,4 +27,46 @@ type ExamProblems struct {
 	ExamIdentity    string `gorm:"NOT NULL;Type:varchar(36);Column:exam_identity" json:"exam_identity"`
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 	QuestionNum     int    `gorm:"NOT NULL;Type:int;Column:question_num" json:"question_num"` //题号
+}
+
+func GetStudentExamList(userIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+	user, err3 := GetUserByIdentity(userIdentity)
+	if err3 != nil {
+		return nil, err3
+	}
+
+	class := make([]*Class, 0)
+	err := DB.Model(user).Association("Classes").Find(&class)
+	if err != nil {
+		return nil, err
+	}
+	data, err2 := GetExamList(class[0].Identity, pageStr, pageSizeStr, keyWord)
+	if err2 != nil {
+		return nil, err2
+	}
+	return data, nil
+}
+
+func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+	data := make([]*Exam, 0)
+	var total int64 = 0
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, err
+	}
+	pageSize, err2 := strconv.Atoi(pageSizeStr)
+	if err2 != nil {
+		return nil, err2
+	}
+	err = DB.Model(&data).Where("class_identity = ?", classIdentity).
+		Where("name like ?", "%"+keyWord+"%").
+		Offset((page - 1) * pageSize).Limit(pageSize).
+		Count(&total).Find(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return gin.H{
+		"total": total,
+		"list":  data,
+	}, nil
 }
