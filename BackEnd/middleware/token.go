@@ -9,7 +9,7 @@ import (
 
 func AnalyseToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("token")
+		token := c.GetHeader("Authorization")
 		analyseToken, err := utils.AnalyseToken(token)
 		if err != nil {
 			c.JSON(200, define.Result{

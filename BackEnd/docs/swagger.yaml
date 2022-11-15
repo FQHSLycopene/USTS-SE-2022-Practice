@@ -217,9 +217,9 @@ paths:
   /Achievement:
     get:
       parameters:
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       - description: page
@@ -245,9 +245,9 @@ paths:
   /Avatar:
     get:
       parameters:
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -267,9 +267,9 @@ paths:
         name: file
         required: true
         type: file
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -312,9 +312,9 @@ paths:
         in: query
         name: keyWord
         type: string
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -323,34 +323,6 @@ paths:
           schema:
             type: string
       summary: 获取班级列表
-      tags:
-      - 公共方法
-  /Knowledge:
-    get:
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      - description: page
-        in: query
-        name: page
-        type: string
-      - description: pageSize
-        in: query
-        name: pageSize
-        type: string
-      - description: keyWord
-        in: query
-        name: keyWord
-        type: string
-      responses:
-        "200":
-          description: code":"200","msg":"","data",""}
-          schema:
-            type: string
-      summary: 获取知识点列表
       tags:
       - 公共方法
   /Login:
@@ -378,9 +350,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.updatePasswordAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -443,9 +415,9 @@ paths:
   /User:
     get:
       parameters:
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -464,9 +436,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.updateUserAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -662,9 +634,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.addAchievementAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -684,9 +656,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.createClassAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -705,9 +677,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.updateClassAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         type: string
       responses:
         "200":
@@ -725,9 +697,9 @@ paths:
         name: identity
         required: true
         type: string
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         type: string
       responses:
         "200":
@@ -757,9 +729,9 @@ paths:
         in: query
         name: keyWord
         type: string
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -779,9 +751,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.deleteKnowledgeAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -792,6 +764,33 @@ paths:
       summary: 删除知识点
       tags:
       - 老师方法
+    get:
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取知识点列表
+      tags:
+      - 老师方法
     post:
       parameters:
       - description: json
@@ -800,9 +799,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.addKnowledgeAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -821,9 +820,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.updateKnowledgeAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -843,9 +842,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.deleteProblemAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -864,9 +863,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.addProblemAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -885,9 +884,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.updateProblemAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -907,9 +906,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.deleteProblemCategoryAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -922,9 +921,9 @@ paths:
       - 老师方法
     get:
       parameters:
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       - description: page
@@ -954,9 +953,9 @@ paths:
         name: json
         schema:
           $ref: '#/definitions/service.addProblemCategoryAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:

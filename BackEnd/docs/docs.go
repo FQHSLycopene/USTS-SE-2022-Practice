@@ -25,8 +25,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -68,8 +68,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -101,8 +101,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -171,53 +171,10 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/Knowledge": {
-            "get": {
-                "tags": [
-                    "公共方法"
-                ],
-                "summary": "获取知识点列表",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "page",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "pageSize",
-                        "name": "pageSize",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "keyWord",
-                        "name": "keyWord",
-                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -274,8 +231,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -377,8 +334,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -409,8 +366,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -715,8 +672,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -749,8 +706,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header"
                     }
                 ],
@@ -780,8 +737,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -812,8 +769,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header"
                     }
                 ],
@@ -861,8 +818,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -878,6 +835,47 @@ const docTemplate = `{
             }
         },
         "/teacher/Knowledge": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取知识点列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "put": {
                 "tags": [
                     "老师方法"
@@ -895,8 +893,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -927,8 +925,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -959,8 +957,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -993,8 +991,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1025,8 +1023,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1057,8 +1055,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1082,8 +1080,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -1131,8 +1129,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -1163,8 +1161,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }

@@ -10,7 +10,7 @@ import (
 // @Summary	获取班级详情
 // @Tags	老师方法
 // @Param   identity path string true "class_identity"
-// @Param	token header string false "token"
+// @Param	Authorization header string false "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Class/{identity} [get]
 func GetClassDetail(c *gin.Context) {
@@ -35,7 +35,7 @@ func GetClassDetail(c *gin.Context) {
 // @Summary	修改班级
 // @Tags	老师方法
 // @Param   json body updateClassAccept true "上传的JSON"
-// @Param	token header string false "token"
+// @Param	Authorization header string false "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Class [put]
 func UpdateClass(c *gin.Context) {
@@ -76,7 +76,7 @@ type updateClassAccept struct {
 // @Summary	创建班级
 // @Tags	老师方法
 // @Param	json body createClassAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Class [post]
 func CreateClass(c *gin.Context) {
@@ -172,7 +172,7 @@ type joinClassAccept struct {
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"
 // @Param	keyWord query string false "keyWord"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/Class [get]
 func GetClassList(c *gin.Context) {

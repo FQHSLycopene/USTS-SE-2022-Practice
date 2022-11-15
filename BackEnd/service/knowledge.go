@@ -10,7 +10,7 @@ import (
 // @Summary	添加知识点
 // @Tags	老师方法
 // @Param	json body addKnowledgeAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  define.Result
 // @Router	/teacher/Knowledge [post]
 func AddKnowledge(c *gin.Context) {
@@ -46,13 +46,13 @@ type addKnowledgeAccept struct {
 
 // GetKnowledgeList
 // @Summary	获取知识点列表
-// @Tags	公共方法
-// @Param	token header string true "token"
+// @Tags	老师方法
+// @Param	Authorization header string true "Authorization"
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"
 // @Param	keyWord query string false "keyWord"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
-// @Router	/Knowledge [Get]
+// @Router	/teacher/Knowledge [Get]
 func GetKnowledgeList(c *gin.Context) {
 	page := c.DefaultQuery("page", define.DefaultPage)
 	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
@@ -77,7 +77,7 @@ func GetKnowledgeList(c *gin.Context) {
 // @Summary	修改知识点
 // @Tags	老师方法
 // @Param	json body updateKnowledgeAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Knowledge [put]
 func UpdateKnowledge(c *gin.Context) {
@@ -116,7 +116,7 @@ type updateKnowledgeAccept struct {
 // @Summary	删除知识点
 // @Tags	老师方法
 // @Param	json body deleteKnowledgeAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/teacher/Knowledge [delete]
 func DeleteKnowledge(c *gin.Context) {
