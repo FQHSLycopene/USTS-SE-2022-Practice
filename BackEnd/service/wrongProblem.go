@@ -9,7 +9,7 @@ import (
 // GetWrongProblemList
 // @Summary	获取错题列表
 // @Tags	学生方法
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"
 // @Param	keyWord query string false "keyWord"
@@ -39,7 +39,7 @@ func GetWrongProblemList(c *gin.Context) {
 // GetWrongProblemDetail
 // @Summary	获取错题详情
 // @Tags	学生方法
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Param   identity path string true "wrongProblem_identity"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/student/WrongProblem/{identity} [Get]

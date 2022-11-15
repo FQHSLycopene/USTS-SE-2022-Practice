@@ -37,6 +37,7 @@ func Router() *gin.Engine {
 
 		teacherGroup.GET("/ClassStudents", service.GetClassStudentList)
 
+		//teacherGroup.GET("/Problem", service.GetProblemList)
 		teacherGroup.POST("/Problem", service.AddProblem)
 		teacherGroup.PUT("/Problem", service.UpdateProblem)
 		teacherGroup.DELETE("/Problem", service.DeleteProblem)
@@ -58,7 +59,7 @@ func Router() *gin.Engine {
 	studentGroup := r.Group("/student", middleware.AnalyseToken(), middleware.UserIsStudent())
 	{
 		studentGroup.PUT("/Class", service.JoinClass)
-		studentGroup.GET("/Practise", middleware.IsGetAchievement(), service.GetPractiseList)
+		studentGroup.GET("/Practise", service.GetPractiseList)
 		studentGroup.GET("/PractiseProblemDetail", service.GetRandPractiseProblemDetail)
 
 		studentGroup.GET("/WrongProblem", service.GetWrongProblemList)

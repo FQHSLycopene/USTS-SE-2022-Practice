@@ -123,7 +123,7 @@ type createClassAccept struct {
 // @Summary	加入班级
 // @Tags	学生方法
 // @Param	json body joinClassAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/student/Class [put]
 func JoinClass(c *gin.Context) {
