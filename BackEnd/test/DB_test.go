@@ -1,6 +1,7 @@
 package test
 
 import (
+	"BackEnd/models"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -8,14 +9,14 @@ import (
 )
 
 func TestDB(t *testing.T) {
-	dsn := "Lycopene:MiMaJiuShi123321!@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "Lycopene:MiMaJiuShi123321!@tcp(127.0.0.1:3306)/SE2022?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 	}
-	db.AutoMigrate(&User{}, &Card{}, &Language{})
-	user := make([]User, 0)
-	db.Model(user).Where("name = ?", "user_3").Order("RAND()").Limit(1).Find(&user)
-	fmt.Println(user)
+	problemIdentities := []string{"10bf65da-be8f-4323-a933-f4e8bc101420", "e87a03f5-f915-4ff3-81f0-654db910de03"}
+	problems := make([]models.Problem, 0)
+	db.Where("identity in ?", problemIdentities).Find(&problems)
+	fmt.Println(problems)
 }
 
 func TestHasmany(t *testing.T) {

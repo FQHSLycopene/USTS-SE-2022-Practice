@@ -121,7 +121,7 @@ func AddClass(name, userIdentity string) (interface{}, error) {
 	class := Class{
 		Identity:      utils.GetUuid(),
 		Name:          name,
-		JoinCode:      name + utils.GetCode(),
+		JoinCode:      utils.GetCode(),
 		StudentNumber: 0,
 	}
 	data := User{}

@@ -847,6 +847,40 @@
                 }
             }
         },
+        "/teacher/Exam": {
+            "post": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "添加考试",
+                "parameters": [
+                    {
+                        "description": "StartAt为考试开始时间，Duration为考试持续时间单位为秒",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addExamAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/Knowledge": {
             "get": {
                 "tags": [
@@ -1204,6 +1238,36 @@
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "service.addExamAccept": {
+            "type": "object",
+            "required": [
+                "StartAt",
+                "class_identity",
+                "duration",
+                "name",
+                "problem_identities"
+            ],
+            "properties": {
+                "StartAt": {
+                    "type": "string"
+                },
+                "class_identity": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "problem_identities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

@@ -42,6 +42,8 @@ func Router() *gin.Engine {
 		teacherGroup.PUT("/Problem", service.UpdateProblem)
 		teacherGroup.DELETE("/Problem", service.DeleteProblem)
 
+		teacherGroup.POST("/Exam", service.AddExam)
+
 	}
 
 	publicGroup := r.Group("", middleware.AnalyseToken())

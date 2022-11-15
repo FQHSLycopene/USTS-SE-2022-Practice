@@ -9,6 +9,27 @@ definitions:
     - knowledge_identity
     - name
     type: object
+  service.addExamAccept:
+    properties:
+      StartAt:
+        type: string
+      class_identity:
+        type: string
+      duration:
+        type: integer
+      name:
+        type: string
+      problem_identities:
+        items:
+          type: string
+        type: array
+    required:
+    - StartAt
+    - class_identity
+    - duration
+    - name
+    - problem_identities
+    type: object
   service.addKnowledgeAccept:
     properties:
       name:
@@ -756,6 +777,28 @@ paths:
           schema:
             type: string
       summary: 获取班级学生列表
+      tags:
+      - 老师方法
+  /teacher/Exam:
+    post:
+      parameters:
+      - description: StartAt为考试开始时间，Duration为考试持续时间单位为秒
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.addExamAccept'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 添加考试
       tags:
       - 老师方法
   /teacher/Knowledge:
