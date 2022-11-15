@@ -45,20 +45,15 @@ type addAchievementAccept struct {
 	KnowledgeIdentity string `binding:"required" json:"knowledge_identity"`
 }
 
-// GetAchievementList
+// GetUserAchievementList
 // @Summary	获取成就列表
-// @Tags	公共方法
+// @Tags	学生方法
 // @Param	Authorization header string true "Authorization"
-// @Param	page query string false "page"
-// @Param	pageSize query string false "pageSize"
-// @Param	keyWord query string false "keyWord"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
-// @Router	/Achievement [Get]
-func GetAchievementList(c *gin.Context) {
-	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
-	keyWord := c.Query("keyWord")
-	data, err := models.GetAchievementList(page, pageSize, keyWord)
+// @Router	/student/Achievement [Get]
+func GetUserAchievementList(c *gin.Context) {
+	userIdentity, _ := c.Get("userIdentity")
+	data, err := models.GetUserAchievementList(userIdentity.(string))
 	if err != nil {
 		c.JSON(200, define.Result{
 			Code: 401,

@@ -214,34 +214,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /Achievement:
-    get:
-      parameters:
-      - description: Authorization
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: page
-        in: query
-        name: page
-        type: string
-      - description: pageSize
-        in: query
-        name: pageSize
-        type: string
-      - description: keyWord
-        in: query
-        name: keyWord
-        type: string
-      responses:
-        "200":
-          description: code":"200","msg":"","data",""}
-          schema:
-            type: string
-      summary: 获取成就列表
-      tags:
-      - 公共方法
   /Avatar:
     get:
       parameters:
@@ -484,6 +456,22 @@ paths:
       summary: 获取图片
       tags:
       - 公共方法
+  /student/Achievement:
+    get:
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取成就列表
+      tags:
+      - 学生方法
   /student/Class:
     put:
       parameters:
@@ -493,9 +481,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.joinClassAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -521,9 +509,9 @@ paths:
         in: query
         name: keyWord
         type: string
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         type: string
       responses:
         "200":
@@ -541,9 +529,9 @@ paths:
         name: practiseIdentity
         required: true
         type: string
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -563,9 +551,9 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/service.upProblemAnswerAccept'
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       responses:
@@ -579,9 +567,9 @@ paths:
   /student/WrongProblem:
     get:
       parameters:
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       - description: page
@@ -607,9 +595,9 @@ paths:
   /student/WrongProblem/{identity}:
     get:
       parameters:
-      - description: token
+      - description: Authorization
         in: header
-        name: token
+        name: Authorization
         required: true
         type: string
       - description: wrongProblem_identity
