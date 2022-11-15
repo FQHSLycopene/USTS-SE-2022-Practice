@@ -15,7 +15,7 @@ var Problem *problem
 // @Summary	提交题目
 // @Tags	学生方法
 // @Param   json body upProblemAnswerAccept true "json"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/student/UpProblemAnswer [put]
 func (p *problem) UpProblemAnswer(c *gin.Context) {
@@ -67,7 +67,7 @@ func GetImage(c *gin.Context) {
 // @Summary	获取练习随机题目
 // @Tags	学生方法
 // @Param	practiseIdentity query string true "practiseIdentity"
-// @Param	token header string true "token"
+// @Param	Authorization header string true "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/student/PractiseProblemDetail [get]
 func GetRandPractiseProblemDetail(c *gin.Context) {

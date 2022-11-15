@@ -12,7 +12,7 @@ import (
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"
 // @Param	keyWord query string false "keyWord"
-// @Param	token header string false "token"
+// @Param	Authorization header string false "Authorization"
 // @Success	200  {string}  json{"code":"200","msg":"","data",""}
 // @Router	/student/Practise [get]
 func GetPractiseList(c *gin.Context) {
