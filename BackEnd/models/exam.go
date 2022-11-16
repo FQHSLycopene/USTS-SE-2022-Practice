@@ -2,6 +2,7 @@ package models
 
 import (
 	"BackEnd/utils"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
@@ -30,10 +31,40 @@ type ExamProblems struct {
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 }
 
+func DeleteExamProblem(examIdentity string, problemIdentities []string) (interface{}, error) {
+	exam, err := getExamByIdentity(examIdentity)
+	if err != nil {
+		return nil, err
+	}
+	if exam.Publish == 1 {
+		return nil, errors.New("考试已发布无法修改题目")
+	}
+	for _, problemIdentity := range problemIdentities {
+		ep := ExamProblems{}
+		problem, err := getProblemByIdentity(problemIdentity)
+		if err != nil {
+			return nil, err
+		}
+		err = DB.Model(&ep).Where("exam_identity = ?", examIdentity).
+			Where("problem_identity = ?", problemIdentity).
+			Delete(&ep).Error
+		exam.ProblemNumber -= 1
+		exam.TotalScore -= problem.Score
+		err = DB.Save(exam).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+	return nil, nil
+}
+
 func UpdateExam(examIdentity, name, duration string, startAt time.Time) (interface{}, error) {
 	exam, err := getExamByIdentity(examIdentity)
 	if err != nil {
 		return nil, err
+	}
+	if exam.Publish == 1 {
+		return nil, errors.New("考试已发布无法修改信息")
 	}
 	parseDuration, err2 := time.ParseDuration(duration)
 	if err2 != nil {

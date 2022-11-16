@@ -8,10 +8,50 @@ import (
 	"time"
 )
 
+// DeleteExamProblem
+// @Summary	删除考试题目列表
+// @Tags	老师方法
+// @Param	json body deleteExamProblemAccept true "json"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/ExamProblem [delete]
+func DeleteExamProblem(c *gin.Context) {
+	accept := deleteExamProblemAccept{}
+	err := c.ShouldBind(&accept)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	_, err = models.DeleteExamProblem(accept.ExamIdentity, accept.ProblemIdentities)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: nil,
+		Msg:  "success",
+	})
+
+}
+
+type deleteExamProblemAccept struct {
+	ExamIdentity      string   `binding:"required" json:"exam_identity"`
+	ProblemIdentities []string `binding:"required" json:"problem_identities"`
+}
+
 // GetExamList
 // @Summary	获取老师考试列表
 // @Tags	老师方法
-// @Param	classIdentity query string false "classIdentity"
+// @Param	classIdentity query string true "classIdentity"
 // @Param	page query string false "page"
 // @Param	pageSize query string false "pageSize"
 // @Param	keyWord query string false "keyWord"
