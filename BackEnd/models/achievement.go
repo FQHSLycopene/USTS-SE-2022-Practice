@@ -2,9 +2,7 @@ package models
 
 import (
 	"BackEnd/utils"
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"strconv"
 	"time"
 )
 
@@ -44,25 +42,17 @@ func AddAchievement(name, knowledgeIdentity string) (interface{}, error) {
 	return data, err
 }
 
-func GetAchievementList(pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+func GetUserAchievementList(userIdentity string) (interface{}, error) {
+	user, err4 := GetUserByIdentity(userIdentity)
+	if err4 != nil {
+		return nil, err4
+	}
 	data := make([]*Achievement, 0)
-	var total int64 = 0
-	page, err := strconv.Atoi(pageStr)
-	if err != nil {
-		return nil, err
-	}
-	pageSize, err2 := strconv.Atoi(pageSizeStr)
-	if err2 != nil {
-		return nil, err2
-	}
-	err3 := DB.Model(data).Where("name like ?", "%"+keyWord+"%").Offset((page - 1) * pageSize).Limit(pageSize).Count(&total).Find(&data).Error
+	err3 := DB.Model(user).Association("Achievements").Find(&data)
 	if err3 != nil {
 		return nil, err3
 	}
-	return gin.H{
-		"total": total,
-		"list":  data,
-	}, nil
+	return data, nil
 }
 
 func UpdateAchievement(name, knowledgeIdentity string) (interface{}, error) {

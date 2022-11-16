@@ -35,11 +35,22 @@ type ExamPaperProblems struct {
 	Exam            *Exam  `gorm:"foreignKey:ExamIdentity;references:Identity"`
 	Answer          string `gorm:"Type:text;Column:answer" json:"answer"`
 	Status          int    `gorm:"NOT NULL;Type:int(11);Column:status;default:0" json:"status"` //0没有做，1做对，2做错
-
 }
 
 func (table *User) TableName() string {
 	return "user"
+}
+
+func UserIsHasClass(identity string) (bool, error) {
+	user, err := GetUserByIdentity(identity)
+	if err != nil {
+		return false, err
+	}
+	count := DB.Model(user).Association("Classes").Count()
+	if count == 0 {
+		return false, err
+	}
+	return true, nil
 }
 
 func UpdateAvatar(identity, dst string) (interface{}, error) {
@@ -173,8 +184,8 @@ func GetClassStudentList(classIdentity, pageStr, pageSizeStr, keyWord string) (i
 		return nil, err2
 	}
 	err = DB.Model(&User{}).Joins("right join user_classes uc on uc.user_identity = identity").
-		Where("uc.class_identity = ?", classIdentity).
-		Where("status = ?", 1).Offset((page-1)*pageSize).Limit(pageSize).Count(&total).
+		Where("uc.class_identity = ?", classIdentity).Count(&total).
+		Where("status = ?", 1).Offset((page-1)*pageSize).Limit(pageSize).
 		Select("Identity", "Name").
 		Find(&data).Error
 	if err != nil {

@@ -51,6 +51,16 @@ func (*Problem) PractiseProblemIsCorrect(userIdentity, problemIdentity, practise
 		DB.Save(&practise)
 		DB.Where("practise_identity = ?", practiseIdentity).
 			Where("problem_identity = ?", problemIdentity).Save(&practiseProblem)
+		if practise.ProblemNum == practise.RightNum {
+			achievement, err := getAchievementByKnowledgeIdentity(practise.KnowledgeIdentity)
+			if err != nil {
+				return nil, err
+			}
+			err = DB.Model(user).Association("Achievements").Append(achievement)
+			if err != nil {
+				return nil, err
+			}
+		}
 		return "correct", nil
 	} else {
 		wrongProblem := wrongProblem{

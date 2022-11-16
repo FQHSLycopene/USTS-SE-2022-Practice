@@ -16,49 +16,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/Achievement": {
-            "get": {
-                "tags": [
-                    "公共方法"
-                ],
-                "summary": "获取成就列表",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "page",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "pageSize",
-                        "name": "pageSize",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "keyWord",
-                        "name": "keyWord",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/Avatar": {
             "get": {
                 "tags": [
@@ -437,6 +394,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/student/Achievement": {
+            "get": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "获取成就列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/student/Class": {
             "put": {
                 "tags": [
@@ -455,8 +437,51 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/Exam": {
+            "get": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "获取学生考试列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -498,8 +523,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header"
                     }
                 ],
@@ -529,8 +554,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -563,8 +588,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     }
@@ -588,8 +613,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -631,8 +656,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "token",
-                        "name": "token",
+                        "description": "Authorization",
+                        "name": "Authorization",
                         "in": "header",
                         "required": true
                     },
@@ -815,6 +840,72 @@ const docTemplate = `{
                         "description": "keyWord",
                         "name": "keyWord",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/Exam": {
+            "put": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "更新考试信息",
+                "parameters": [
+                    {
+                        "description": "StartAt为考试开始时间（例：北京时间2022年12月30日中午12点30分，格式为",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.updateExamAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "添加考试",
+                "parameters": [
+                    {
+                        "description": "StartAt为考试开始时间（例：北京时间2022年12月30日中午12点30分，格式为",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addExamAccept"
+                        }
                     },
                     {
                         "type": "string",
@@ -1194,6 +1285,36 @@ const docTemplate = `{
                 }
             }
         },
+        "service.addExamAccept": {
+            "type": "object",
+            "required": [
+                "StartAt",
+                "class_identity",
+                "duration",
+                "name",
+                "problem_identities"
+            ],
+            "properties": {
+                "StartAt": {
+                    "type": "string"
+                },
+                "class_identity": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "problem_identities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "service.addKnowledgeAccept": {
             "type": "object",
             "required": [
@@ -1399,6 +1520,29 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "service.updateExamAccept": {
+            "type": "object",
+            "required": [
+                "StartAt",
+                "duration",
+                "exam_identity",
+                "name"
+            ],
+            "properties": {
+                "StartAt": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "exam_identity": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },

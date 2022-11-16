@@ -41,8 +41,8 @@ func GetPractiseList(userIdentity, pageStr, pageSizeStr, keyWord string) (interf
 	}
 	DB.Model(&practise).Preload("Knowledge").
 		Where("name like ?", "%"+keyWord+"%").
-		Where("user_identity = ?", userIdentity).
-		Offset((page - 1) * pageSize).Limit(pageSize).Count(&total).
+		Where("user_identity = ?", userIdentity).Count(&total).
+		Offset((page - 1) * pageSize).Limit(pageSize).
 		Find(&practise)
 	return gin.H{
 		"total": total,
