@@ -60,14 +60,14 @@ func GetStudentExamList(userIdentity, pageStr, pageSizeStr, keyWord string) (int
 	if err != nil {
 		return nil, err
 	}
-	data, err2 := GetExamList(class[0].Identity, pageStr, pageSizeStr, keyWord)
+	data, err2 := GetExamList(class[0].Identity, pageStr, pageSizeStr, keyWord, 1)
 	if err2 != nil {
 		return nil, err2
 	}
 	return data, nil
 }
 
-func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string, status int) (interface{}, error) {
 	data := make([]*Exam, 0)
 	var total int64 = 0
 	page, err := strconv.Atoi(pageStr)
@@ -78,15 +78,27 @@ func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string) (interface
 	if err2 != nil {
 		return nil, err2
 	}
-	err = DB.Model(&data).
-		Where("publish = ?", 1).
-		Where("class_identity = ?", classIdentity).
-		Where("name like ?", "%"+keyWord+"%").Count(&total).
-		Offset((page - 1) * pageSize).Limit(pageSize).
-		Find(&data).Error
-	if err != nil {
-		return nil, err
+	if status == 1 {
+		err = DB.Model(&data).
+			Where("publish = ?", 1).
+			Where("class_identity = ?", classIdentity).
+			Where("name like ?", "%"+keyWord+"%").Count(&total).
+			Offset((page - 1) * pageSize).Limit(pageSize).
+			Find(&data).Error
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = DB.Model(&data).
+			Where("class_identity = ?", classIdentity).
+			Where("name like ?", "%"+keyWord+"%").Count(&total).
+			Offset((page - 1) * pageSize).Limit(pageSize).
+			Find(&data).Error
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	return gin.H{
 		"total": total,
 		"list":  data,

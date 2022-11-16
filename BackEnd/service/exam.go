@@ -8,6 +8,38 @@ import (
 	"time"
 )
 
+// GetExamList
+// @Summary	获取老师考试列表
+// @Tags	老师方法
+// @Param	classIdentity query string false "classIdentity"
+// @Param	page query string false "page"
+// @Param	pageSize query string false "pageSize"
+// @Param	keyWord query string false "keyWord"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Exam [get]
+func GetExamList(c *gin.Context) {
+	page := c.DefaultQuery("page", define.DefaultPage)
+	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	keyWord := c.Query("keyWord")
+	classIdentity := c.Query("classIdentity")
+
+	data, err := models.GetExamList(classIdentity, page, pageSize, keyWord, 2)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
 // UpdateExam
 // @Summary	更新考试信息
 // @Tags	老师方法

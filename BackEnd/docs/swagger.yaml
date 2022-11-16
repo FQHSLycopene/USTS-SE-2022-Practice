@@ -796,6 +796,37 @@ paths:
       tags:
       - 老师方法
   /teacher/Exam:
+    get:
+      parameters:
+      - description: classIdentity
+        in: query
+        name: classIdentity
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取老师考试列表
+      tags:
+      - 老师方法
     post:
       parameters:
       - description: StartAt为考试开始时间（例：北京时间2022年12月30日中午12点30分，格式为
