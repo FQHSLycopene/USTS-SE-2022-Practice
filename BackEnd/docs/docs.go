@@ -870,7 +870,8 @@ const docTemplate = `{
                         "type": "string",
                         "description": "classIdentity",
                         "name": "classIdentity",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -952,6 +953,72 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/service.addExamAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/ExamProblem": {
+            "post": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "添加考试题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addExamProblemAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "删除考试题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.deleteExamProblemAccept"
                         }
                     },
                     {
@@ -1362,6 +1429,24 @@ const docTemplate = `{
                 }
             }
         },
+        "service.addExamProblemAccept": {
+            "type": "object",
+            "required": [
+                "exam_identity",
+                "problem_identities"
+            ],
+            "properties": {
+                "exam_identity": {
+                    "type": "string"
+                },
+                "problem_identities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "service.addKnowledgeAccept": {
             "type": "object",
             "required": [
@@ -1430,6 +1515,24 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "service.deleteExamProblemAccept": {
+            "type": "object",
+            "required": [
+                "exam_identity",
+                "problem_identities"
+            ],
+            "properties": {
+                "exam_identity": {
+                    "type": "string"
+                },
+                "problem_identities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

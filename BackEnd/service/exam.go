@@ -8,8 +8,47 @@ import (
 	"time"
 )
 
+// AddExamProblem
+// @Summary	添加考试题目
+// @Tags	老师方法
+// @Param	json body addExamProblemAccept true "json"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/ExamProblem [post]
+func AddExamProblem(c *gin.Context) {
+	accept := addExamProblemAccept{}
+	err := c.ShouldBind(&accept)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	data, err2 := models.AddExamProblem(accept.ExamIdentity, accept.ProblemIdentities)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
+type addExamProblemAccept struct {
+	ExamIdentity      string   `binding:"required" json:"exam_identity"`
+	ProblemIdentities []string `binding:"required" json:"problem_identities"`
+}
+
 // DeleteExamProblem
-// @Summary	删除考试题目列表
+// @Summary	删除考试题目
 // @Tags	老师方法
 // @Param	json body deleteExamProblemAccept true "json"
 // @Param	Authorization header string true "Authorization"

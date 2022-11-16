@@ -31,6 +31,38 @@ type ExamProblems struct {
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 }
 
+func AddExamProblem(examIdentity string, problemIdentities []string) (interface{}, error) {
+	exam, err := getExamByIdentity(examIdentity)
+	if err != nil {
+		return nil, err
+	}
+	if exam.Publish == 1 {
+		return nil, errors.New("考试已发布无法修改题目")
+	}
+	for _, problemIdentity := range problemIdentities {
+		problem, err := getProblemByIdentity(problemIdentity)
+		if err != nil {
+			return nil, err
+		}
+		ep := ExamProblems{
+			Identity:        utils.GetUuid(),
+			ExamIdentity:    examIdentity,
+			ProblemIdentity: problemIdentity,
+		}
+		err = DB.Create(&ep).Error
+		if err != nil {
+			return nil, err
+		}
+		exam.ProblemNumber += 1
+		exam.TotalScore += problem.Score
+		err = DB.Model(exam).Preload("Problems").Save(exam).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+	return exam, nil
+}
+
 func DeleteExamProblem(examIdentity string, problemIdentities []string) (interface{}, error) {
 	exam, err := getExamByIdentity(examIdentity)
 	if err != nil {
@@ -40,14 +72,17 @@ func DeleteExamProblem(examIdentity string, problemIdentities []string) (interfa
 		return nil, errors.New("考试已发布无法修改题目")
 	}
 	for _, problemIdentity := range problemIdentities {
-		ep := ExamProblems{}
 		problem, err := getProblemByIdentity(problemIdentity)
 		if err != nil {
 			return nil, err
 		}
+		ep := ExamProblems{}
 		err = DB.Model(&ep).Where("exam_identity = ?", examIdentity).
 			Where("problem_identity = ?", problemIdentity).
 			Delete(&ep).Error
+		if err != nil {
+			return nil, err
+		}
 		exam.ProblemNumber -= 1
 		exam.TotalScore -= problem.Score
 		err = DB.Save(exam).Error

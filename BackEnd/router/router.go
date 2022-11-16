@@ -47,6 +47,7 @@ func Router() *gin.Engine {
 		teacherGroup.GET("/Exam", service.GetExamList)
 
 		teacherGroup.DELETE("/ExamProblem", service.DeleteExamProblem)
+		teacherGroup.POST("/ExamProblem", service.AddExamProblem)
 
 	}
 
