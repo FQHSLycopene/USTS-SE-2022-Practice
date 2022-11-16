@@ -168,6 +168,22 @@ definitions:
     - class_identity
     - is_change_code
     type: object
+  service.updateExamAccept:
+    properties:
+      StartAt:
+        type: string
+      duration:
+        type: integer
+      exam_identity:
+        type: string
+      name:
+        type: string
+    required:
+    - StartAt
+    - duration
+    - exam_identity
+    - name
+    type: object
   service.updateKnowledgeAccept:
     properties:
       identity:
@@ -782,7 +798,7 @@ paths:
   /teacher/Exam:
     post:
       parameters:
-      - description: StartAt为考试开始时间，Duration为考试持续时间单位为秒
+      - description: StartAt为考试开始时间（例：北京时间2022年12月30日中午12点30分，格式为
         in: body
         name: json
         required: true
@@ -799,6 +815,27 @@ paths:
           schema:
             type: string
       summary: 添加考试
+      tags:
+      - 老师方法
+    put:
+      parameters:
+      - description: StartAt为考试开始时间（例：北京时间2022年12月30日中午12点30分，格式为
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.updateExamAccept'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 更新考试信息
       tags:
       - 老师方法
   /teacher/Knowledge:

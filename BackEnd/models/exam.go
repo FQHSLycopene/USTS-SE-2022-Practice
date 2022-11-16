@@ -19,6 +19,7 @@ type Exam struct {
 	Duration      time.Duration  `gorm:"NOT NULL;"`
 	ClassIdentity string         `gorm:"NOT NULL;Type:varchar(36);Column:class_identity" json:"class_identity"`
 	TotalScore    int            `gorm:"NOT NULL;Type:int;Column:total_score" json:"total_score"`
+	Publish       int            `gorm:"NOT NULL;Type:int;Column:publish;default:0" json:"publish"` //考试是否发布0为否1为是
 	ProblemNumber int            `gorm:"NOT NULL;Type:int;Column:problem_number" json:"problem_number"`
 	Problems      []*Problem     `gorm:"many2many:exam_problems;foreignKey:Identity;joinForeignKey:ExamIdentity;References:Identity;joinReferences:ProblemIdentity"`
 }
@@ -27,6 +28,25 @@ type ExamProblems struct {
 	Identity        string `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
 	ExamIdentity    string `gorm:"NOT NULL;Type:varchar(36);Column:exam_identity" json:"exam_identity"`
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
+}
+
+func UpdateExam(examIdentity, name, duration string, startAt time.Time) (interface{}, error) {
+	exam, err := getExamByIdentity(examIdentity)
+	if err != nil {
+		return nil, err
+	}
+	parseDuration, err2 := time.ParseDuration(duration)
+	if err2 != nil {
+		return nil, err2
+	}
+	exam.Name = name
+	exam.Duration = parseDuration
+	exam.StartAt = startAt
+	err = DB.Save(exam).Error
+	if err != nil {
+		return nil, err
+	}
+	return exam, nil
 }
 
 func GetStudentExamList(userIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
@@ -58,10 +78,12 @@ func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string) (interface
 	if err2 != nil {
 		return nil, err2
 	}
-	err = DB.Model(&data).Where("class_identity = ?", classIdentity).
-		Where("name like ?", "%"+keyWord+"%").
+	err = DB.Model(&data).
+		Where("publish = ?", 1).
+		Where("class_identity = ?", classIdentity).
+		Where("name like ?", "%"+keyWord+"%").Count(&total).
 		Offset((page - 1) * pageSize).Limit(pageSize).
-		Count(&total).Find(&data).Error
+		Find(&data).Error
 	if err != nil {
 		return nil, err
 	}
@@ -112,4 +134,13 @@ func AddExam(classIdentity, name, duration string, startAt time.Time, problemIde
 	}
 
 	return nil, err
+}
+
+func getExamByIdentity(identity string) (*Exam, error) {
+	exam := Exam{}
+	err := DB.Model(&exam).Where("identity = ?", identity).First(&exam).Error
+	if err != nil {
+		return nil, err
+	}
+	return &exam, nil
 }

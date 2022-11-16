@@ -176,10 +176,9 @@ func GetClassList(userIdentity, pageStr, pageSizeStr, keyWord string) (interface
 	}
 	err = DB.Model(data).
 		Joins("right join user_classes uc on uc.class_identity = identity").
-		Where("uc.user_identity = ?", userIdentity).
+		Where("uc.user_identity = ?", userIdentity).Count(&total).
 		Where("name like ?", "%"+keyWord+"%").
 		Offset((page - 1) * pageSize).Limit(pageSize).Omit("JoinCode").
-		Count(&total).
 		Find(&data).Error
 	return gin.H{
 		"total": total,

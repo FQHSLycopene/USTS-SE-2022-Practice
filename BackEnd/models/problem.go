@@ -3,7 +3,6 @@ package models
 import (
 	"BackEnd/utils"
 	"errors"
-	"fmt"
 	"gorm.io/gorm"
 	"time"
 )
@@ -54,7 +53,6 @@ func (*Problem) PractiseProblemIsCorrect(userIdentity, problemIdentity, practise
 			Where("problem_identity = ?", problemIdentity).Save(&practiseProblem)
 		if practise.ProblemNum == practise.RightNum {
 			achievement, err := getAchievementByKnowledgeIdentity(practise.KnowledgeIdentity)
-			fmt.Println(achievement)
 			if err != nil {
 				return nil, err
 			}

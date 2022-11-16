@@ -860,6 +860,38 @@ const docTemplate = `{
             }
         },
         "/teacher/Exam": {
+            "put": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "更新考试信息",
+                "parameters": [
+                    {
+                        "description": "StartAt为考试开始时间（例：北京时间2022年12月30日中午12点30分，格式为",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.updateExamAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "老师方法"
@@ -867,7 +899,7 @@ const docTemplate = `{
                 "summary": "添加考试",
                 "parameters": [
                     {
-                        "description": "StartAt为考试开始时间，Duration为考试持续时间单位为秒",
+                        "description": "StartAt为考试开始时间（例：北京时间2022年12月30日中午12点30分，格式为",
                         "name": "json",
                         "in": "body",
                         "required": true,
@@ -1488,6 +1520,29 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "service.updateExamAccept": {
+            "type": "object",
+            "required": [
+                "StartAt",
+                "duration",
+                "exam_identity",
+                "name"
+            ],
+            "properties": {
+                "StartAt": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "exam_identity": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },

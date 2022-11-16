@@ -8,19 +8,18 @@ import (
 )
 
 type wrongProblem struct {
+	ID        uint `gorm:"PRIMARY_KEY"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Identity  string         `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
+	Name      string         `gorm:"NOT NULL;unique;Type:varchar(36);Column:name" json:"name"`
 
-	ID              uint `gorm:"PRIMARY_KEY"`
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	DeletedAt       gorm.DeletedAt `gorm:"index"`
-	Identity        string         `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
-	Name            string         `gorm:"NOT NULL;unique;Type:varchar(36);Column:name" json:"name"`
+	UserIdentity string `gorm:"Type:varchar(36);Column:user_identity" json:"user_identity"`
 
-	UserIdentity    string         `gorm:"Type:varchar(36);Column:user_identity" json:"user_identity"`
-
-	ProblemIdentity string         `gorm:"Type:varchar(36);Column:problem_identity" json:"problem_identity"`
-	Problem         *Problem       `gorm:"foreignKey:ProblemIdentity;references:Identity"`
-	WrongAnswer     string         `gorm:"NOT NULL;Type:text;Column:wrong_answer" json:"wrong_answer"`
+	ProblemIdentity string   `gorm:"Type:varchar(36);Column:problem_identity" json:"problem_identity"`
+	Problem         *Problem `gorm:"foreignKey:ProblemIdentity;references:Identity"`
+	WrongAnswer     string   `gorm:"NOT NULL;Type:text;Column:wrong_answer" json:"wrong_answer"`
 }
 
 var WrongProblem *wrongProblem
@@ -45,8 +44,8 @@ func (*wrongProblem) GetWrongProblemList(pageStr, pageSizeStr, keyWord string) (
 	}
 	data := make([]*wrongProblem, 0)
 	DB.Model(&data).
-		Where("name like ?", "%"+keyWord+"%").
-		Offset((page - 1) * pageSize).Limit(pageSize).Count(&total).
+		Where("name like ?", "%"+keyWord+"%").Count(&total).
+		Offset((page - 1) * pageSize).Limit(pageSize).
 		Find(&data)
 	return gin.H{
 		"list":  data,

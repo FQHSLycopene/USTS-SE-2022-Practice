@@ -184,8 +184,8 @@ func GetClassStudentList(classIdentity, pageStr, pageSizeStr, keyWord string) (i
 		return nil, err2
 	}
 	err = DB.Model(&User{}).Joins("right join user_classes uc on uc.user_identity = identity").
-		Where("uc.class_identity = ?", classIdentity).
-		Where("status = ?", 1).Offset((page-1)*pageSize).Limit(pageSize).Count(&total).
+		Where("uc.class_identity = ?", classIdentity).Count(&total).
+		Where("status = ?", 1).Offset((page-1)*pageSize).Limit(pageSize).
 		Select("Identity", "Name").
 		Find(&data).Error
 	if err != nil {
