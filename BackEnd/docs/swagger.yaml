@@ -30,6 +30,18 @@ definitions:
     - name
     - problem_identities
     type: object
+  service.addExamProblemAccept:
+    properties:
+      exam_identity:
+        type: string
+      problem_identities:
+        items:
+          type: string
+        type: array
+    required:
+    - exam_identity
+    - problem_identities
+    type: object
   service.addKnowledgeAccept:
     properties:
       name:
@@ -78,6 +90,18 @@ definitions:
     required:
     - name
     type: object
+  service.deleteExamProblemAccept:
+    properties:
+      exam_identity:
+        type: string
+      problem_identities:
+        items:
+          type: string
+        type: array
+    required:
+    - exam_identity
+    - problem_identities
+    type: object
   service.deleteKnowledgeAccept:
     properties:
       identity:
@@ -115,6 +139,13 @@ definitions:
     required:
     - name
     - password
+    type: object
+  service.publishExamAccept:
+    properties:
+      exam_identity:
+        type: string
+    required:
+    - exam_identity
     type: object
   service.registerAccept:
     properties:
@@ -796,6 +827,38 @@ paths:
       tags:
       - 老师方法
   /teacher/Exam:
+    get:
+      parameters:
+      - description: classIdentity
+        in: query
+        name: classIdentity
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取老师考试列表
+      tags:
+      - 老师方法
     post:
       parameters:
       - description: StartAt为考试开始时间（例：北京时间2022年12月30日中午12点30分，格式为
@@ -836,6 +899,102 @@ paths:
           schema:
             type: string
       summary: 更新考试信息
+      tags:
+      - 老师方法
+  /teacher/Exam/{identity}:
+    get:
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: examIdentity
+        in: path
+        name: identity
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取考试详情
+      tags:
+      - 老师方法
+  /teacher/ExamProblem:
+    delete:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.deleteExamProblemAccept'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 删除考试题目
+      tags:
+      - 老师方法
+    get:
+      parameters:
+      - description: examIdentity
+        in: query
+        name: examIdentity
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取考试题目列表
+      tags:
+      - 老师方法
+    post:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.addExamProblemAccept'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 添加考试题目
       tags:
       - 老师方法
   /teacher/Knowledge:
@@ -951,6 +1110,38 @@ paths:
       summary: 删除题目
       tags:
       - 老师方法
+    get:
+      parameters:
+      - description: knowledgeIdentity
+        in: query
+        name: knowledgeIdentity
+        required: true
+        type: string
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: string
+      - description: keyWord
+        in: query
+        name: keyWord
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取题目列表
+      tags:
+      - 老师方法
     post:
       parameters:
       - description: json
@@ -1060,6 +1251,28 @@ paths:
           schema:
             type: string
       summary: 添加题目类型
+      tags:
+      - 老师方法
+  /teacher/PublishExam:
+    put:
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.publishExamAccept'
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 发布考试
       tags:
       - 老师方法
 swagger: "2.0"

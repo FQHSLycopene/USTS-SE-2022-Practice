@@ -13,10 +13,12 @@ func TestDB(t *testing.T) {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 	}
-	problemIdentities := []string{"10bf65da-be8f-4323-a933-f4e8bc101420", "e87a03f5-f915-4ff3-81f0-654db910de03"}
-	problems := make([]models.Problem, 0)
-	db.Where("identity in ?", problemIdentities).Find(&problems)
-	fmt.Println(problems)
+	//problemIdentities := []string{"10bf65da-be8f-4323-a933-f4e8bc101420"}
+	ep := models.ExamProblems{}
+	db.Model(&ep).Where("problem_identity = ?", "10bf65da-be8f-4323-a933-f4e8bc101420").
+		Where("exam_identity = ?", "8459caa5-0b84-41e0-8c1c-dd76af5b248d").
+		Delete(&ep)
+	fmt.Println(ep)
 }
 
 func TestHasmany(t *testing.T) {

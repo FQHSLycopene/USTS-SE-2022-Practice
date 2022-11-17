@@ -2,6 +2,7 @@ package models
 
 import (
 	"BackEnd/utils"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
@@ -30,10 +31,141 @@ type ExamProblems struct {
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 }
 
+func PublishExam(identity string) (interface{}, error) {
+	exam, err := getExamByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	if exam.Publish == 1 {
+		return nil, errors.New("该考试已发布")
+	}
+	exam.Publish = 1
+
+	problemIdentities := make([]string, 0)
+	err = DB.Model(&ExamProblems{}).Where("exam_identity = ?", identity).
+		Select("problem_identity").Find(&problemIdentities).Error
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = InitExamPaperProblems(exam.ClassIdentity, exam.Identity, problemIdentities)
+	if err != nil {
+		return nil, err
+	}
+
+	err = DB.Save(exam).Error
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func GetExamDetail(identity string) (interface{}, error) {
+	exam := Exam{}
+	DB.Model(exam).
+		Where("identity = ?", identity).First(&exam)
+	return exam, nil
+}
+
+func GetExamProblemList(examIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+	problemIdentities := make([]string, 0)
+	err := DB.Model(&ExamProblems{}).Where("exam_identity = ?", examIdentity).
+		Select("problem_identity").Find(&problemIdentities).Error
+	if err != nil {
+		return nil, err
+	}
+	problems := make([]*Problem, 0)
+	var total int64 = 0
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, err
+	}
+	pageSize, err2 := strconv.Atoi(pageSizeStr)
+	if err2 != nil {
+		return nil, err2
+	}
+	err = DB.Model(&ProblemModels).Preload("Knowledge").Preload("ProblemCategory").
+		Where("identity in ?", problemIdentities).
+		Where("name like ?", "%"+keyWord+"%").Count(&total).
+		Offset((page - 1) * pageSize).Limit(pageSize).Find(&problems).Error
+	if err != nil {
+		return nil, err
+	}
+	return gin.H{
+		"total": total,
+		"list":  problems,
+	}, nil
+}
+
+func AddExamProblem(examIdentity string, problemIdentities []string) (interface{}, error) {
+	exam, err := getExamByIdentity(examIdentity)
+	if err != nil {
+		return nil, err
+	}
+	if exam.Publish == 1 {
+		return nil, errors.New("考试已发布无法修改题目")
+	}
+	for _, problemIdentity := range problemIdentities {
+		problem, err := getProblemByIdentity(problemIdentity)
+		if err != nil {
+			return nil, err
+		}
+		ep := ExamProblems{
+			Identity:        utils.GetUuid(),
+			ExamIdentity:    examIdentity,
+			ProblemIdentity: problemIdentity,
+		}
+		err = DB.Create(&ep).Error
+		if err != nil {
+			return nil, err
+		}
+		exam.ProblemNumber += 1
+		exam.TotalScore += problem.Score
+		err = DB.Model(exam).Preload("Problems").Save(exam).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+	return exam, nil
+}
+
+func DeleteExamProblem(examIdentity string, problemIdentities []string) (interface{}, error) {
+	exam, err := getExamByIdentity(examIdentity)
+	if err != nil {
+		return nil, err
+	}
+	if exam.Publish == 1 {
+		return nil, errors.New("考试已发布无法修改题目")
+	}
+	for _, problemIdentity := range problemIdentities {
+		problem, err := getProblemByIdentity(problemIdentity)
+		if err != nil {
+			return nil, err
+		}
+		ep := ExamProblems{}
+		err = DB.Model(&ep).Where("exam_identity = ?", examIdentity).
+			Where("problem_identity = ?", problemIdentity).
+			Delete(&ep).Error
+		if err != nil {
+			return nil, err
+		}
+		exam.ProblemNumber -= 1
+		exam.TotalScore -= problem.Score
+		err = DB.Save(exam).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+	return nil, nil
+}
+
 func UpdateExam(examIdentity, name, duration string, startAt time.Time) (interface{}, error) {
 	exam, err := getExamByIdentity(examIdentity)
 	if err != nil {
 		return nil, err
+	}
+	if exam.Publish == 1 {
+		return nil, errors.New("考试已发布无法修改信息")
 	}
 	parseDuration, err2 := time.ParseDuration(duration)
 	if err2 != nil {
@@ -60,14 +192,16 @@ func GetStudentExamList(userIdentity, pageStr, pageSizeStr, keyWord string) (int
 	if err != nil {
 		return nil, err
 	}
-	data, err2 := GetExamList(class[0].Identity, pageStr, pageSizeStr, keyWord)
+	data, err2 := GetExamList(class[0].Identity, pageStr, pageSizeStr, keyWord, 1)
+
 	if err2 != nil {
 		return nil, err2
 	}
 	return data, nil
 }
 
-func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string, status int) (interface{}, error) {
+
 	data := make([]*Exam, 0)
 	var total int64 = 0
 	page, err := strconv.Atoi(pageStr)
@@ -78,15 +212,27 @@ func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string) (interface
 	if err2 != nil {
 		return nil, err2
 	}
-	err = DB.Model(&data).
-		Where("publish = ?", 1).
-		Where("class_identity = ?", classIdentity).
-		Where("name like ?", "%"+keyWord+"%").Count(&total).
-		Offset((page - 1) * pageSize).Limit(pageSize).
-		Find(&data).Error
-	if err != nil {
-		return nil, err
+	if status == 1 {
+		err = DB.Model(&data).
+			Where("publish = ?", 1).
+			Where("class_identity = ?", classIdentity).
+			Where("name like ?", "%"+keyWord+"%").Count(&total).
+			Offset((page - 1) * pageSize).Limit(pageSize).
+			Find(&data).Error
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = DB.Model(&data).
+			Where("class_identity = ?", classIdentity).
+			Where("name like ?", "%"+keyWord+"%").Count(&total).
+			Offset((page - 1) * pageSize).Limit(pageSize).
+			Find(&data).Error
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	return gin.H{
 		"total": total,
 		"list":  data,

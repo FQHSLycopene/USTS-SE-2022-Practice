@@ -860,6 +860,56 @@ const docTemplate = `{
             }
         },
         "/teacher/Exam": {
+
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取老师考试列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "classIdentity",
+                        "name": "classIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+
             "put": {
                 "tags": [
                     "老师方法"
@@ -905,6 +955,152 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/service.addExamAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/Exam/{identity}": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取考试详情",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "examIdentity",
+                        "name": "identity",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/ExamProblem": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取考试题目列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "examIdentity",
+                        "name": "examIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "添加考试题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.addExamProblemAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "删除考试题目",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.deleteExamProblemAccept"
                         }
                     },
                     {
@@ -1065,6 +1261,54 @@ const docTemplate = `{
             }
         },
         "/teacher/Problem": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取题目列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "knowledgeIdentity",
+                        "name": "knowledgeIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "put": {
                 "tags": [
                     "老师方法"
@@ -1267,6 +1511,40 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/teacher/PublishExam": {
+            "put": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "发布考试",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.publishExamAccept"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1305,6 +1583,24 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "problem_identities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "service.addExamProblemAccept": {
+            "type": "object",
+            "required": [
+                "exam_identity",
+                "problem_identities"
+            ],
+            "properties": {
+                "exam_identity": {
                     "type": "string"
                 },
                 "problem_identities": {
@@ -1386,6 +1682,24 @@ const docTemplate = `{
                 }
             }
         },
+        "service.deleteExamProblemAccept": {
+            "type": "object",
+            "required": [
+                "exam_identity",
+                "problem_identities"
+            ],
+            "properties": {
+                "exam_identity": {
+                    "type": "string"
+                },
+                "problem_identities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "service.deleteKnowledgeAccept": {
             "type": "object",
             "required": [
@@ -1441,6 +1755,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.publishExamAccept": {
+            "type": "object",
+            "required": [
+                "exam_identity"
+            ],
+            "properties": {
+                "exam_identity": {
                     "type": "string"
                 }
             }

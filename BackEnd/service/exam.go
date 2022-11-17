@@ -8,6 +8,212 @@ import (
 	"time"
 )
 
+// PublishExam
+// @Summary	发布考试
+// @Tags	老师方法
+// @Param	Authorization header string true "Authorization"
+// @Param   json body publishExamAccept true "json"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/PublishExam [put]
+func PublishExam(c *gin.Context) {
+	accept := publishExamAccept{}
+	err := c.ShouldBind(&accept)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	_, err = models.PublishExam(accept.ExamIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: nil,
+		Msg:  "success",
+	})
+}
+
+type publishExamAccept struct {
+	ExamIdentity string `binding:"required" json:"exam_identity"`
+}
+
+// GetExamDetail
+// @Summary	获取考试详情
+// @Tags	老师方法
+// @Param	Authorization header string true "Authorization"
+// @Param   identity path string true "examIdentity"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Exam/{identity} [Get]
+func GetExamDetail(c *gin.Context) {
+	examIdentity := c.Param("identity")
+	data, err := models.GetExamDetail(examIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
+// GetExamProblemList
+// @Summary	获取考试题目列表
+// @Tags	老师方法
+// @Param	examIdentity query string true "examIdentity"
+// @Param	page query string false "page"
+// @Param	pageSize query string false "pageSize"
+// @Param	keyWord query string false "keyWord"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/ExamProblem [get]
+func GetExamProblemList(c *gin.Context) {
+	examIdentity := c.Query("examIdentity")
+	page := c.DefaultQuery("page", define.DefaultPage)
+	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	keyWord := c.Query("keyWord")
+	list, err := models.GetExamProblemList(examIdentity, page, pageSize, keyWord)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: list,
+		Msg:  "success",
+	})
+
+}
+
+// AddExamProblem
+// @Summary	添加考试题目
+// @Tags	老师方法
+// @Param	json body addExamProblemAccept true "json"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/ExamProblem [post]
+func AddExamProblem(c *gin.Context) {
+	accept := addExamProblemAccept{}
+	err := c.ShouldBind(&accept)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	data, err2 := models.AddExamProblem(accept.ExamIdentity, accept.ProblemIdentities)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
+type addExamProblemAccept struct {
+	ExamIdentity      string   `binding:"required" json:"exam_identity"`
+	ProblemIdentities []string `binding:"required" json:"problem_identities"`
+}
+
+// DeleteExamProblem
+// @Summary	删除考试题目
+// @Tags	老师方法
+// @Param	json body deleteExamProblemAccept true "json"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/ExamProblem [delete]
+func DeleteExamProblem(c *gin.Context) {
+	accept := deleteExamProblemAccept{}
+	err := c.ShouldBind(&accept)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	_, err = models.DeleteExamProblem(accept.ExamIdentity, accept.ProblemIdentities)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: nil,
+		Msg:  "success",
+	})
+
+}
+
+type deleteExamProblemAccept struct {
+	ExamIdentity      string   `binding:"required" json:"exam_identity"`
+	ProblemIdentities []string `binding:"required" json:"problem_identities"`
+}
+
+// GetExamList
+// @Summary	获取老师考试列表
+// @Tags	老师方法
+// @Param	classIdentity query string true "classIdentity"
+// @Param	page query string false "page"
+// @Param	pageSize query string false "pageSize"
+// @Param	keyWord query string false "keyWord"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Exam [get]
+func GetExamList(c *gin.Context) {
+	page := c.DefaultQuery("page", define.DefaultPage)
+	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	keyWord := c.Query("keyWord")
+	classIdentity := c.Query("classIdentity")
+
+	data, err := models.GetExamList(classIdentity, page, pageSize, keyWord, 2)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
 // UpdateExam
 // @Summary	更新考试信息
 // @Tags	老师方法
