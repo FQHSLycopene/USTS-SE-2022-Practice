@@ -11,6 +11,38 @@ type problem struct {
 
 var Problem *problem
 
+// GetProblemList
+// @Summary	获取题目列表
+// @Tags	老师方法
+// @Param   knowledgeIdentity query string true "knowledgeIdentity"
+// @Param	page query string false "page"
+// @Param	pageSize query string false "pageSize"
+// @Param	keyWord query string false "keyWord"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Problem [get]
+func GetProblemList(c *gin.Context) {
+	knowledgeIdentity := c.Query("knowledgeIdentity")
+	page := c.DefaultQuery("page", define.DefaultPage)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
+	keyWord := c.Query("keyWord")
+
+	list, err := models.GetProblemList(knowledgeIdentity, page, pageSize, keyWord)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Msg:  err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Msg:  "success",
+		Data: list,
+	})
+}
+
 // UpProblemAnswer
 // @Summary	提交题目
 // @Tags	学生方法

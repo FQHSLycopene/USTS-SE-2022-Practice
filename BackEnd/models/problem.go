@@ -3,7 +3,9 @@ package models
 import (
 	"BackEnd/utils"
 	"errors"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"strconv"
 	"time"
 )
 
@@ -24,6 +26,31 @@ type Problem struct {
 }
 
 var ProblemModels *Problem
+
+func GetProblemList(knowLedgeIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+	problems := make([]*Problem, 0)
+	var total int64 = 0
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, err
+	}
+	pageSize, err2 := strconv.Atoi(pageSizeStr)
+	if err2 != nil {
+		return nil, err2
+	}
+	err = DB.Model(ProblemModels).Preload("ProblemCategory").
+		Joins("right join problem_knowledge pk on pk.problem_identity = identity").
+		Where("pk.knowledge_identity = ?", knowLedgeIdentity).
+		Where("name like ?", "%"+keyWord+"%").Count(&total).
+		Offset((page - 1) * pageSize).Limit(pageSize).Find(&problems).Error
+	if err != nil {
+		return nil, err
+	}
+	return gin.H{
+		"total": total,
+		"list":  problems,
+	}, nil
+}
 
 func (*Problem) PractiseProblemIsCorrect(userIdentity, problemIdentity, practiseIdentity, answer string) (interface{}, error) {
 	problem, err := getProblemByIdentity(problemIdentity)
