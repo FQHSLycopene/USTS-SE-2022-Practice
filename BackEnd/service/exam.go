@@ -8,6 +8,38 @@ import (
 	"time"
 )
 
+// GetExamProblemList
+// @Summary	获取考试题目列表
+// @Tags	老师方法
+// @Param	examIdentity query string true "examIdentity"
+// @Param	page query string false "page"
+// @Param	pageSize query string false "pageSize"
+// @Param	keyWord query string false "keyWord"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/ExamProblem [get]
+func GetExamProblemList(c *gin.Context) {
+	examIdentity := c.Query("examIdentity")
+	page := c.DefaultQuery("page", define.DefaultPage)
+	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	keyWord := c.Query("keyWord")
+	list, err := models.GetExamProblemList(examIdentity, page, pageSize, keyWord)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: list,
+		Msg:  "success",
+	})
+
+}
+
 // AddExamProblem
 // @Summary	添加考试题目
 // @Tags	老师方法

@@ -974,6 +974,54 @@ const docTemplate = `{
             }
         },
         "/teacher/ExamProblem": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取考试题目列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "examIdentity",
+                        "name": "examIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pageSize",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "keyWord",
+                        "name": "keyWord",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "老师方法"

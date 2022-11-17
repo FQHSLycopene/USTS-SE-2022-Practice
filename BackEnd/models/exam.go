@@ -31,6 +31,36 @@ type ExamProblems struct {
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 }
 
+func GetExamProblemList(examIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
+	problemIdentities := make([]string, 0)
+	err := DB.Model(&ExamProblems{}).Where("exam_identity = ?", examIdentity).
+		Select("problem_identity").Find(&problemIdentities).Error
+	if err != nil {
+		return nil, err
+	}
+	problems := make([]*Problem, 0)
+	var total int64 = 0
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, err
+	}
+	pageSize, err2 := strconv.Atoi(pageSizeStr)
+	if err2 != nil {
+		return nil, err2
+	}
+	err = DB.Model(&ProblemModels).Preload("Knowledge").Preload("ProblemCategory").
+		Where("identity in ?", problemIdentities).
+		Where("name like ?", "%"+keyWord+"%").Count(&total).
+		Offset((page - 1) * pageSize).Limit(pageSize).Find(&problems).Error
+	if err != nil {
+		return nil, err
+	}
+	return gin.H{
+		"total": total,
+		"list":  problems,
+	}, nil
+}
+
 func AddExamProblem(examIdentity string, problemIdentities []string) (interface{}, error) {
 	exam, err := getExamByIdentity(examIdentity)
 	if err != nil {
