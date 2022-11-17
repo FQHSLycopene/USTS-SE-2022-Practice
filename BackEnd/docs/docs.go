@@ -860,6 +860,7 @@ const docTemplate = `{
             }
         },
         "/teacher/Exam": {
+
             "get": {
                 "tags": [
                     "老师方法"
@@ -908,6 +909,7 @@ const docTemplate = `{
                     }
                 }
             },
+
             "put": {
                 "tags": [
                     "老师方法"

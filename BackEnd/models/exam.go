@@ -193,6 +193,7 @@ func GetStudentExamList(userIdentity, pageStr, pageSizeStr, keyWord string) (int
 		return nil, err
 	}
 	data, err2 := GetExamList(class[0].Identity, pageStr, pageSizeStr, keyWord, 1)
+
 	if err2 != nil {
 		return nil, err2
 	}
@@ -200,6 +201,7 @@ func GetStudentExamList(userIdentity, pageStr, pageSizeStr, keyWord string) (int
 }
 
 func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string, status int) (interface{}, error) {
+
 	data := make([]*Exam, 0)
 	var total int64 = 0
 	page, err := strconv.Atoi(pageStr)

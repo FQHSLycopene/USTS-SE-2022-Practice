@@ -44,6 +44,7 @@ func Router() *gin.Engine {
 
 		teacherGroup.POST("/Exam", service.AddExam)
 		teacherGroup.PUT("/Exam", service.UpdateExam)
+
 		teacherGroup.GET("/Exam", service.GetExamList)
 		teacherGroup.GET("/Exam/:identity", service.GetExamDetail)
 
