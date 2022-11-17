@@ -973,6 +973,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/teacher/Exam/{identity}": {
+            "get": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "获取考试详情",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "examIdentity",
+                        "name": "identity",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/teacher/ExamProblem": {
             "get": {
                 "tags": [
@@ -1429,6 +1461,40 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/teacher/PublishExam": {
+            "put": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "发布考试",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.publishExamAccept"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1639,6 +1705,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.publishExamAccept": {
+            "type": "object",
+            "required": [
+                "exam_identity"
+            ],
+            "properties": {
+                "exam_identity": {
                     "type": "string"
                 }
             }

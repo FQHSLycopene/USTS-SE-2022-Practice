@@ -140,6 +140,13 @@ definitions:
     - name
     - password
     type: object
+  service.publishExamAccept:
+    properties:
+      exam_identity:
+        type: string
+    required:
+    - exam_identity
+    type: object
   service.registerAccept:
     properties:
       email:
@@ -894,6 +901,27 @@ paths:
       summary: 更新考试信息
       tags:
       - 老师方法
+  /teacher/Exam/{identity}:
+    get:
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: examIdentity
+        in: path
+        name: identity
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取考试详情
+      tags:
+      - 老师方法
   /teacher/ExamProblem:
     delete:
       parameters:
@@ -1191,6 +1219,28 @@ paths:
           schema:
             type: string
       summary: 添加题目类型
+      tags:
+      - 老师方法
+  /teacher/PublishExam:
+    put:
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.publishExamAccept'
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 发布考试
       tags:
       - 老师方法
 swagger: "2.0"

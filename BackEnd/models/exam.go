@@ -31,6 +31,42 @@ type ExamProblems struct {
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 }
 
+func PublishExam(identity string) (interface{}, error) {
+	exam, err := getExamByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	if exam.Publish == 1 {
+		return nil, errors.New("该考试已发布")
+	}
+	exam.Publish = 1
+
+	problemIdentities := make([]string, 0)
+	err = DB.Model(&ExamProblems{}).Where("exam_identity = ?", identity).
+		Select("problem_identity").Find(&problemIdentities).Error
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = InitExamPaperProblems(exam.ClassIdentity, exam.Identity, problemIdentities)
+	if err != nil {
+		return nil, err
+	}
+
+	err = DB.Save(exam).Error
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func GetExamDetail(identity string) (interface{}, error) {
+	exam := Exam{}
+	DB.Model(exam).
+		Where("identity = ?", identity).First(&exam)
+	return exam, nil
+}
+
 func GetExamProblemList(examIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
 	problemIdentities := make([]string, 0)
 	err := DB.Model(&ExamProblems{}).Where("exam_identity = ?", examIdentity).

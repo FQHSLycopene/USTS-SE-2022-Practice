@@ -8,6 +8,69 @@ import (
 	"time"
 )
 
+// PublishExam
+// @Summary	发布考试
+// @Tags	老师方法
+// @Param	Authorization header string true "Authorization"
+// @Param   json body publishExamAccept true "json"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/PublishExam [put]
+func PublishExam(c *gin.Context) {
+	accept := publishExamAccept{}
+	err := c.ShouldBind(&accept)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	_, err = models.PublishExam(accept.ExamIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: nil,
+		Msg:  "success",
+	})
+}
+
+type publishExamAccept struct {
+	ExamIdentity string `binding:"required" json:"exam_identity"`
+}
+
+// GetExamDetail
+// @Summary	获取考试详情
+// @Tags	老师方法
+// @Param	Authorization header string true "Authorization"
+// @Param   identity path string true "examIdentity"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Exam/{identity} [Get]
+func GetExamDetail(c *gin.Context) {
+	examIdentity := c.Param("identity")
+	data, err := models.GetExamDetail(examIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
 // GetExamProblemList
 // @Summary	获取考试题目列表
 // @Tags	老师方法

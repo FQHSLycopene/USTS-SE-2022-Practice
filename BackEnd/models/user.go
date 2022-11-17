@@ -41,6 +41,35 @@ func (table *User) TableName() string {
 	return "user"
 }
 
+func InitExamPaperProblems(classIdentity, examIdentity string, problemIdentities []string) (interface{}, error) {
+	users := make([]*User, 0)
+	err := DB.Model(users).
+		Joins("right join user_classes uc on uc.user_identity = identity").
+		Where("uc.class_identity = ?", classIdentity).Where("status = 1").
+		Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	for _, user := range users {
+		epps := make([]*ExamPaperProblems, 0)
+		for _, problemIdentity := range problemIdentities {
+			epp := ExamPaperProblems{
+				UserIdentity:    user.Identity,
+				ProblemIdentity: problemIdentity,
+				ExamIdentity:    examIdentity,
+				Answer:          "",
+				Status:          0,
+			}
+			epps = append(epps, &epp)
+		}
+		err := DB.Create(&epps).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+	return nil, nil
+}
+
 func UserIsHasClass(identity string) (bool, error) {
 	user, err := GetUserByIdentity(identity)
 	if err != nil {
