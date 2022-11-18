@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -29,6 +30,113 @@ type ExamProblems struct {
 	Identity        string `gorm:"index;NOT NULL;Type:varchar(36);Column:identity" json:"identity"`
 	ExamIdentity    string `gorm:"NOT NULL;Type:varchar(36);Column:exam_identity" json:"exam_identity"`
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
+}
+
+type ExamPaperProblem struct {
+	ProblemIdentity string `binding:"required" json:"problem_identity"`
+	Answer          string `binding:"required" json:"answer"`
+}
+
+func GetExamPaper(userIdentity, examIdentity string) (interface{}, error) {
+	epps := make([]*ExamPaperProblems, 0)
+	var total int64 = 0
+	err := DB.Model(&epps).
+		Where("user_identity = ?", userIdentity).
+		Where("exam_identity = ?", examIdentity).Count(&total).
+		Find(&epps).Error
+	if err != nil {
+		return nil, err
+	}
+	exam, err2 := getExamByIdentity(examIdentity)
+	if err2 != nil {
+		return nil, err2
+	}
+	score := 0
+	for _, epp := range epps {
+		score += epp.Score
+	}
+	return gin.H{
+		"total":      total,
+		"score":      score,
+		"totalScore": exam.TotalScore,
+		"list":       epps,
+	}, nil
+
+}
+
+func UpExamPaper(userIdentity, examIdentity string, examPaperProblems []*ExamPaperProblem) (interface{}, error) {
+	for _, examPaperProblem := range examPaperProblems {
+		epp := ExamPaperProblems{}
+		err := DB.Model(&epp).
+			Where("user_identity = ?", userIdentity).
+			Where("exam_identity = ?", examIdentity).
+			Where("problem_identity = ?", examPaperProblem.ProblemIdentity).
+			First(&epp).Error
+		if err != nil {
+			return nil, err
+		}
+		problem, err2 := getProblemByIdentity(examPaperProblem.ProblemIdentity)
+		if err2 != nil {
+			return nil, err2
+		}
+		epp.Answer = examPaperProblem.Answer
+		if problem.ProblemCategory.Name == "选择题" {
+			if epp.Answer == problem.Answer {
+				epp.Status = 1
+				epp.Score = problem.Score
+			} else {
+				epp.Score = 0
+				epp.Status = 2
+			}
+		} else {
+			eppsp := strings.Split(epp.Answer, ";")
+			anssp := strings.Split(problem.Answer, ";")
+			for i, s := range eppsp {
+				if anssp[i] == s {
+					epp.Score += 2
+				}
+			}
+			if epp.Score == problem.Score {
+				epp.Status = 1
+			} else {
+				epp.Status = 2
+			}
+		}
+		err = DB.Where("user_identity = ?", userIdentity).
+			Where("exam_identity = ?", examIdentity).
+			Where("problem_identity = ?", examPaperProblem.ProblemIdentity).
+			Save(&epp).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+	return nil, nil
+}
+
+func GetStudentExamProblemList(userIdentity, examIdentity string) (interface{}, error) {
+	problems := make([]*Problem, 0)
+	problemIdentities := make([]string, 0)
+	var total int64 = 0
+	err := DB.Model(&ExamPaperProblems{}).Select("ProblemIdentity").
+		Where("user_identity = ?", userIdentity).
+		Where("exam_identity = ?", examIdentity).
+		Where("status = 0").Count(&total).
+		Find(&problemIdentities).Error
+	if err != nil {
+		return nil, err
+	}
+	if total == 0 {
+		return nil, errors.New("试卷已提交")
+	}
+	err = DB.Model(&problems).Preload("Knowledge").Preload("ProblemCategory").
+		Where("identity in ?", problemIdentities).Find(&problems).Error
+	if err != nil {
+		return nil, err
+	}
+	return gin.H{
+		"total": total,
+		"list":  problems,
+	}, nil
 }
 
 func PublishExam(identity string) (interface{}, error) {

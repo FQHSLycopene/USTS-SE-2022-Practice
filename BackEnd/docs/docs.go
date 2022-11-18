@@ -229,6 +229,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/Problem/{identity}": {
+            "get": {
+                "tags": [
+                    "公共方法"
+                ],
+                "summary": "获取题目详情",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "identity",
+                        "name": "identity",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/Register": {
             "post": {
                 "tags": [
@@ -477,6 +509,102 @@ const docTemplate = `{
                         "description": "keyWord",
                         "name": "keyWord",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/ExamPaper": {
+            "get": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "查看试卷",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "examIdentity",
+                        "name": "examIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "提交试卷",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.upExamPaperAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/ExamProblem": {
+            "get": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "获取学生考试题目列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "examIdentity",
+                        "name": "examIdentity",
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -860,7 +988,6 @@ const docTemplate = `{
             }
         },
         "/teacher/Exam": {
-
             "get": {
                 "tags": [
                     "老师方法"
@@ -909,7 +1036,6 @@ const docTemplate = `{
                     }
                 }
             },
-
             "put": {
                 "tags": [
                     "老师方法"
@@ -1548,6 +1674,21 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.ExamPaperProblem": {
+            "type": "object",
+            "required": [
+                "answer",
+                "problem_identity"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "problem_identity": {
+                    "type": "string"
+                }
+            }
+        },
         "service.addAchievementAccept": {
             "type": "object",
             "required": [
@@ -1803,6 +1944,24 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string"
+                }
+            }
+        },
+        "service.upExamPaperAccept": {
+            "type": "object",
+            "required": [
+                "exam_identity",
+                "exam_paper_problems"
+            ],
+            "properties": {
+                "exam_identity": {
+                    "type": "string"
+                },
+                "exam_paper_problems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ExamPaperProblem"
+                    }
                 }
             }
         },

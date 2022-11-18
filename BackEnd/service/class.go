@@ -177,7 +177,7 @@ type joinClassAccept struct {
 // @Router	/Class [get]
 func GetClassList(c *gin.Context) {
 	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	userIdentity, exist := c.Get("userIdentity")
 	if !exist {

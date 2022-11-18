@@ -8,6 +8,98 @@ import (
 	"time"
 )
 
+// GetExamPaper
+// @Summary	查看试卷
+// @Tags	学生方法
+// @Param	examIdentity query string true "examIdentity"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/student/ExamPaper [get]
+func GetExamPaper(c *gin.Context) {
+	examIdentity := c.Query("examIdentity")
+	userIdentity, _ := c.Get("userIdentity")
+	data, err := models.GetExamPaper(userIdentity.(string), examIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
+// UpExamPaper
+// @Summary	提交试卷
+// @Tags	学生方法
+// @Param	json body upExamPaperAccept true "json"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/student/ExamPaper [put]
+func UpExamPaper(c *gin.Context) {
+	accept := upExamPaperAccept{}
+	userIdentity, _ := c.Get("userIdentity")
+	err := c.ShouldBind(&accept)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	_, err = models.UpExamPaper(userIdentity.(string), accept.ExamIdentity, accept.ExamPaperProblems)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: nil,
+		Msg:  "success",
+	})
+}
+
+type upExamPaperAccept struct {
+	ExamIdentity      string                     `binding:"required" json:"exam_identity"`
+	ExamPaperProblems []*models.ExamPaperProblem `binding:"required" json:"exam_paper_problems"`
+}
+
+// GetStudentExamProblemList
+// @Summary	获取学生考试题目列表
+// @Tags	学生方法
+// @Param	examIdentity query string true "examIdentity"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/student/ExamProblem [get]
+func GetStudentExamProblemList(c *gin.Context) {
+	examIdentity := c.Query("examIdentity")
+	userIdentity, _ := c.Get("userIdentity")
+	data, err := models.GetStudentExamProblemList(userIdentity.(string), examIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: data,
+		Msg:  "success",
+	})
+}
+
 // PublishExam
 // @Summary	发布考试
 // @Tags	老师方法

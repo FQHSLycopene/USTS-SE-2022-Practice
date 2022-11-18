@@ -35,6 +35,7 @@ type ExamPaperProblems struct {
 	Exam            *Exam  `gorm:"foreignKey:ExamIdentity;references:Identity"`
 	Answer          string `gorm:"Type:text;Column:answer" json:"answer"`
 	Status          int    `gorm:"NOT NULL;Type:int(11);Column:status;default:0" json:"status"` //0没有做，1做对，2做错
+	Score           int    `gorm:"NOT NULL;Type:int(11);Column:score;default:0" json:"score"`
 }
 
 func (table *User) TableName() string {

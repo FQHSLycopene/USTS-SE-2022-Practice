@@ -1,4 +1,14 @@
 definitions:
+  models.ExamPaperProblem:
+    properties:
+      answer:
+        type: string
+      problem_identity:
+        type: string
+    required:
+    - answer
+    - problem_identity
+    type: object
   service.addAchievementAccept:
     properties:
       knowledge_identity:
@@ -170,6 +180,18 @@ definitions:
         type: string
     required:
     - email
+    type: object
+  service.upExamPaperAccept:
+    properties:
+      exam_identity:
+        type: string
+      exam_paper_problems:
+        items:
+          $ref: '#/definitions/models.ExamPaperProblem'
+        type: array
+    required:
+    - exam_identity
+    - exam_paper_problems
     type: object
   service.upProblemAnswerAccept:
     properties:
@@ -419,6 +441,27 @@ paths:
       summary: PostArrayTest
       tags:
       - 测试方法
+  /Problem/{identity}:
+    get:
+      parameters:
+      - description: identity
+        in: path
+        name: identity
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取题目详情
+      tags:
+      - 公共方法
   /Register:
     post:
       parameters:
@@ -588,6 +631,69 @@ paths:
           schema:
             type: string
       summary: 获取学生考试列表
+      tags:
+      - 学生方法
+  /student/ExamPaper:
+    get:
+      parameters:
+      - description: examIdentity
+        in: query
+        name: examIdentity
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 查看试卷
+      tags:
+      - 学生方法
+    put:
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/service.upExamPaperAccept'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 提交试卷
+      tags:
+      - 学生方法
+  /student/ExamProblem:
+    get:
+      parameters:
+      - description: examIdentity
+        in: query
+        name: examIdentity
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 获取学生考试题目列表
       tags:
       - 学生方法
   /student/Practise:
