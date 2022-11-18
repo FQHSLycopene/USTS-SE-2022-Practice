@@ -11,6 +11,31 @@ type problem struct {
 
 var Problem *problem
 
+// GetProblemDetail
+// @Summary	获取题目详情
+// @Tags	公共方法
+// @Param	identity path string true "identity"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/Problem/{identity} [get]
+func GetProblemDetail(c *gin.Context) {
+	problemIdentity := c.Param("identity")
+	data, err := models.GetProblemDetail(problemIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Msg:  err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Msg:  "success",
+		Data: data,
+	})
+}
+
 // GetProblemList
 // @Summary	获取题目列表
 // @Tags	老师方法

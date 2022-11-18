@@ -27,6 +27,14 @@ type Problem struct {
 
 var ProblemModels *Problem
 
+func GetProblemDetail(identity string) (interface{}, error) {
+	problem, err := getProblemByIdentity(identity)
+	if err != nil {
+		return nil, err
+	}
+	return problem, nil
+}
+
 func GetProblemList(knowLedgeIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
 	problems := make([]*Problem, 0)
 	var total int64 = 0
