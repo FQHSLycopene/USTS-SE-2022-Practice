@@ -194,7 +194,7 @@ func GetAvatar(c *gin.Context) {
 // @Router	/teacher/ClassStudents [get]
 func GetClassStudentList(c *gin.Context) {
 	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	classIdentity := c.Query("classIdentity")
 	data, err := models.GetClassStudentList(classIdentity, page, pageSize, keyWord)
