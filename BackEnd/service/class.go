@@ -68,7 +68,7 @@ func UpdateClass(c *gin.Context) {
 type updateClassAccept struct {
 	ClassIdentity     string   `json:"class_identity" binding:"required"`
 	ClassName         string   `json:"class_name" binding:""`
-	IsChangeCode      bool     `json:"is_change_code" binding:"required"`
+	IsChangeCode      bool     `json:"is_change_code" binding:""`
 	StudentIdentities []string `json:"student_identities" binding:""`
 }
 
