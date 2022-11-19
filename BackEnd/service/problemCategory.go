@@ -93,7 +93,7 @@ type addProblemCategoryAccept struct {
 // @Router	/teacher/ProblemCategory [Get]
 func GetProblemCategoryList(c *gin.Context) {
 	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	data, err := models.GetProblemCategoryList(page, pageSize, keyWord)
 	if err != nil {

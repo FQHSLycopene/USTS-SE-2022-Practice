@@ -176,7 +176,7 @@ func GetExamDetail(c *gin.Context) {
 func GetExamProblemList(c *gin.Context) {
 	examIdentity := c.Query("examIdentity")
 	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	list, err := models.GetExamProblemList(examIdentity, page, pageSize, keyWord)
 	if err != nil {
@@ -358,7 +358,7 @@ type updateExamAccept struct {
 // @Router	/student/Exam [get]
 func GetStudentExamList(c *gin.Context) {
 	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	userIdentity, exist := c.Get("userIdentity")
 	if !exist {

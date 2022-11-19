@@ -17,7 +17,7 @@ import (
 // @Router	/student/WrongProblem [Get]
 func GetWrongProblemList(c *gin.Context) {
 	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	data, err := models.WrongProblem.GetWrongProblemList(page, pageSize, keyWord)
 	if err != nil {
