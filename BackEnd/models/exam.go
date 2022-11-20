@@ -267,7 +267,7 @@ func DeleteExamProblem(examIdentity string, problemIdentities []string) (interfa
 	return nil, nil
 }
 
-func UpdateExam(examIdentity, name, duration string, startAt time.Time) (interface{}, error) {
+func UpdateExam(examIdentity, name string, duration time.Duration, startAt time.Time) (interface{}, error) {
 	exam, err := getExamByIdentity(examIdentity)
 	if err != nil {
 		return nil, err
@@ -275,12 +275,8 @@ func UpdateExam(examIdentity, name, duration string, startAt time.Time) (interfa
 	if exam.Publish == 1 {
 		return nil, errors.New("考试已发布无法修改信息")
 	}
-	parseDuration, err2 := time.ParseDuration(duration)
-	if err2 != nil {
-		return nil, err2
-	}
 	exam.Name = name
-	exam.Duration = parseDuration
+	exam.Duration = duration
 	exam.StartAt = startAt
 	err = DB.Save(exam).Error
 	if err != nil {
@@ -347,16 +343,12 @@ func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string, status int
 	}, nil
 }
 
-func AddExam(classIdentity, name, duration string, startAt time.Time, problemIdentities []string) (interface{}, error) {
-	parseDuration, err2 := time.ParseDuration(duration)
-	if err2 != nil {
-		return nil, err2
-	}
+func AddExam(classIdentity, name string, duration time.Duration, startAt time.Time, problemIdentities []string) (interface{}, error) {
 	exam := Exam{
 		Identity:      utils.GetUuid(),
 		Name:          name,
 		StartAt:       startAt,
-		Duration:      parseDuration,
+		Duration:      duration,
 		ClassIdentity: classIdentity,
 		TotalScore:    0,
 		ProblemNumber: 0,

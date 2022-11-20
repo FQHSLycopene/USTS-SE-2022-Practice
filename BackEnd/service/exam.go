@@ -4,7 +4,6 @@ import (
 	"BackEnd/define"
 	"BackEnd/models"
 	"github.com/gin-gonic/gin"
-	"strconv"
 	"time"
 )
 
@@ -324,7 +323,7 @@ func UpdateExam(c *gin.Context) {
 		})
 		return
 	}
-	data, err2 := models.UpdateExam(accept.ExamIdentity, accept.Name, strconv.Itoa(accept.Duration)+"s", accept.StartAt)
+	data, err2 := models.UpdateExam(accept.ExamIdentity, accept.Name, time.Duration(accept.Duration), accept.StartAt)
 	if err2 != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -344,7 +343,7 @@ type updateExamAccept struct {
 	ExamIdentity string    `binding:"required" json:"exam_identity"`
 	Name         string    `binding:"required" json:"name"`
 	StartAt      time.Time `binding:"required" json:"StartAt"`
-	Duration     int       `binding:"required" json:"duration"`
+	Duration     int64     `binding:"required" json:"duration"`
 }
 
 // GetStudentExamList
@@ -403,7 +402,7 @@ func AddExam(c *gin.Context) {
 		})
 		return
 	}
-	data, err2 := models.AddExam(accept.ClassIdentity, accept.Name, strconv.Itoa(accept.Duration)+"s", accept.StartAt, accept.ProblemIdentities)
+	data, err2 := models.AddExam(accept.ClassIdentity, accept.Name, time.Duration(accept.Duration), accept.StartAt, accept.ProblemIdentities)
 	if err2 != nil {
 		c.JSON(200, define.Result{
 			Code: 401,
@@ -423,6 +422,6 @@ type addExamAccept struct {
 	ClassIdentity     string    `binding:"required" json:"class_identity"`
 	Name              string    `binding:"required" json:"name"`
 	StartAt           time.Time `binding:"required" json:"StartAt"`
-	Duration          int       `binding:"required" json:"duration"`
+	Duration          int64     `binding:"required" json:"duration"`
 	ProblemIdentities []string  `binding:"required" json:"problem_identities"`
 }
