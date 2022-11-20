@@ -16,7 +16,8 @@
                                 <el-input class="username" v-model="form.name" placeholder="用户名:"></el-input>
                             </el-form-item>
                             <el-form-item prop="password">
-                                <el-input type="password" show-password  v-model="form.password" placeholder="密码:" style="height: 30px;"></el-input>
+                                <el-input type="password" show-password v-model="form.password" placeholder="密码:"
+                                    style="height: 30px;"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button class="submit_button" @click="submit" type="primary">登录
@@ -35,7 +36,7 @@
                             <el-form-item>
                                 <el-input v-model="emailForm.code" placeholder="验证码" prefix-icon="el-icon-key">
                                     <template #append>
-                                        <el-button size='mini' @click="SendCode" v-if="isSend">{{sendmsg}}</el-button>
+                                        <el-button size='mini' @click="SendCode" v-if="isSend">{{ sendmsg }}</el-button>
                                         <el-button size='mini' v-if="!isSend">{{ sendmsg }}</el-button>
                                     </template>
                                 </el-input>
@@ -54,7 +55,7 @@
 </template>
 
 <script>
-import { LoginData, SendCode, VerifyEmailCode } from '../api'
+import { LoginData, SendCode, VerifyEmailCode, User } from '../api'
 import Cookie from 'js-cookie'
 export default {
     data() {
@@ -85,14 +86,22 @@ export default {
                 LoginData(this.form).then(({ data }) => {
                     console.log(data)
                     if (data.code === 200) {
+                        console.log("逆天登陆")
                         this.$message.success(data.msg)
                         Cookie.set('token', data.data);
-                        this.$router.push('/home');
+                        this.User();
                     } else {
                         this.$message.error(data.msg)
                     }
                 })
             })
+        },
+        User() {
+             // 此时需要发起请求个人信息 判断status
+             User().then(({ data }) => {
+                            Cookie.set('status', data.data.status)
+                            this.$router.push('/home');
+                        })
         },
         SendCode() {
             SendCode({ email: this.emailForm.email }).then(({ data }) => {
@@ -123,7 +132,7 @@ export default {
                 if (data.code === 200) {
                     this.$message.success(data.msg)
                     Cookie.set('token', data.data);
-                    this.$router.push('/home');
+                    this.User();
                 } else {
                     this.$message.error(data.msg)
                 }

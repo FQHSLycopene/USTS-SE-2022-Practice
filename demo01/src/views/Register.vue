@@ -43,6 +43,7 @@
   
 <script>
 import { Register } from '../api'
+import Cookie from 'js-cookie'
 export default {
     name: "Register",
     data() {
@@ -84,15 +85,19 @@ export default {
                     console.log("注册")
                     if (data.code === 200) {
                         this.$message.success("注册成功")
-                        this.$router.push("/login")
+                        Cookie.set('token', data.data);
+                        Cookie.set('status',this.form.status)
+                        this.$router.push("/home")
                     } else {
                         this.$message.error("注册失败")
                     }
                 })
             })
-        }
+        },
+        
 
     },
+   
 };
 </script>
   

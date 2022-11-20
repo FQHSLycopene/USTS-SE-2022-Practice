@@ -8,7 +8,7 @@ import (
 var DB = InitDB()
 
 func InitDB() *gorm.DB {
-	dsn := "Lycopene:MiMaJiuShi123321!@tcp(127.0.0.1:3306)/SE2022?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:dlq668713@tcp(127.0.0.1:3306)/stus?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 	}

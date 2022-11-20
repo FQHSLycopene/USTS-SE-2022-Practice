@@ -1,13 +1,7 @@
 <template>
-    <el-menu default-active="1-4-1" 
-    class="el-menu-vertical-demo" 
-    @open="handleOpen" 
-    @close="handleClose"
-    :collapse="isCollapse" 
-    background-color="#545c64" 
-    text-color="#fff" 
-    active-text-color="#ffd04b">
-        <h3>{{isCollapse ? 'OJ' : 'phycial OJ system'}}</h3>
+    <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+        :collapse="isCollapse" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+        <h3>{{ isCollapse ? 'OJ' : 'phycial OJ system' }}</h3>
         <el-menu-item @click="clickMenu(item)" v-for="item in noChildren" :key="item.name" :index="item.name">
             <i :class="`el-icon-${item.icon}`"></i>
             <span slot="title">{{ item.label }}</span>
@@ -45,6 +39,7 @@
 </style>
   
 <script>
+import Cookie from 'js-cookie'
 export default {
     data() {
         return {
@@ -56,7 +51,6 @@ export default {
                     icon: 's-home',
                     url: 'Home/Home'
                 },
-            
                 {
                     path: '/practice',
                     name: 'practice',
@@ -98,6 +92,29 @@ export default {
                 //         }
                 //     ]
                 // }
+            ],
+            menuDatas: [
+                {
+                    path: '/',
+                    name: 'home',
+                    label: '首页',
+                    icon: 's-home',
+                    url: 'Home/Home'
+                },
+                {
+                    path: '/knowledge',
+                    name: 'knowledge',
+                    label: '题库',
+                    icon: 'pie-chart',
+                    url: 'KnowledgeManage/KnowledgeManage'
+                },
+                {
+                    path: '/class',
+                    name: 'class',
+                    label: '班级',
+                    icon: 'document',
+                    url: 'ClassManage/ClassManage'
+                }
             ]
         };
     },
@@ -118,7 +135,17 @@ export default {
     },
     computed: {
         noChildren() {
-            return this.menuData.filter(item => !item.children)
+            console.log("登陆是学生还是老师",Cookie.get('status'))
+            if (Cookie.get('status') === '1') {
+                console.log("学生的侧边栏",Cookie.get('status'))
+                return this.menuData.filter(item => !item.children)
+            } else if (Cookie.get('status') === '2') {
+                console.log("老师的侧边栏",Cookie.get('status'))
+                return this.menuDatas.filter(item => !item.children)
+            } else {
+                console.log("没有登陆的侧边栏",Cookie.get('status'))
+                return this.menuData.filter(item => !item.children)
+            }
         },
         // 有子菜单
         hasChildren() {

@@ -10,7 +10,8 @@
 export default {
     data() {
         return {}
-    }
+    },
+
 }
 </script>
 
@@ -29,7 +30,7 @@ export default {
             text-align: center;
             overflow: auto;
             font-size: 67px;
-            margin-left: -272px;
+            margin-right: 90px;
         }
     }
 }
