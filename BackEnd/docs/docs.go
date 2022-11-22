@@ -1221,13 +1221,18 @@ const docTemplate = `{
                 "summary": "删除考试题目",
                 "parameters": [
                     {
-                        "description": "json",
-                        "name": "json",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/service.deleteExamProblemAccept"
-                        }
+                        "type": "string",
+                        "description": "examIdentity",
+                        "name": "examIdentity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "problemIdentity",
+                        "name": "problemIdentity",
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -1823,24 +1828,6 @@ const docTemplate = `{
                 }
             }
         },
-        "service.deleteExamProblemAccept": {
-            "type": "object",
-            "required": [
-                "exam_identity",
-                "problem_identities"
-            ],
-            "properties": {
-                "exam_identity": {
-                    "type": "string"
-                },
-                "problem_identities": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
         "service.deleteKnowledgeAccept": {
             "type": "object",
             "required": [
@@ -1986,8 +1973,7 @@ const docTemplate = `{
         "service.updateClassAccept": {
             "type": "object",
             "required": [
-                "class_identity",
-                "is_change_code"
+                "class_identity"
             ],
             "properties": {
                 "class_identity": {

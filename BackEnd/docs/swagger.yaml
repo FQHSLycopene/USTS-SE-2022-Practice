@@ -100,18 +100,6 @@ definitions:
     required:
     - name
     type: object
-  service.deleteExamProblemAccept:
-    properties:
-      exam_identity:
-        type: string
-      problem_identities:
-        items:
-          type: string
-        type: array
-    required:
-    - exam_identity
-    - problem_identities
-    type: object
   service.deleteKnowledgeAccept:
     properties:
       identity:
@@ -219,7 +207,6 @@ definitions:
         type: array
     required:
     - class_identity
-    - is_change_code
     type: object
   service.updateExamAccept:
     properties:
@@ -1031,12 +1018,16 @@ paths:
   /teacher/ExamProblem:
     delete:
       parameters:
-      - description: json
-        in: body
-        name: json
+      - description: examIdentity
+        in: query
+        name: examIdentity
         required: true
-        schema:
-          $ref: '#/definitions/service.deleteExamProblemAccept'
+        type: string
+      - description: problemIdentity
+        in: query
+        name: problemIdentity
+        required: true
+        type: string
       - description: Authorization
         in: header
         name: Authorization

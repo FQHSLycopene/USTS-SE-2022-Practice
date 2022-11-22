@@ -237,7 +237,7 @@ func AddExamProblem(examIdentity string, problemIdentities []string) (interface{
 	return exam, nil
 }
 
-func DeleteExamProblem(examIdentity string, problemIdentities []string) (interface{}, error) {
+func DeleteExamProblem(examIdentity, problemIdentity string) (interface{}, error) {
 	exam, err := getExamByIdentity(examIdentity)
 	if err != nil {
 		return nil, err
@@ -245,24 +245,22 @@ func DeleteExamProblem(examIdentity string, problemIdentities []string) (interfa
 	if exam.Publish == 1 {
 		return nil, errors.New("考试已发布无法修改题目")
 	}
-	for _, problemIdentity := range problemIdentities {
-		problem, err := getProblemByIdentity(problemIdentity)
-		if err != nil {
-			return nil, err
-		}
-		ep := ExamProblems{}
-		err = DB.Model(&ep).Where("exam_identity = ?", examIdentity).
-			Where("problem_identity = ?", problemIdentity).
-			Delete(&ep).Error
-		if err != nil {
-			return nil, err
-		}
-		exam.ProblemNumber -= 1
-		exam.TotalScore -= problem.Score
-		err = DB.Save(exam).Error
-		if err != nil {
-			return nil, err
-		}
+	problem, err2 := getProblemByIdentity(problemIdentity)
+	if err2 != nil {
+		return nil, err2
+	}
+	ep := ExamProblems{}
+	err = DB.Model(&ep).Where("exam_identity = ?", examIdentity).
+		Where("problem_identity = ?", problemIdentity).
+		Delete(&ep).Error
+	if err != nil {
+		return nil, err
+	}
+	exam.ProblemNumber -= 1
+	exam.TotalScore -= problem.Score
+	err = DB.Save(exam).Error
+	if err != nil {
+		return nil, err
 	}
 	return nil, nil
 }
