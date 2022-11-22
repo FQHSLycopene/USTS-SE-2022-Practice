@@ -285,7 +285,7 @@ type deleteExamProblemAccept struct {
 // @Router	/teacher/Exam [get]
 func GetExamList(c *gin.Context) {
 	page := c.DefaultQuery("page", define.DefaultPage)
-	pageSize := c.DefaultQuery("page", define.DefaultPageSize)
+	pageSize := c.DefaultQuery("pageSize", define.DefaultPageSize)
 	keyWord := c.Query("keyWord")
 	classIdentity := c.Query("classIdentity")
 
