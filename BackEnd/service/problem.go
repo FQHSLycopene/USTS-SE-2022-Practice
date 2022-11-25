@@ -117,7 +117,7 @@ type upProblemAnswerAccept struct {
 // @Router	/image [get]
 func GetImage(c *gin.Context) {
 	path := c.Query("url")
-	c.File(path)
+	c.File("./" + path)
 }
 
 // GetRandPractiseProblemDetail

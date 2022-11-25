@@ -179,7 +179,7 @@ func GetAvatar(c *gin.Context) {
 		})
 		return
 	}
-	c.File(data.(string))
+	c.File("./" + data.(string))
 }
 
 // GetClassStudentList
