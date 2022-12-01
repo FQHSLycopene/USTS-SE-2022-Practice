@@ -83,6 +83,7 @@ func Router() *gin.Engine {
 		studentGroup.GET("/Exam", middleware.UserIsHasClass(), service.GetStudentExamList)
 		studentGroup.GET("/ExamProblem", service.GetStudentExamProblemList)
 		studentGroup.PUT("/ExamPaper", service.UpExamPaper)
+		studentGroup.PUT("/SaveExamPaper", service.SaveExamPaper)
 		studentGroup.GET("/ExamPaper", service.GetExamPaper)
 
 	}

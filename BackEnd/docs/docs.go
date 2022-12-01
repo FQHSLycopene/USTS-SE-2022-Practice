@@ -698,6 +698,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/student/SaveExamPaper": {
+            "put": {
+                "tags": [
+                    "学生方法"
+                ],
+                "summary": "保存试卷",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.upExamPaperAccept"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/student/UpProblemAnswer": {
             "put": {
                 "tags": [

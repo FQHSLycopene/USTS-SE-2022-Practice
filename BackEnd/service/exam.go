@@ -33,6 +33,41 @@ func GetExamPaper(c *gin.Context) {
 	})
 }
 
+// SaveExamPaper
+// @Summary	保存试卷
+// @Tags	学生方法
+// @Param	json body upExamPaperAccept true "json"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/student/SaveExamPaper [put]
+func SaveExamPaper(c *gin.Context) {
+	accept := upExamPaperAccept{}
+	userIdentity, _ := c.Get("userIdentity")
+	err := c.ShouldBind(&accept)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	_, err2 := models.SaveExamPaper(userIdentity.(string), accept.ExamIdentity, accept.ExamPaperProblems)
+	if err2 != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err2.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: nil,
+		Msg:  "success",
+	})
+}
+
 // UpExamPaper
 // @Summary	提交试卷
 // @Tags	学生方法

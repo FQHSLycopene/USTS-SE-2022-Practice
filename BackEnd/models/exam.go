@@ -37,6 +37,29 @@ type ExamPaperProblem struct {
 	Answer          string `binding:"required" json:"answer"`
 }
 
+func SaveExamPaper(userIdentity, examIdentity string, examPaperProblems []*ExamPaperProblem) (interface{}, error) {
+	for _, examPaperProblem := range examPaperProblems {
+		epp := ExamPaperProblems{}
+		err := DB.Model(&epp).
+			Where("user_identity = ?", userIdentity).
+			Where("exam_identity = ?", examIdentity).
+			Where("problem_identity = ?", examPaperProblem.ProblemIdentity).
+			First(&epp).Error
+		if err != nil {
+			return nil, err
+		}
+		epp.Answer = examPaperProblem.Answer
+		err = DB.Where("user_identity = ?", userIdentity).
+			Where("exam_identity = ?", examIdentity).
+			Where("problem_identity = ?", examPaperProblem.ProblemIdentity).
+			Save(&epp).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+	return nil, nil
+}
+
 func GetExamPaper(userIdentity, examIdentity string) (interface{}, error) {
 	epps := make([]*ExamPaperProblems, 0)
 	var total int64 = 0
@@ -114,28 +137,32 @@ func UpExamPaper(userIdentity, examIdentity string, examPaperProblems []*ExamPap
 }
 
 func GetStudentExamProblemList(userIdentity, examIdentity string) (interface{}, error) {
-	problems := make([]*Problem, 0)
-	problemIdentities := make([]string, 0)
+	type data struct {
+		Identity string
+		Name     string
+		Content  string
+		Answer   string
+		Key      string
+		Score    int
+	}
+	datas := make([]*data, 0)
 	var total int64 = 0
-	err := DB.Model(&ExamPaperProblems{}).Select("ProblemIdentity").
+	err := DB.Model(&ExamPaperProblems{}).
+		Select("problems.identity,problems.name,problems.content,problems.key,problems.score,exam_paper_problems.answer").
+		Joins("right join problems on problems.identity = problem_identity").
 		Where("user_identity = ?", userIdentity).
 		Where("exam_identity = ?", examIdentity).
 		Where("status = 0").Count(&total).
-		Find(&problemIdentities).Error
+		Scan(&datas).Error
 	if err != nil {
 		return nil, err
 	}
 	if total == 0 {
 		return nil, errors.New("试卷已提交")
 	}
-	err = DB.Model(&problems).Preload("Knowledge").Preload("ProblemCategory").
-		Where("identity in ?", problemIdentities).Find(&problems).Error
-	if err != nil {
-		return nil, err
-	}
 	return gin.H{
 		"total": total,
-		"list":  problems,
+		"list":  datas,
 	}, nil
 }
 
