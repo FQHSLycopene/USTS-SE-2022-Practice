@@ -48,7 +48,7 @@ func SaveExamPaper(userIdentity, examIdentity string, examPaperProblems []*ExamP
 		if err != nil {
 			return nil, err
 		}
-		epp.Answer = examPaperProblem.Answer
+		epp.MyAnswer = examPaperProblem.Answer
 		err = DB.Where("user_identity = ?", userIdentity).
 			Where("exam_identity = ?", examIdentity).
 			Where("problem_identity = ?", examPaperProblem.ProblemIdentity).
@@ -61,28 +61,40 @@ func SaveExamPaper(userIdentity, examIdentity string, examPaperProblems []*ExamP
 }
 
 func GetExamPaper(userIdentity, examIdentity string) (interface{}, error) {
-	epps := make([]*ExamPaperProblems, 0)
+	type data struct {
+		Problem
+		MyAnswer string
+		MyScore  int
+	}
+	datas := make([]*data, 0)
 	var total int64 = 0
-	err := DB.Model(&epps).
-		Where("user_identity = ?", userIdentity).
-		Where("exam_identity = ?", examIdentity).Count(&total).
-		Find(&epps).Error
+	err := DB.Model(&Problem{}).Preload("ProblemCategory").
+		Joins("left join exam_paper_problems on problems.identity = exam_paper_problems.problem_identity").
+		Where("exam_paper_problems.user_identity = ?", userIdentity).
+		Where("exam_paper_problems.exam_identity = ?", examIdentity).
+		Count(&total).Find(&datas).Error
 	if err != nil {
 		return nil, err
+	}
+	for _, d := range datas {
+		DB.Model(&ExamPaperProblems{}).Select("my_score,my_answer").
+			Where("user_identity = ?", userIdentity).
+			Where("exam_identity = ?", examIdentity).
+			Where("problem_identity = ?", d.Problem.Identity).First(&d)
 	}
 	exam, err2 := getExamByIdentity(examIdentity)
 	if err2 != nil {
 		return nil, err2
 	}
 	score := 0
-	for _, epp := range epps {
-		score += epp.Score
+	for _, d := range datas {
+		score += d.MyScore
 	}
 	return gin.H{
 		"total":      total,
 		"score":      score,
 		"totalScore": exam.TotalScore,
-		"list":       epps,
+		"list":       datas,
 	}, nil
 
 }
@@ -102,24 +114,24 @@ func UpExamPaper(userIdentity, examIdentity string, examPaperProblems []*ExamPap
 		if err2 != nil {
 			return nil, err2
 		}
-		epp.Answer = examPaperProblem.Answer
+		epp.MyAnswer = examPaperProblem.Answer
 		if problem.ProblemCategory.Name == "选择题" {
-			if epp.Answer == problem.Answer {
+			if epp.MyAnswer == problem.Answer {
 				epp.Status = 1
-				epp.Score = problem.Score
+				epp.MyScore = problem.Score
 			} else {
-				epp.Score = 0
+				epp.MyScore = 0
 				epp.Status = 2
 			}
 		} else {
-			eppsp := strings.Split(epp.Answer, ";")
+			eppsp := strings.Split(epp.MyAnswer, ";")
 			anssp := strings.Split(problem.Answer, ";")
 			for i, s := range eppsp {
 				if anssp[i] == s {
-					epp.Score += 2
+					epp.MyScore += 2
 				}
 			}
-			if epp.Score == problem.Score {
+			if epp.MyScore == problem.Score {
 				epp.Status = 1
 			} else {
 				epp.Status = 2
@@ -138,27 +150,30 @@ func UpExamPaper(userIdentity, examIdentity string, examPaperProblems []*ExamPap
 
 func GetStudentExamProblemList(userIdentity, examIdentity string) (interface{}, error) {
 	type data struct {
-		Identity string
-		Name     string
-		Content  string
-		Answer   string
-		Key      string
-		Score    int
+		Problem
+		MyAnswer string
+		MyScore  int
 	}
 	datas := make([]*data, 0)
 	var total int64 = 0
-	err := DB.Model(&ExamPaperProblems{}).
-		Select("problems.identity,problems.name,problems.content,problems.key,problems.score,exam_paper_problems.answer").
-		Joins("right join problems on problems.identity = problem_identity").
-		Where("user_identity = ?", userIdentity).
-		Where("exam_identity = ?", examIdentity).
+	err := DB.Model(&Problem{}).Preload("ProblemCategory").
+		Joins("left join exam_paper_problems on problems.identity = exam_paper_problems.problem_identity").
+		Where("exam_paper_problems.user_identity = ?", userIdentity).
+		Where("exam_paper_problems.exam_identity = ?", examIdentity).
 		Where("status = 0").Count(&total).
-		Scan(&datas).Error
+		Find(&datas).Error
 	if err != nil {
 		return nil, err
 	}
+
 	if total == 0 {
 		return nil, errors.New("试卷已提交")
+	}
+	for _, d := range datas {
+		DB.Model(&ExamPaperProblems{}).Select("my_score,my_answer").
+			Where("user_identity = ?", userIdentity).
+			Where("exam_identity = ?", examIdentity).
+			Where("problem_identity = ?", d.Problem.Identity).First(&d)
 	}
 	return gin.H{
 		"total": total,
