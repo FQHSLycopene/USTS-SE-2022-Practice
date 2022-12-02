@@ -33,9 +33,9 @@ type ExamPaperProblems struct {
 	ProblemIdentity string `gorm:"index;NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 	ExamIdentity    string `gorm:"index;NOT NULL;Type:varchar(36);Column:exam_identity" json:"exam_identity"`
 	Exam            *Exam  `gorm:"foreignKey:ExamIdentity;references:Identity"`
-	Answer          string `gorm:"Type:text;Column:answer" json:"answer"`
+	MyAnswer        string `gorm:"Type:text;Column:my_answer" json:"my_answer"`
 	Status          int    `gorm:"NOT NULL;Type:int(11);Column:status;default:0" json:"status"` //0没有做，1做对，2做错
-	Score           int    `gorm:"NOT NULL;Type:int(11);Column:score;default:0" json:"score"`
+	MyScore         int    `gorm:"NOT NULL;Type:int(11);Column:score;default:0" json:"my-score"`
 }
 
 func (table *User) TableName() string {
@@ -58,7 +58,7 @@ func InitExamPaperProblems(classIdentity, examIdentity string, problemIdentities
 				UserIdentity:    user.Identity,
 				ProblemIdentity: problemIdentity,
 				ExamIdentity:    examIdentity,
-				Answer:          "",
+				MyAnswer:        "",
 				Status:          0,
 			}
 			epps = append(epps, &epp)
