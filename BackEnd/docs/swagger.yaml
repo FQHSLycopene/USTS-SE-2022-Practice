@@ -847,6 +847,25 @@ paths:
       tags:
       - 老师方法
   /teacher/Class:
+    delete:
+      parameters:
+      - description: identity
+        in: query
+        name: identity
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 删除班级
+      tags:
+      - 老师方法
     post:
       parameters:
       - description: json
@@ -942,6 +961,26 @@ paths:
       tags:
       - 老师方法
   /teacher/Exam:
+    delete:
+      parameters:
+      - description: examIdentity
+        in: query
+        name: examIdentity
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: code":"200","msg":"","data",""}
+          schema:
+            type: string
+      summary: 删除考试
+      tags:
+      - 老师方法
     get:
       parameters:
       - description: classIdentity

@@ -42,6 +42,65 @@ func (table *User) TableName() string {
 	return "user"
 }
 
+func deleteUserClassAssociation(userIdentity, classIdentity string) error {
+	user, err := GetUserByIdentity(userIdentity)
+	if err != nil {
+		return err
+	}
+	class, err2 := getClassByIdentity(classIdentity)
+	if err2 != nil {
+		return err2
+	}
+	err = DB.Model(user).Association("Classes").Delete(class)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func getUserIdentityByClassIdentity(classIdentity string) ([]string, error) {
+	userIdentities := make([]string, 0)
+	err := DB.Model(&User{}).Select("identity").Joins("right join user_classes as uc on uc.user_identity = identity").
+		Where("uc.class_identity = ?", classIdentity).Find(&userIdentities).Error
+	if err != nil {
+		return nil, err
+	}
+	return userIdentities, nil
+}
+
+func deleteExamPaperProblems(userIdentity, examIdentity string) error {
+	if userIdentity == "" || examIdentity != "" {
+		err := deleteExamPaperProblemsByExamIdentity(examIdentity)
+		return err
+	} else if userIdentity != "" || examIdentity == "" {
+		err := deleteExamPaperProblemsByUserIdentity(examIdentity)
+		return err
+	}
+	epps := make([]*ExamPaperProblems, 0)
+	err := DB.Model(&epps).Where("exam_identity = ?", examIdentity).
+		Where("user_identity = ?", userIdentity).
+		Unscoped().Delete(&epps).Error
+	return err
+}
+
+func deleteExamPaperProblemsByUserIdentity(userIdentity string) error {
+	epps := make([]*ExamPaperProblems, 0)
+	err := DB.Model(&epps).Where("user_identity = ?", userIdentity).Unscoped().Delete(&epps).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func deleteExamPaperProblemsByExamIdentity(examIdentity string) error {
+	epps := make([]*ExamPaperProblems, 0)
+	err := DB.Model(&epps).Where("exam_identity = ?", examIdentity).Unscoped().Delete(&epps).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func InitExamPaperProblems(classIdentity, examIdentity string, problemIdentities []string) (interface{}, error) {
 	users := make([]*User, 0)
 	err := DB.Model(users).

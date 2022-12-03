@@ -7,6 +7,31 @@ import (
 	"time"
 )
 
+// DeleteExam
+// @Summary 删除考试
+// @Tags	老师方法
+// @Param	examIdentity query string true "examIdentity"
+// @Param	Authorization header string true "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Exam [delete]
+func DeleteExam(c *gin.Context) {
+	examIdentity := c.Query("examIdentity")
+	_, err := models.DeleteExam(examIdentity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Data: nil,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Data: nil,
+		Msg:  "success",
+	})
+}
+
 // GetExamPaper
 // @Summary	查看试卷
 // @Tags	学生方法

@@ -21,6 +21,41 @@ type Class struct {
 	Exams         []*Exam        `gorm:"foreignKey:ClassIdentity;references:Identity"`
 }
 
+func DeleteClass(classIdentity string) (interface{}, error) {
+	examIdentities, err := getExamIdentityByClassIdentity(classIdentity)
+	if err != nil {
+		return nil, err
+	}
+	//删除班级关联的考试
+	for _, identity := range examIdentities {
+		err := deleteExam(identity)
+		if err != nil {
+			return nil, err
+		}
+	}
+	//删除班级关联的用户
+	userIdentities, err2 := getUserIdentityByClassIdentity(classIdentity)
+	if err2 != nil {
+		return nil, err2
+	}
+	for _, identity := range userIdentities {
+		err := deleteUserClassAssociation(identity, classIdentity)
+		if err != nil {
+			return nil, err
+		}
+	}
+	//删除班级
+	class, err3 := getClassByIdentity(classIdentity)
+	if err3 != nil {
+		return nil, err3
+	}
+	err = DB.Unscoped().Delete(class).Error
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
 func GetClassDetail(identity string) (interface{}, error) {
 	class := Class{}
 	err := DB.Preload("Exams").Where("identity = ?", identity).Find(&class).Error
@@ -51,11 +86,19 @@ func UpdateClass(identity, name string, isChangCode bool, studentIdentities []st
 	}
 	if len(studentIdentities) != 0 {
 		for _, studentIdentity := range studentIdentities {
-			student, err := GetUserByIdentity(studentIdentity)
-			if err != nil {
-				return nil, err
+			//删除学生与班级考试关联
+			examIdentities, err2 := getExamIdentityByClassIdentity(identity)
+			if err2 != nil {
+				return nil, err2
 			}
-			err = DB.Model(student).Association("Classes").Delete(class)
+			for _, examIdentity := range examIdentities {
+				err := deleteExamPaperProblems(studentIdentity, examIdentity)
+				if err != nil {
+					return nil, err
+				}
+			}
+			//删除学生与班级关联
+			err := deleteUserClassAssociation(studentIdentity, class.Identity)
 			if err != nil {
 				return nil, err
 			}
