@@ -926,6 +926,35 @@
                         }
                     }
                 }
+            },
+            "delete": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "删除班级",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "identity",
+                        "name": "identity",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/teacher/Class/{identity}": {
@@ -1104,6 +1133,36 @@
                         "schema": {
                             "$ref": "#/definitions/service.addExamAccept"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\":\"200\",\"msg\":\"\",\"data\",\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "老师方法"
+                ],
+                "summary": "删除考试",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "examIdentity",
+                        "name": "examIdentity",
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "string",

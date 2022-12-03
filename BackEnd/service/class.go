@@ -6,6 +6,31 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// DeleteClass
+// @Summary	删除班级
+// @Tags	老师方法
+// @Param   identity query string true "identity"
+// @Param	Authorization header string false "Authorization"
+// @Success	200  {string}  json{"code":"200","msg":"","data",""}
+// @Router	/teacher/Class [delete]
+func DeleteClass(c *gin.Context) {
+	identity := c.Query("identity")
+	_, err := models.DeleteClass(identity)
+	if err != nil {
+		c.JSON(200, define.Result{
+			Code: 401,
+			Msg:  err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	c.JSON(200, define.Result{
+		Code: 200,
+		Msg:  "success",
+		Data: nil,
+	})
+}
+
 // GetClassDetail
 // @Summary	获取班级详情
 // @Tags	老师方法

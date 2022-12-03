@@ -33,6 +33,7 @@ func Router() *gin.Engine {
 
 		teacherGroup.POST("/Class", service.CreateClass)
 		teacherGroup.PUT("/Class", service.UpdateClass)
+		teacherGroup.DELETE("/Class", service.DeleteClass)
 		teacherGroup.GET("/Class/:identity", service.GetClassDetail)
 
 		teacherGroup.GET("/ClassStudents", service.GetClassStudentList)
@@ -44,6 +45,7 @@ func Router() *gin.Engine {
 
 		teacherGroup.POST("/Exam", service.AddExam)
 		teacherGroup.PUT("/Exam", service.UpdateExam)
+		teacherGroup.DELETE("/Exam", service.DeleteExam)
 
 		teacherGroup.GET("/Exam", service.GetExamList)
 		teacherGroup.GET("/Exam/:identity", service.GetExamDetail)

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -32,9 +33,52 @@ type ExamProblems struct {
 	ProblemIdentity string `gorm:"NOT NULL;Type:varchar(36);Column:problem_identity" json:"problem_identity"`
 }
 
+// 循环依赖
 type ExamPaperProblem struct {
 	ProblemIdentity string `binding:"required" json:"problem_identity"`
 	Answer          string `binding:"required" json:"answer"`
+}
+
+func getExamIdentityByClassIdentity(classIdentity string) ([]string, error) {
+	examIdentities := make([]string, 0)
+	err := DB.Model(&Exam{}).Select("identity").
+		Where("class_identity = ?", classIdentity).Find(&examIdentities).Error
+	if err != nil {
+		return nil, err
+	}
+	return examIdentities, nil
+}
+
+func DeleteExam(examIdentity string) (interface{}, error) {
+	err := deleteExam(examIdentity)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func deleteExam(examIdentity string) error {
+	//删除考试关联学生试卷
+	err2 := deleteExamPaperProblems("", examIdentity)
+	if err2 != nil {
+		return err2
+	}
+
+	exam, err := getExamByIdentity(examIdentity)
+	if err != nil {
+		return err
+	}
+	//删除考试关联题目
+	err2 = DB.Model(exam).Association("Problems").Clear()
+	if err2 != nil {
+		return err2
+	}
+	//删除考试
+	err = DB.Unscoped().Delete(exam).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func SaveExamPaper(userIdentity, examIdentity string, examPaperProblems []*ExamPaperProblem) (interface{}, error) {
@@ -287,24 +331,32 @@ func DeleteExamProblem(examIdentity, problemIdentity string) (interface{}, error
 	if exam.Publish == 1 {
 		return nil, errors.New("考试已发布无法修改题目")
 	}
+	err = deleteExamProblem(exam, problemIdentity)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func deleteExamProblem(exam *Exam, problemIdentity string) error {
 	problem, err2 := getProblemByIdentity(problemIdentity)
 	if err2 != nil {
-		return nil, err2
+		return err2
 	}
 	ep := ExamProblems{}
-	err = DB.Model(&ep).Where("exam_identity = ?", examIdentity).
+	err := DB.Model(&ep).Where("exam_identity = ?", exam.Identity).
 		Where("problem_identity = ?", problemIdentity).
 		Delete(&ep).Error
 	if err != nil {
-		return nil, err
+		return err
 	}
 	exam.ProblemNumber -= 1
 	exam.TotalScore -= problem.Score
 	err = DB.Save(exam).Error
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return nil, nil
+	return nil
 }
 
 func UpdateExam(examIdentity, name string, duration time.Duration, startAt time.Time) (interface{}, error) {
@@ -326,22 +378,63 @@ func UpdateExam(examIdentity, name string, duration time.Duration, startAt time.
 }
 
 func GetStudentExamList(userIdentity, pageStr, pageSizeStr, keyWord string) (interface{}, error) {
-	user, err3 := GetUserByIdentity(userIdentity)
-	if err3 != nil {
-		return nil, err3
-	}
-
-	class := make([]*Class, 0)
-	err := DB.Model(user).Association("Classes").Find(&class)
+	data := make([]*Exam, 0)
+	var total int64 = 0
+	page, err := strconv.Atoi(pageStr)
 	if err != nil {
 		return nil, err
 	}
-	data, err2 := GetExamList(class[0].Identity, pageStr, pageSizeStr, keyWord, 1)
-
+	pageSize, err2 := strconv.Atoi(pageSizeStr)
 	if err2 != nil {
 		return nil, err2
 	}
-	return data, nil
+	examIdentities, err := getExamIdentitiesByUserIdentity(userIdentity)
+	if err != nil {
+		return nil, err
+	}
+	err = DB.Model(&Exam{}).
+		Where("identity in ? ", examIdentities).
+		Where("name like ?", "%"+keyWord+"%").Count(&total).
+		Offset((page - 1) * pageSize).Limit(pageSize).
+		Find(&data).Error
+	if err != nil {
+		return nil, err
+	}
+	return gin.H{
+		"total": total,
+		"list":  data,
+	}, nil
+}
+
+func getExamIdentitiesByUserIdentity(userIdentity string) ([]string, error) {
+	examIdentities := make([]string, 0)
+	err := DB.Model(&ExamPaperProblems{}).Select("exam_identity").
+		Where("user_identity = ?", userIdentity).Find(&examIdentities).Error
+	if err != nil {
+		return nil, err
+	}
+	examIdentities = SetString(examIdentities)
+	return examIdentities, nil
+}
+
+// 对[]string 类型的切片进行元素唯一化处理，返回来的元素已经排好序
+func SetString(arr []string) []string {
+	newArr := make([]string, 0)
+
+	for i := 0; i < len(arr); i++ {
+		repeat := false
+		for j := i + 1; j < len(arr); j++ {
+			if arr[i] == arr[j] {
+				repeat = true
+			}
+
+		}
+		if !repeat {
+			newArr = append(newArr, arr[i])
+		}
+	}
+	sort.Strings(newArr)
+	return (newArr)
 }
 
 func GetExamList(classIdentity, pageStr, pageSizeStr, keyWord string, status int) (interface{}, error) {
